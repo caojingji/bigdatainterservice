@@ -103,7 +103,7 @@ public class StringUtil {
 	 * @date: 2018/8/13 0013-11:35
 	 */
 	public static Map<String,Object> isQQ(String qqStr) {
-		String regex = "^[1-9][0-9]{4,14}&";// 5到15位qq验证 第一位1-9之间的数字，第二位0-9之间的数字
+		String regex = "[1-9][0-9]{4,14}";// 5到15位qq验证 第一位1-9之间的数字，第二位0-9之间的数字
 		Map<String,Object> rs = new HashMap<String,Object>();
 		boolean bol = qqStr.matches(regex);
 		if (bol) {
