@@ -61,56 +61,7 @@ public class HttpUtil {
 		httpclient.getConnectionManager().shutdown(); 
 		return sb.toString();
 	}
-	
-	public static String doGetEsb(String uri, String id) {
-		HttpClient httpclient = new DefaultHttpClient();
 
-		// Prepare a request object
-		HttpGet httpget = new HttpGet(uri);
-
-		// Execute the request
-		HttpResponse response = null;
-		StringBuffer sb = new StringBuffer();
-		try {
-			HttpParams params = httpclient.getParams();//new BasicHttpParams();
-			Integer CONNECTION_TIMEOUT = 15 * 1000;
-			Integer SO_TIMEOUT = 15 * 1000;
-			Long CONN_MANAGER_TIMEOUT = 500L;
-			params.setIntParameter(CoreConnectionPNames.CONNECTION_TIMEOUT, CONNECTION_TIMEOUT);
-			params.setIntParameter(CoreConnectionPNames.SO_TIMEOUT, SO_TIMEOUT);
-			params.setLongParameter(ClientPNames.CONN_MANAGER_TIMEOUT, CONN_MANAGER_TIMEOUT);
-			params.setBooleanParameter(CoreConnectionPNames.STALE_CONNECTION_CHECK, true);
-			PoolingClientConnectionManager conMgr = new PoolingClientConnectionManager();
-			conMgr.setMaxTotal(200);
-			conMgr.setDefaultMaxPerRoute(conMgr.getMaxTotal());
-			response = httpclient.execute(httpget);
-//			System.out.println(response.getStatusLine());
-			HttpEntity entity = response.getEntity();
-			if (entity != null) {
-				InputStream instream = null;
-				instream = entity.getContent();
-				BufferedReader reader = new BufferedReader(new InputStreamReader(instream,"UTF-8"));
-				String temp = null;
-				while((temp = reader.readLine())!=null){
-					sb.append(temp);
-				}
-			}
-		} /*catch (ClientProtocolException e) {
-			e.printStackTrace();
-		} catch (IOException e) {
-			e.printStackTrace();
-		} */catch (Exception e) {
-			//e.printStackTrace();
-			sb.append("\"<root><resourceType id=\""+id+"\" count=\"0\"><timeAnalysisField></timeAnalysisField><data><record></record></data></resourceType></root>\"");
-			//throw new BaseException("查询出错！uri = " + uri,e);
-			System.err.println("查询出错:"+e.toString());
-		}
-		httpclient.getConnectionManager().shutdown(); 
-
-		return sb.toString();
-	}
-	
-	
 	public static String doPost(String uri,Map<String,String> params) {
 		HttpClient httpclient = new DefaultHttpClient();
 

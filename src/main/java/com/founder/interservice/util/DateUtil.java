@@ -33,15 +33,6 @@ public class DateUtil {
 
 	private static String datetimePattern_CN = "yyyy��M��d��Hʱm��";
 
-	static {
-		Locale locale = LocaleContextHolder.getLocale();
-		try {
-			datePattern = ResourceBundle.getBundle("messageResource_en_US",
-					locale).getString("date.default_format");
-		} catch (MissingResourceException localMissingResourceException) {
-		}
-	}
-
 	public static String getDatePattern() {
 		return datePattern;
 	}
@@ -246,7 +237,7 @@ public class DateUtil {
 	/**
 	 * ���ַ�����ʽyyyy/MM/dd HH24:MI:SS��yyyy/MM/dd ��yyyy/MM/dd HH24:MI:SS��yyyy/MM/dd��ʽ ת����������
 	 * @author zhouwei
-	 * @param strDate
+	 * @param
 	 * @return Date
 	 */
 	public static Date commonStringToDate(String time){ 
@@ -462,7 +453,7 @@ public class DateUtil {
 	
 	/***
 	 * ���yyyyMMdd��ʽ�������ַ��� 
-	 * @param date
+	 * @param
 	 * @return
 	 */
 	public static String getYYYYMMDD() {
@@ -478,7 +469,7 @@ public class DateUtil {
 	
 	/**
 	 * �õ���������ÿ�������
-	 * @param args
+	 * @param
 	 */
 	public static Date[] getWeekDay() {
         Calendar calendar = Calendar.getInstance();
@@ -492,6 +483,7 @@ public class DateUtil {
         }
         return dates;
     }
+
 	public static void main(String[] args) {
 		/*String a = getDatePattern();
 		String flrsj = DateUtil.beforeDate(3);
