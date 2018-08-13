@@ -69,6 +69,8 @@ public class IphoneTrackController {
                 }else{
                     resultVO = ResultVOUtil.success();
                 }
+            }else if(code == 13){
+                resultVO = ResultVOUtil.success();
             }else{
                 resultVO = ResultVOUtil.error((int)paramMap.get("code"),(String) paramMap.get("msg"));
             }
@@ -91,28 +93,37 @@ public class IphoneTrackController {
     private Map<String, Object> checkParam(String objVal,String objType,String kssj, String jssj,String yhCate) {
         Map<String, Object> resultMap = new HashMap<String, Object>();
         if(!StringUtils.isEmpty(yhCate)){
-            if(!StringUtils.isEmpty(objType)){
-                if (!StringUtils.isEmpty(objVal)) {
-                    if("001".equals(objType)){
-                        resultMap = StringUtil.isPhone(objVal);
-                        if (0 == (int)resultMap.get("code")) {
-                            resultMap = checkTime(kssj,jssj);
-                        }
-                    }else if("002".equals(objType)){
-                        resultMap = StringUtil.isQQ(objVal);
-                        if (0 == (int)resultMap.get("code")) {
-                            resultMap = checkTime(kssj,jssj);
-                        }
-                    }else if("003".equals(objType)){ //微信
-
-                    }
-                } else {
-                    resultMap.put("code", ResultEnum.PARAM_NOTNULL.getCode());
-                    resultMap.put("msg", ResultEnum.PARAM_NOTNULL.getMessage());
-                }
+            if(!Arrays.asList("00","01","02","03","04").contains(yhCate)){
+                resultMap.put("code", ResultEnum.YHCATE_PARAM_ERROR.getCode());
+                resultMap.put("msg", ResultEnum.YHCATE_PARAM_ERROR.getMessage());
             }else{
-                resultMap.put("code", ResultEnum.OBJTYPE_PARAM_ERROR.getCode());
-                resultMap.put("msg", ResultEnum.OBJTYPE_PARAM_ERROR.getMessage());
+                if(!StringUtils.isEmpty(objType)){
+                    if (!StringUtils.isEmpty(objVal)) {
+                        if("001".equals(objType)){
+                            resultMap = StringUtil.isPhone(objVal);
+                            if (0 == (int)resultMap.get("code")) {
+                                resultMap = checkTime(kssj,jssj);
+                            }
+                        }else if("002".equals(objType)){
+                            resultMap = StringUtil.isQQ(objVal);
+                            if (0 == (int)resultMap.get("code")) {
+                                resultMap = checkTime(kssj,jssj);
+                            }
+                        }else if("003".equals(objType)){ //微信
+                            resultMap.put("code", 13);
+                            resultMap.put("msg", "微信");
+                        }else{
+                            resultMap.put("code", ResultEnum.OBJTYPE_PARAM_ERROR.getCode());
+                            resultMap.put("msg", ResultEnum.OBJTYPE_PARAM_ERROR.getMessage());
+                        }
+                    } else {
+                        resultMap.put("code", ResultEnum.PARAM_NOTNULL.getCode());
+                        resultMap.put("msg", ResultEnum.PARAM_NOTNULL.getMessage());
+                    }
+                }else{
+                    resultMap.put("code", ResultEnum.OBJTYPE_PARAM_NOTNULL.getCode());
+                    resultMap.put("msg", ResultEnum.OBJTYPE_PARAM_NOTNULL.getMessage());
+                }
             }
         }else{
             resultMap.put("code", ResultEnum.YHCATE_PARAM_NOTNULL.getCode());
