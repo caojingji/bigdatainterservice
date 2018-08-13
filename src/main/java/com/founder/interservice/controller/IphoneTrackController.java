@@ -27,7 +27,7 @@ public class IphoneTrackController {
     /**
      * 通过手机号调取手机轨迹
      * @param objValue 参数值
-     * @param objType 参数类型 （00：手机号；01：QQ号；02：微信号）
+     * @param objType 参数类型 （001：手机号；002：QQ号；003：微信号）
      * @param kssj 开始时间
      * @param jssj 结束时间
      * @param yhCate 用户类别（00：方正；01：嘉崎；02：新德汇；03：天彦；04：海鑫）
@@ -93,17 +93,17 @@ public class IphoneTrackController {
         if(!StringUtils.isEmpty(yhCate)){
             if(!StringUtils.isEmpty(objType)){
                 if (!StringUtils.isEmpty(objVal)) {
-                    if("00".equals(objType)){
+                    if("001".equals(objType)){
                         resultMap = StringUtil.isPhone(objVal);
                         if (0 == (int)resultMap.get("code")) {
                             resultMap = checkTime(kssj,jssj);
                         }
-                    }else if("01".equals(objType)){
+                    }else if("002".equals(objType)){
                         resultMap = StringUtil.isQQ(objVal);
                         if (0 == (int)resultMap.get("code")) {
                             resultMap = checkTime(kssj,jssj);
                         }
-                    }else if("02".equals(objType)){ //微信
+                    }else if("003".equals(objType)){ //微信
 
                     }
                 } else {
