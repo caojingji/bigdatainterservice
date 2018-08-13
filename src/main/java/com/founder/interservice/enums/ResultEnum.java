@@ -13,9 +13,11 @@ public enum ResultEnum {
     SUCCESS(0,"成功"),
 
     YHCATE_PARAM_NOTNULL(1,"yhCate参数必传！"),
-    OBJTYPE_PARAM_ERROR(2,"参数类型必传！"),
+    YHCATE_PARAM_ERROR(11,"yhCate参数错误！"),
+    OBJTYPE_PARAM_NOTNULL(2,"objType参数必传！"),
+    OBJTYPE_PARAM_ERROR(10,"objType参数错误！"),
 
-    PARAM_NOTNULL(3,"参数值必传！"),
+    PARAM_NOTNULL(3,"objValue参数必传！"),
 
     IPHONE_PARAM_ERROE(4,"手机号码应为11位数！"),
     IPHONE_PARAM_ERROR1(5,"手机号码不正确！"),
