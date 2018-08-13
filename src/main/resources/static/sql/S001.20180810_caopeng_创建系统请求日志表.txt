@@ -1,0 +1,99 @@
+INSERT INTO SYS_DBLOG(SID,STATUS)VALUES('S001',0);
+COMMIT;
+-------------------------------------------------------------------------------------------
+
+alter table SYS_REQ_LOG drop index PK_SYS_REQ_LOG_RZLSH;
+
+--日志表
+CREATE TABLE SYS_REQ_LOG
+(
+  RZLSH            VARCHAR2(30 BYTE)            NOT NULL,
+  YH_IP            VARCHAR2(50 BYTE),
+  REQMETHOD		   VARCHAR2(10 BYTE),
+  REQURI		   VARCHAR2(100 BYTE),
+  REQURIDES		   VARCHAR2(200 BYTE),
+  XXSC_PDBZ        VARCHAR2(1 BYTE)             DEFAULT 0,
+  YHCATECODE  	   VARCHAR2(10 BYTE),
+  YHCATENAME 	   VARCHAR2(50 BYTE),
+  OBJTYPECODE      VARCHAR2(10 BYTE),
+  OBJTYPENAME      VARCHAR2(10 BYTE),
+  OBJVALUE         varchar2(50 byte),
+  FWSJ             DATE                         DEFAULT sysdate
+)TABLESPACE TBS_BIGDATA
+ PCTUSED    0
+ PCTFREE    10
+ INITRANS   1
+ MAXTRANS   255
+ STORAGE    (
+             INITIAL          64K
+             NEXT             1M
+             MINEXTENTS       1
+             MAXEXTENTS       UNLIMITED
+             PCTINCREASE      0
+             BUFFER_POOL      DEFAULT
+            )
+ LOGGING
+ NOCOMPRESS
+ NOCACHE
+ NOPARALLEL
+ MONITORING;
+--注释
+COMMENT ON TABLE SYS_REQ_LOG is '系统请求日志';
+COMMENT ON COLUMN SYS_REQ_LOG.RZLSH IS '日志流水号';
+
+COMMENT ON COLUMN SYS_REQ_LOG.FWSJ IS '访问时间';
+
+COMMENT ON COLUMN SYS_REQ_LOG.REQMETHOD IS '请求方法';
+
+COMMENT ON COLUMN SYS_REQ_LOG.REQURI IS '请求URI';
+
+COMMENT ON COLUMN SYS_REQ_LOG.YH_IP IS '用户IP';
+
+COMMENT ON COLUMN SYS_REQ_LOG.REQURIDES IS '请求URI描述';
+
+COMMENT ON COLUMN SYS_REQ_LOG.YHCATECODE IS '用户公司类别代码 00：方正；01：嘉崎；02：新德汇；03：天彦；04：海鑫';
+
+COMMENT ON COLUMN SYS_REQ_LOG.YHCATENAME IS '用户公司类别名称';
+COMMENT ON COLUMN SYS_REQ_LOG.OBJTYPECODE IS '参数类型代码 001：手机号码 002：QQ号  003：微信号';
+COMMENT ON COLUMN SYS_REQ_LOG.OBJTYPENAME IS '参数类型名称';
+COMMENT ON COLUMN SYS_REQ_LOG.OBJVALUE IS '参数值';
+
+COMMENT ON COLUMN SYS_REQ_LOG.XXSC_PDBZ IS '信息删除——判断标识';
+--添加主键
+CREATE UNIQUE INDEX PK_SYS_REQ_LOG_RZLSH ON SYS_REQ_LOG
+(RZLSH)
+LOGGING
+TABLESPACE TBS_INDEX
+PCTFREE    10
+INITRANS   2
+MAXTRANS   255
+STORAGE    (
+            INITIAL          64K
+            NEXT             1M
+            MINEXTENTS       1
+            MAXEXTENTS       UNLIMITED
+            PCTINCREASE      0
+            BUFFER_POOL      DEFAULT
+           )
+NOPARALLEL;
+
+ALTER TABLE SYS_REQ_LOG ADD (
+  CONSTRAINT PK_SYS_REQ_LOG_RZLSH
+ PRIMARY KEY
+ (RZLSH)
+    USING INDEX 
+    TABLESPACE TBS_INDEX
+    PCTFREE    10
+    INITRANS   2
+    MAXTRANS   255
+    STORAGE    (
+                INITIAL          64K
+                NEXT             1M
+                MINEXTENTS       1
+                MAXEXTENTS       UNLIMITED
+                PCTINCREASE      0
+               ));
+
+-------------------------------------------------------------------------------------------
+UPDATE SYS_DBLOG SET STATUS=1 WHERE SID='S001';
+COMMIT;

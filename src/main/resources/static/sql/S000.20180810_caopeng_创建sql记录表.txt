@@ -1,0 +1,67 @@
+
+CREATE TABLE SYS_DBLOG
+(
+  SID       VARCHAR2(6 BYTE)                    NOT NULL,
+  STATUS    NUMBER,
+  RUN_TIME  DATE                                DEFAULT sysDate
+)TABLESPACE TBS_BIGDATA
+PCTUSED    0
+PCTFREE    10
+INITRANS   1
+MAXTRANS   255
+STORAGE    (
+            INITIAL          64K
+            NEXT             1M
+            MINEXTENTS       1
+            MAXEXTENTS       UNLIMITED
+            PCTINCREASE      0
+            BUFFER_POOL      DEFAULT
+           )
+LOGGING
+NOCOMPRESS
+NOCACHE
+NOPARALLEL
+MONITORING;
+
+COMMENT ON TABLE SYS_DBLOG IS '数据库更新日志';
+
+COMMENT ON COLUMN SYS_DBLOG.SID IS 'Script Id 数据库脚本ID';
+
+COMMENT ON COLUMN SYS_DBLOG.STATUS IS '状态0，开始运行，1运行完成';
+
+COMMENT ON COLUMN SYS_DBLOG.RUN_TIME IS '运行时间';
+
+
+CREATE UNIQUE INDEX IDX_SYS_DBLOG_PK ON SYS_DBLOG
+(SID)
+LOGGING
+TABLESPACE TBS_INDEX
+PCTFREE    10
+INITRANS   2
+MAXTRANS   255
+STORAGE    (
+            INITIAL          128K
+            NEXT             1M
+            MINEXTENTS       1
+            MAXEXTENTS       UNLIMITED
+            PCTINCREASE      0
+            BUFFER_POOL      DEFAULT
+           )
+NOPARALLEL;
+
+ALTER TABLE SYS_DBLOG ADD (
+  CONSTRAINT IDX_SYS_DBLOG_PK
+ PRIMARY KEY
+ (SID)
+    USING INDEX
+    TABLESPACE TBS_INDEX
+    PCTFREE    10
+    INITRANS   2
+    MAXTRANS   255
+    STORAGE    (
+                INITIAL          128K
+                NEXT             1M
+                MINEXTENTS       1
+                MAXEXTENTS       UNLIMITED
+                PCTINCREASE      0
+               ));
