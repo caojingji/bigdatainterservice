@@ -1,14 +1,18 @@
 spring:
   profiles:
-    active: prod
+    active: dev
+  mvc:
+    view:
+      prefix: /WEB-INF/jsp/
+      suffix: .jsp
 server:
   port: 8080
   servlet:
     context-path: /
-#mybatis:
-#    type-aliases-package: com.founder.interservice.model
-#    mapper-locations: classpath:mybatis/mapper/*.xml
-#    config-location: classpath:mybatis/mybatis-config.xml
+mybatis:
+    type-aliases-package: com.founder.interservice.model
+    mapper-locations: classpath:mybatis/mapper/*.xml
+    config-location: classpath:mybatis/mybatis-config.xml
 #  redis:
 #    host:
 #    port:
@@ -17,3 +21,8 @@ wabigdata:
     url:  http://www.adu.cq:6080/api?name=objectRelation&key=62bf1b59c14bf770ccbc48767db26c48
   gettrack:
     url:  http://www.adu.cq:6080/api?name=getTrack&key=62bf1b59c14bf770ccbc48767db26c48
+  relationGetAll:
+    url:  http://www.adu.cq:6080/api?name=relationGetAll&key=62bf1b59c14bf770ccbc48767db26c48
+logging:
+  level:
+    com.founder.interservice.mapper : trace

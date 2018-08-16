@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE configuration
+        PUBLIC "-//mybatis.org//DTD Config 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-config.dtd">
+<configuration>
+    <typeAliases>
+        <!-- 定义别名 -->
+        <typeAlias type="com.founder.interservice.model.Relation" alias="relation" />
+        <typeAlias type="com.founder.interservice.model.Track" alias="track" />
+        <typeAlias type="com.founder.interservice.querymodel.RelationFilter" alias="relationFilter" />
+        <typeAlias type="com.founder.interservice.querymodel.TrackFilter" alias="trackFilter" />
+    </typeAliases>
+</configuration>

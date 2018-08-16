@@ -1,6 +1,7 @@
 package com.founder.interservice.mapper;
 
 import com.founder.interservice.model.Relation;
+import com.founder.interservice.querymodel.RelationFilter;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -23,9 +24,9 @@ public interface RelationMapper {
 
     /**
      * 查询
-     * @param relation
+     * @param relationFilter
      * @return
      * @throws Exception
      */
-    public List<Relation> getRelations(Relation relation) throws Exception;
+    public List<Relation> getRelations(RelationFilter relationFilter) throws Exception;
 }

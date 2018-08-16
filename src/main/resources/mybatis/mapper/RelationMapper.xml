@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.founder.interservice.mapper.RelationMapper" >
+
+    <sql id = "getRelation_where">
+        <if test="xxzjbh != null and xxzjbh != ''">
+            and r.xxzjbh = #{xxzjbh}
+        </if>
+        <if test="objectfromtype != null and objectfromtype != ''">
+            and r.objectfromtype = #{objectfromtype}
+        </if>
+        <if test="objectfromvalue != null and objectfromvalue != ''">
+            and r.objectfromvalue = #{objectfromvalue}
+        </if>
+        <if test="objecttotype != null and objecttotype != ''">
+            and r.objecttotype = #{objecttotype}
+        </if>
+        <if test="kssj != null and kssj != ''">
+            and to_date(r.timestamp,'yyyy-MM-dd HH24:mi:ss') <![CDATA[>=]]> to_date(#{kssj},'yyyy-MM-dd HH24:mi:ss')
+        </if>
+        <if test="jssj != null and jssj != ''">
+            and to_date(r.timestamp,'yyyy-MM-dd HH24:mi:ss') <![CDATA[<]]> to_date(#{jssj},'yyyy-MM-dd HH24:mi:ss')
+        </if>
+    </sql>
+    <select id = "getRelations" parameterType="relationFilter" resultType="relation">
+        select
+          r.xxzjbh as xxzjbh,
+          r.objectfromtype,
+          r.objectfromtypename,
+          r.objectfromvalue,
+          r.objecttotypename,
+          r.objecttotype,
+          r.objecttovalue,
+          r.timestamp,
+          r.first_timestamp
+          from relation r
+          <where>
+            <include refid="getRelation_where" />
+          </where>
+    </select>
+
+
+
+</mapper>

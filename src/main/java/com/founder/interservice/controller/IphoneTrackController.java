@@ -5,24 +5,40 @@ import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.founder.interservice.VO.ResultVO;
 import com.founder.interservice.enums.ResultEnum;
-import com.founder.interservice.model.Track;
+import com.founder.interservice.model.ResultObj;
 import com.founder.interservice.service.IphoneTrackService;
 import com.founder.interservice.util.DateUtil;
 import com.founder.interservice.util.ResultVOUtil;
 import com.founder.interservice.util.StringUtil;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.ResponseBody;
+
 import java.util.*;
 
 /**
  * 手机轨迹controller
  */
-@RestController
+@Controller
+@CrossOrigin
 public class IphoneTrackController {
 
     @Autowired
     private IphoneTrackService iphoneTrackService;
+
+    @RequestMapping("/getObjectRelationAll")
+    @ResponseBody
+    public ResultObj getObjectRelationAll(String objValue,String type){
+        ResultObj resultObj = null;
+        try{
+            resultObj = iphoneTrackService.getObjectRelationAll(objValue,type);
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+        return resultObj;
+    }
 
     /**
      * 通过手机号调取手机轨迹
@@ -34,6 +50,7 @@ public class IphoneTrackController {
      * @return
      */
     @RequestMapping("/iphoneTrackForSjhm")
+    @ResponseBody
     public ResultVO iphoneTrackForSjhm(String objValue, String objType, String kssj, String jssj, String yhCate) {
         ResultVO resultVO = null;
         List<Object> resultArr = new ArrayList<Object>();
@@ -59,13 +76,19 @@ public class IphoneTrackController {
                     }
                 }
                 if(imsis != null && !imsis.isEmpty()){
+                    kssj = kssj.contains(" ") ? DateUtil.convertStringToDateTime(kssj).getTime()+"" : DateUtil.convertStringToDate(kssj).getTime()+"";
+                    jssj = jssj.contains(" ") ? DateUtil.convertStringToDateTime(jssj).getTime()+"" : DateUtil.convertStringToDate(jssj).getTime()+"";
                     for (String imsi:imsis) {
-                        kssj = kssj.contains(" ") ? DateUtil.convertStringToDateMinute(kssj).getTime()+"" : DateUtil.convertStringToDate(kssj).getTime()+"";
-                        jssj = jssj.contains(" ") ? DateUtil.convertStringToDateMinute(jssj).getTime()+"" : DateUtil.convertStringToDate(jssj).getTime()+"";
                         Map<String,Object> resultMap = iphoneTrackService.iphoneTrackForSjhm(imsi,kssj,jssj);
-                        resultArr.add(resultMap);
+                        if(resultMap != null){
+                            resultArr.add(resultMap);
+                        }
                     }
-                    resultVO = ResultVOUtil.success(resultArr);
+                    if(resultArr != null && resultArr.size() > 0){
+                        resultVO = ResultVOUtil.success(resultArr);
+                    }else{
+                        resultVO = ResultVOUtil.success();
+                    }
                 }else{
                     resultVO = ResultVOUtil.success();
                 }
@@ -75,6 +98,7 @@ public class IphoneTrackController {
                 resultVO = ResultVOUtil.error((int)paramMap.get("code"),(String) paramMap.get("msg"));
             }
         }catch (Exception e){
+            e.printStackTrace();
             resultVO = ResultVOUtil.error(ResultEnum.RESULT_ERROR.getCode(),ResultEnum.RESULT_ERROR.getMessage());
         }
         return resultVO;

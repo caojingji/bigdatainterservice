@@ -55,7 +55,7 @@ public class LogFilter implements Filter {
         requestLog.setYhcatecode(yhCateCode);
         String yhCateName = "";
         if(yhCateCode != null){
-            switch (yhCateCode){
+                switch (yhCateCode){
                 case "00":
                     yhCateName="方正";
                     break;
