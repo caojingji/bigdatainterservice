@@ -26,8 +26,7 @@ function queryJzgj(){
 	var param = {"yhCate":yhCate,"objType":objType,"objValue":objValue,"kssj":kssj,"jssj":jssj};
 	console.log("param ====" + JSON.stringify(param));
 	$.post("/iphoneTrackForSjhm",param,function(result){
-		console.log("result ====" + JSON.stringify(result));
-		$("#resultView").html(JSON.stringify(result,null,2));
+		$("#resultView").text(JSON.stringify(result,null,2));
 	});
 
 }

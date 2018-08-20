@@ -46,4 +46,7 @@ public interface TrackMapper {
     */
     public List<Track> queryTrackBefore5(TrackFilter trackFilter) throws Exception;
 
+    public List<Track> queryTracksListNoPage(TrackFilter trackFilter) throws Exception;
+
+    public List<Track> queryTracksByRSD(TrackFilter trackFilter) throws Exception;
 }

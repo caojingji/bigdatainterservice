@@ -1,6 +1,6 @@
 spring:
   profiles:
-    active: dev
+    active: prod
   mvc:
     view:
       prefix: /WEB-INF/jsp/
@@ -16,6 +16,8 @@ mybatis:
 #  redis:
 #    host:
 #    port:
+
+# 系统变量
 wabigdata:
   objectrelation:
     url:  http://www.adu.cq:6080/api?name=objectRelation&key=62bf1b59c14bf770ccbc48767db26c48
@@ -23,6 +25,10 @@ wabigdata:
     url:  http://www.adu.cq:6080/api?name=getTrack&key=62bf1b59c14bf770ccbc48767db26c48
   relationGetAll:
     url:  http://www.adu.cq:6080/api?name=relationGetAll&key=62bf1b59c14bf770ccbc48767db26c48
+  pgis:
+    url:  http://77.1.24.49:8081/lbs/
+
+#mysql sql打印
 logging:
   level:
     com.founder.interservice.mapper : trace

@@ -33,7 +33,7 @@ public class IphoneTrackServiceImpl implements IphoneTrackService {
     @Value("${wabigdata.gettrack.url}")
     private String gettrack_url;
     @Value("${wabigdata.relationGetAll.url}")
-    private String relationGetAll;
+    private String relationGetAll_url;
     /* JAP 轨迹 */
     @Autowired
     private TrackRepository trackRepository;
@@ -52,9 +52,9 @@ public class IphoneTrackServiceImpl implements IphoneTrackService {
      */
     public ResultObj getObjectRelationAll(String obj,String type) throws Exception{
         ResultObj resultObj = null;
-        String url = gettrack_url + "&objectValue="+obj;
-        //String result = HttpUtil.doGet(url);
-        String result = "{\"children\":[{\"children\":[],\"objType\":437,\"objTypeName\":\"号牌号码\",\"objValue\":\"渝AZN748\"},{\"children\":[],\"objType\":4394,\"objTypeName\":\"电话号码\",\"objValue\":\"02379226951\"},{\"children\":[{\"children\":[{\"children\":[],\"objType\":4315,\"objTypeName\":\"IMEI\",\"objValue\":\"866091037961143\"},{\"children\":[],\"objType\":4315,\"objTypeName\":\"IMEI\",\"objValue\":\"861106038308428\"},{\"children\":[],\"objType\":4615,\"objTypeName\":\"微信ID\",\"objValue\":\"612087581\"}],\"objType\":4314,\"objTypeName\":\"IMSI\",\"objValue\":\"460110496721423\"}],\"objType\":3996,\"objTypeName\":\"手机号码\",\"objValue\":\"13308271988\"},{\"children\":[],\"objType\":4394,\"objTypeName\":\"电话号码\",\"objValue\":\"18008365980\"},{\"children\":[{\"children\":[{\"children\":[],\"objType\":4315,\"objTypeName\":\"IMEI\",\"objValue\":\"866091037961143\"},{\"children\":[],\"objType\":4315,\"objTypeName\":\"IMEI\",\"objValue\":\"861106038308428\"},{\"children\":[],\"objType\":4615,\"objTypeName\":\"微信ID\",\"objValue\":\"612087581\"}],\"objType\":4314,\"objTypeName\":\"IMSI\",\"objValue\":\"460110496721423\"}],\"objType\":4394,\"objTypeName\":\"电话号码\",\"objValue\":\"13308271988\"},{\"children\":[{\"children\":[{\"children\":[],\"objType\":4315,\"objTypeName\":\"IMEI\",\"objValue\":\"866091037961143\"},{\"children\":[],\"objType\":4315,\"objTypeName\":\"IMEI\",\"objValue\":\"861106038308428\"},{\"children\":[],\"objType\":4615,\"objTypeName\":\"微信ID\",\"objValue\":\"612087581\"}],\"objType\":4314,\"objTypeName\":\"IMSI\",\"objValue\":\"460110496721423\"}],\"objType\":20,\"objTypeName\":\"联系方式\",\"objValue\":\"13308271988\"},{\"children\":[],\"objType\":6424,\"objTypeName\":\"汽车蓝色号牌\",\"objValue\":\"渝AZN748\"},{\"children\":[],\"objType\":4394,\"objTypeName\":\"电话号码\",\"objValue\":\"02367625393\"},{\"children\":[{\"children\":[{\"children\":[],\"objType\":4315,\"objTypeName\":\"IMEI\",\"objValue\":\"866091038053692\"}],\"objType\":4314,\"objTypeName\":\"IMSI\",\"objValue\":\"460005331386186\"}],\"objType\":4394,\"objTypeName\":\"电话号码\",\"objValue\":\"13638201377\"}],\"objType\":1,\"objTypeName\":\"身份证号码\",\"objValue\":\"513523196904108017\"}";
+        String url = relationGetAll_url + "&objectValue="+obj;
+        String result = HttpUtil.doGet(url);
+        //String result = "{\"children\":[{\"children\":[],\"objType\":437,\"objTypeName\":\"号牌号码\",\"objValue\":\"渝AZN748\"},{\"children\":[],\"objType\":4394,\"objTypeName\":\"电话号码\",\"objValue\":\"02379226951\"},{\"children\":[{\"children\":[{\"children\":[],\"objType\":4315,\"objTypeName\":\"IMEI\",\"objValue\":\"866091037961143\"},{\"children\":[],\"objType\":4315,\"objTypeName\":\"IMEI\",\"objValue\":\"861106038308428\"},{\"children\":[],\"objType\":4615,\"objTypeName\":\"微信ID\",\"objValue\":\"612087581\"}],\"objType\":4314,\"objTypeName\":\"IMSI\",\"objValue\":\"460110496721423\"}],\"objType\":3996,\"objTypeName\":\"手机号码\",\"objValue\":\"13308271988\"},{\"children\":[],\"objType\":4394,\"objTypeName\":\"电话号码\",\"objValue\":\"18008365980\"},{\"children\":[{\"children\":[{\"children\":[],\"objType\":4315,\"objTypeName\":\"IMEI\",\"objValue\":\"866091037961143\"},{\"children\":[],\"objType\":4315,\"objTypeName\":\"IMEI\",\"objValue\":\"861106038308428\"},{\"children\":[],\"objType\":4615,\"objTypeName\":\"微信ID\",\"objValue\":\"612087581\"}],\"objType\":4314,\"objTypeName\":\"IMSI\",\"objValue\":\"460110496721423\"}],\"objType\":4394,\"objTypeName\":\"电话号码\",\"objValue\":\"13308271988\"},{\"children\":[{\"children\":[{\"children\":[],\"objType\":4315,\"objTypeName\":\"IMEI\",\"objValue\":\"866091037961143\"},{\"children\":[],\"objType\":4315,\"objTypeName\":\"IMEI\",\"objValue\":\"861106038308428\"},{\"children\":[],\"objType\":4615,\"objTypeName\":\"微信ID\",\"objValue\":\"612087581\"}],\"objType\":4314,\"objTypeName\":\"IMSI\",\"objValue\":\"460110496721423\"}],\"objType\":20,\"objTypeName\":\"联系方式\",\"objValue\":\"13308271988\"},{\"children\":[],\"objType\":6424,\"objTypeName\":\"汽车蓝色号牌\",\"objValue\":\"渝AZN748\"},{\"children\":[],\"objType\":4394,\"objTypeName\":\"电话号码\",\"objValue\":\"02367625393\"},{\"children\":[{\"children\":[{\"children\":[],\"objType\":4315,\"objTypeName\":\"IMEI\",\"objValue\":\"866091038053692\"}],\"objType\":4314,\"objTypeName\":\"IMSI\",\"objValue\":\"460005331386186\"}],\"objType\":4394,\"objTypeName\":\"电话号码\",\"objValue\":\"13638201377\"}],\"objType\":1,\"objTypeName\":\"身份证号码\",\"objValue\":\"513523196904108017\"}";
         JSONObject jsonObejct = JSONObject.parseObject(result);
         if(jsonObejct != null){
             resultObj = new ResultObj();
@@ -62,8 +62,8 @@ public class IphoneTrackServiceImpl implements IphoneTrackService {
             resultObj.setObjTypeName(jsonObejct.getString("objTypeName"));
             resultObj.setObjValue(jsonObejct.getString("objValue"));
             JSONArray childrens = jsonObejct.getJSONArray("children");
-            List<String> cphmTypes = Arrays.asList("6424","437","7888");
-            List<String> sjhmTypes = Arrays.asList("20","4394");
+            List<String> cphmTypes = Arrays.asList("6424","437","7888"); // 车牌号类别
+            List<String> sjhmTypes = Arrays.asList("20","4394"); //手机号码类别
             if(childrens != null && childrens.size() > 0){
                 List<JSONObject> cphms = new ArrayList<JSONObject>();
                 List<JSONObject> sjhms = new ArrayList<JSONObject>();
@@ -91,61 +91,64 @@ public class IphoneTrackServiceImpl implements IphoneTrackService {
                             if(!b){cphms.add(object);}
                         }
                     } else if (sjhmTypes.contains(children.getString("objType"))){ //手机号码
-                        object = new JSONObject();
-                        object.put("objType","4394");
-                        object.put("objTypeName","电话号码");
-                        object.put("objValue",children.getString("objValue"));
-                        JSONArray array = children.getJSONArray("children");
-                        List<JSONObject> wxhms = new ArrayList<JSONObject>();
-                        List<JSONObject> qqhms = new ArrayList<JSONObject>();
-                        if(array != null && !array.isEmpty()){
-                            JSONObject o = array.getJSONObject(0);
-                            if(o != null){
-                                JSONArray a = o.getJSONArray("children");
-                                if(a != null && !a.isEmpty()){
-                                    for (int j = 0;j < a.size(); j++){
-                                        JSONObject o1 = a.getJSONObject(j);
-                                        JSONObject o2 = new JSONObject();
-                                        o2.put("objType", o1.getString("objType"));
-                                        o2.put("objTypeName", o1.getString("objTypeName"));
-                                        o2.put("objValue", o1.getString("objValue"));
-                                        if(o1.getString("objType").equals("4615")){
-                                            if(wxhms.isEmpty()){
-                                                wxhms.add(o2);
-                                            }else{
-                                                boolean b = false;
-                                                for (JSONObject o3:wxhms){
-                                                    if(o3.getString("objValue").equals(o2.getString("objValue"))){
-                                                        b = true;
-                                                        break;
-                                                    }else{
-                                                        continue;
+                        String sjhm = children.getString("objValue");
+                        if(sjhm != null && sjhm.length() == 11){
+                            object = new JSONObject();
+                            object.put("objType","4394");
+                            object.put("objTypeName","电话号码");
+                            object.put("objValue",children.getString("objValue"));
+                            JSONArray array = children.getJSONArray("children");
+                            List<JSONObject> wxhms = new ArrayList<JSONObject>();
+                            List<JSONObject> qqhms = new ArrayList<JSONObject>();
+                            if(array != null && !array.isEmpty()){
+                                JSONObject o = array.getJSONObject(0);
+                                if(o != null){
+                                    JSONArray a = o.getJSONArray("children");
+                                    if(a != null && !a.isEmpty()){
+                                        for (int j = 0;j < a.size(); j++){
+                                            JSONObject o1 = a.getJSONObject(j);
+                                            JSONObject o2 = new JSONObject();
+                                            o2.put("objType", o1.getString("objType"));
+                                            o2.put("objTypeName", o1.getString("objTypeName"));
+                                            o2.put("objValue", o1.getString("objValue"));
+                                            if(o1.getString("objType").equals("4615")){ //梳理添加微信号码
+                                                if(wxhms.isEmpty()){
+                                                    wxhms.add(o2);
+                                                }else{
+                                                    boolean b = false;
+                                                    for (JSONObject o3:wxhms){
+                                                        if(o3.getString("objValue").equals(o2.getString("objValue"))){
+                                                            b = true;
+                                                            break;
+                                                        }else{
+                                                            continue;
+                                                        }
                                                     }
+                                                    if(!b){wxhms.add(o2);}
                                                 }
-                                                if(!b){wxhms.add(o2);}
-                                            }
-                                        }else if(o1.getString("objType").equals("558")){
-                                            if(qqhms.isEmpty()){
-                                                qqhms.add(o2);
-                                            }else{
-                                                boolean b = false;
-                                                for (JSONObject o3:qqhms){
-                                                    if(o3.getString("objValue").equals(o2.getString("objValue"))){
-                                                        b = true;
-                                                        break;
-                                                    }else{
-                                                        continue;
+                                            }else if(o1.getString("objType").equals("558")){ //梳理添加QQ号码
+                                                if(qqhms.isEmpty()){
+                                                    qqhms.add(o2);
+                                                }else{
+                                                    boolean b = false;
+                                                    for (JSONObject o3:qqhms){
+                                                        if(o3.getString("objValue").equals(o2.getString("objValue"))){
+                                                            b = true;
+                                                            break;
+                                                        }else{
+                                                            continue;
+                                                        }
                                                     }
+                                                    if(!b){qqhms.add(o2);}
                                                 }
-                                                if(!b){qqhms.add(o2);}
                                             }
                                         }
                                     }
                                 }
                             }
+                            object.put("wxhms",wxhms);
+                            object.put("qqhms",qqhms);
                         }
-                        object.put("wxhms",wxhms);
-                        object.put("qqhms",qqhms);
                         if(sjhms.isEmpty()){
                             sjhms.add(object);
                         }else{
@@ -181,8 +184,8 @@ public class IphoneTrackServiceImpl implements IphoneTrackService {
     public Map<String,Object> iphoneTrackForSjhm(String obj,String kssj,String jssj) throws Exception {
         Map<String,Object> resultMap = null;
         String url = gettrack_url + "&objectValue="+obj+"&startTime="+kssj+"&endTime="+jssj;
-        //String result = HttpUtil.doGet(url);
-        String result = "{\"results\":[{\"address\":\"中国重庆北碚保亿紫园无线网络资源点\",\"base\":\"null\",\"j\":106.46750041645927,\"objectType\":4314,\"objectTypeName\":\"IMSI\",\"objectValue\":\"460001180780041\",\"source\":1046,\"sourceName\":\"4G认证\",\"source_md5\":\"FMrkzI8rgzeciALkGIwi6Q==\",\"timestamp\":1533276986000,\"w\":29.72508301582967},{\"address\":\" \",\"base\":\"null\",\"j\":106.46750041645927,\"objectType\":4314,\"objectTypeName\":\"IMSI\",\"objectValue\":\"460001180780041\",\"source\":1046,\"sourceName\":\"4G认证\",\"source_md5\":\"2dcoWfhPoRRw5GzanGHj0A==\",\"timestamp\":1533276936000,\"w\":29.72508301582967},{\"address\":\"中国重庆合川三汇兴旺街资源点\",\"base\":\"460003333db65682\",\"j\":106.5964763499098,\"objectType\":4314,\"objectTypeName\":\"IMSI\",\"objectValue\":\"460001180780041\",\"source\":1046,\"sourceName\":\"4G认证\",\"source_md5\":\"nj7A/fyzWq57tTBYdKIsjw==\",\"timestamp\":1533104872000,\"w\":30.0796412256528}],\"status\":\"ok\"}";
+        String result = HttpUtil.doGet(url);
+        //String result = "{\"results\":[{\"address\":\"中国重庆北碚保亿紫园无线网络资源点\",\"base\":\"null\",\"j\":106.46750041645927,\"objectType\":4314,\"objectTypeName\":\"IMSI\",\"objectValue\":\"460001180780041\",\"source\":1046,\"sourceName\":\"4G认证\",\"source_md5\":\"FMrkzI8rgzeciALkGIwi6Q==\",\"timestamp\":1533276986000,\"w\":29.72508301582967},{\"address\":\" \",\"base\":\"null\",\"j\":106.46750041645927,\"objectType\":4314,\"objectTypeName\":\"IMSI\",\"objectValue\":\"460001180780041\",\"source\":1046,\"sourceName\":\"4G认证\",\"source_md5\":\"2dcoWfhPoRRw5GzanGHj0A==\",\"timestamp\":1533276936000,\"w\":29.72508301582967},{\"address\":\"中国重庆合川三汇兴旺街资源点\",\"base\":\"460003333db65682\",\"j\":106.5964763499098,\"objectType\":4314,\"objectTypeName\":\"IMSI\",\"objectValue\":\"460001180780041\",\"source\":1046,\"sourceName\":\"4G认证\",\"source_md5\":\"nj7A/fyzWq57tTBYdKIsjw==\",\"timestamp\":1533104872000,\"w\":30.0796412256528}],\"status\":\"ok\"}";
         JSONObject jsonObejct = JSONObject.parseObject(result);
         if(jsonObejct != null){
             JSONArray jsonArray = jsonObejct.getJSONArray("results");
@@ -256,8 +259,8 @@ public class IphoneTrackServiceImpl implements IphoneTrackService {
     @Override
     public JSONObject getObjectRelation(String obj) throws Exception {
         String url = objectrelation_url+"&objectValue="+obj;
-        //String result = HttpUtil.doGet(url);
-        String result = "{\"results\":[{\"ccv \":227,\"first_timestamp\":1531908084000,\"objectFromType\":4394,\"objectFromTypeName\":\"电话号码\",\"objectFromValue\":\"15129457465\",\"objectToType\":4314,\"objectToTypeName\":\"IMSI\",\"objectToValue\":\"460001180780041\",\"relativeType\":4402,\"relativeTypeName\":\"手机-IMSI\",\"source\":1094,\"sourceName\":\"4G-微信\",\"source_md5\":\"cfnQ37fBveUMP7kTZJqoDA==\",\"timestamp\":1533743041000},{\"count\":726,\"first_timestamp\":1531908024000,\"objectFromType\":4394,\"objectFromTypeName\":\"电话号码\",\"objectFromValue\":\"15129457465\",\"objectToType\":4314,\"objectToTypeName\":\"IMSI\",\"objectToValue\":\"460001180780041\",\"relativeType\":4402,\"relativeTypeName\":\"手机-IMSI\",\"source\":1046,\"sourceName\":\"4G认证\",\"source_md5\":\"lgnna+LmDFyEJ+BTVmtmQg==\",\"timestamp\":1533745282000}],\"status\":\"ok\"}";
+        String result = HttpUtil.doGet(url);
+        //String result = "{\"results\":[{\"ccv \":227,\"first_timestamp\":1531908084000,\"objectFromType\":4394,\"objectFromTypeName\":\"电话号码\",\"objectFromValue\":\"15129457465\",\"objectToType\":4314,\"objectToTypeName\":\"IMSI\",\"objectToValue\":\"460001180780041\",\"relativeType\":4402,\"relativeTypeName\":\"手机-IMSI\",\"source\":1094,\"sourceName\":\"4G-微信\",\"source_md5\":\"cfnQ37fBveUMP7kTZJqoDA==\",\"timestamp\":1533743041000},{\"count\":726,\"first_timestamp\":1531908024000,\"objectFromType\":4394,\"objectFromTypeName\":\"电话号码\",\"objectFromValue\":\"15129457465\",\"objectToType\":4314,\"objectToTypeName\":\"IMSI\",\"objectToValue\":\"460001180780041\",\"relativeType\":4402,\"relativeTypeName\":\"手机-IMSI\",\"source\":1046,\"sourceName\":\"4G认证\",\"source_md5\":\"lgnna+LmDFyEJ+BTVmtmQg==\",\"timestamp\":1533745282000}],\"status\":\"ok\"}";
         JSONObject jsonObejct = JSONObject.parseObject(result);
         if(jsonObejct != null){
             JSONArray jsonArray = jsonObejct.getJSONArray("results");

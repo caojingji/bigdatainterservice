@@ -31,6 +31,19 @@ public class DataServiceImpl implements DataService {
 
     /**
      *
+     * @Description: 根据日时段查询每个日时段排行前五的轨迹地址
+     * @Param:
+     * @param trackFilter
+     * @return: java.util.List<com.founder.interservice.model.Track>
+     * @Author: cao peng
+     * @date: 2018/8/17 0017-14:15
+     */
+    public List<Track> queryTracksByRSD(TrackFilter trackFilter) throws Exception{
+        return trackMapper.queryTracksByRSD(trackFilter);
+    }
+
+    /**
+     *
      * @Description: 查询轨迹次数最多的前五轨迹信息
      * @Param:
      * @param trackFilter 封装了查询提哦案件
@@ -40,6 +53,20 @@ public class DataServiceImpl implements DataService {
      */
     public List<Track> queryTrackBefore5(TrackFilter trackFilter) throws  Exception{
         return trackMapper.queryTrackBefore5(trackFilter);
+    }
+
+    /**
+    *
+    * @Description: 不分页根据条件查询Track
+    * @Param:
+        * @param trackFilter 查询条件
+    * @return:
+    * @Author: cao peng
+    * @date: 2018/8/16 0016-17:41
+    */
+    @Override
+    public List<Track> queryTracksListNoPage(TrackFilter trackFilter) throws Exception{
+        return trackMapper.queryTracksListNoPage(trackFilter);
     }
 
     /**

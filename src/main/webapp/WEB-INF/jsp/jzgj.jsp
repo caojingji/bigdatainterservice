@@ -62,9 +62,9 @@
 			<span class="">
 				结果展示：
 			</span>
-            <div id = "resultView" style = "width:100%;height:400px;border-collapse: collapse;background-color: rgba(255,255,255,0.75);text-align:left;">
+            <pre id = "resultView" style = "width:100%;border-collapse: collapse;background-color: rgba(255,255,255,0.75);text-align:left;">
 
-            </div>
+            </pre>
         </div>
     </div>
 </div>
