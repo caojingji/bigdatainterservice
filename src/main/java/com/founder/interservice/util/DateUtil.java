@@ -27,11 +27,11 @@ public class DateUtil {
 
 	private static String datetimePattern = "yyyy-MM-dd HH:mm:ss";
 
-	private static String dateminutePattern = "yyyy-MM-dd HH:mm";//ת�������� by-fujh
+	private static String dateminutePattern = "yyyy-MM-dd HH:mm";
 
-	private static String datePattern_CN = "yyyy��M��d��";
+	private static String datePattern_CN = "yyyy年MM月dd月";
 
-	private static String datetimePattern_CN = "yyyy��M��d��Hʱm��";
+	private static String datetimePattern_CN = "yyyy年MM月dd月 HH时mm分ss秒";
 
 	public static String getDatePattern() {
 		return datePattern;

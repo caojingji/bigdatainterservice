@@ -20,17 +20,6 @@
 		<!--结果 table-->
 		<div class="result" style="padding-bottom:30px;">
 			<table class="easyui-datagrid" id="gjzsTable" style="border-top:1px dashed #ccc;" width="100%">
-                <thead>
-                	<tr>
-                		<th data-options="field:'序号',align:'center'" style="width:10%;text-align:center;">序号</th>               
-                		<th data-options="field:'IMSI',align:'center'" style="width:20%;text-align:center;">IMSI</th>    
-			            <th data-options="field:'经度',align:'center'" style="width:15%;">经度</th>    
-			            <th data-options="field:'纬度',align:'center'" style="width:15%;">纬度</th> 
-			            <th data-options="field:'抓取时间',align:'center'" style="width:20%;">抓取时间</th> 
-			            <th data-options="field:'登记时间',align:'center'" style="width:20%;">登记时间
-						</th>                           
-                    </tr>
-                </thead>
                 <tbody>
 
                 </tbody>
@@ -70,7 +59,7 @@ $(function(){
 	    showFooter: true,
 		pageNumber:1,
         loadFilter: function(data){
-
+            console.log(JSON.stringify(data));
             return data;
         }
     });

@@ -27,6 +27,9 @@ public enum ResultEnum {
     TIME_PARAM_NOTNULL(7,"起止时间必传！"),
     TIME_PARAM_ERROR(8,"时间格式错误！"),
     TIME_APRAM_ERROR2(9,"结束时间必须大于开始时间！"),
+
+    TASK_SEND_ERROR(22,"任务发送失败！"),
+
     RESULT_ERROR(55,"发生了未知错误！"),
     ;
 

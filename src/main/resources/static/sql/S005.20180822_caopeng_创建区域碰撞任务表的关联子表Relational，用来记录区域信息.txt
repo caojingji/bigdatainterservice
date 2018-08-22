@@ -1,0 +1,89 @@
+INSERT INTO SYS_DBLOG(SID,STATUS)VALUES('S005',0);
+COMMIT;
+-------------------------------------------------------------------------------------------
+
+--创建区域碰撞区域实体表
+CREATE TABLE XZXT.TB_ST_REGIONAL
+(
+    regional_id VARCHAR2(23 BYTE),
+    task_id VARCHAR2(100 BYTE),
+    start_time Date DEFAULT sysdate,
+    end_time Date DEFAULT sysdate,
+    lc varchar2(1000),
+    name VARCHAR2(50 BYTE),
+    source VARCHAR2(10 BYTE),
+    DJSJ DATE               DEFAULT sysdate
+)TABLESPACE TBS_BIGDATA
+  PCTUSED    0
+  PCTFREE    10
+  INITRANS   1
+  MAXTRANS   255
+  STORAGE    (
+              INITIAL          64K
+              NEXT             1M
+              MINEXTENTS       1
+              MAXEXTENTS       UNLIMITED
+              PCTINCREASE      0
+              BUFFER_POOL      DEFAULT
+             )
+  LOGGING
+  NOCOMPRESS
+  NOCACHE
+  NOPARALLEL
+  MONITORING;
+
+COMMENT ON table XZXT.TB_ST_REGIONAL is '区域碰撞区域实体表';
+COMMENT ON COLUMN XZXT.TB_ST_REGIONAL.regional_id IS '区域ID';
+
+COMMENT ON COLUMN XZXT.TB_ST_REGIONAL.task_id IS '所属任务ID';
+
+COMMENT ON COLUMN XZXT.TB_ST_REGIONAL.start_time IS '开始时间';
+
+COMMENT ON COLUMN XZXT.TB_ST_REGIONAL.end_time IS '结束时间';
+
+COMMENT ON COLUMN XZXT.TB_ST_REGIONAL.lc IS '组成区域的经纬度';
+
+COMMENT ON COLUMN XZXT.TB_ST_REGIONAL.name IS '区域名称';
+
+COMMENT ON COLUMN XZXT.TB_ST_REGIONAL.source IS '数据源';
+
+COMMENT ON COLUMN XZXT.TB_ST_REGIONAL.DJSJ IS '登记时间';
+
+--创建主键
+CREATE UNIQUE INDEX PK_TB_ST_REGIONAL_id ON XZXT.TB_ST_REGIONAL
+(regional_id)
+LOGGING
+TABLESPACE TBS_INDEX
+PCTFREE    10
+INITRANS   2
+MAXTRANS   255
+STORAGE    (
+            INITIAL          64K
+            NEXT             1M
+            MINEXTENTS       1
+            MAXEXTENTS       UNLIMITED
+            PCTINCREASE      0
+            BUFFER_POOL      DEFAULT
+           )
+NOPARALLEL;
+
+ALTER TABLE XZXT.TB_ST_REGIONAL ADD (
+  CONSTRAINT PK_TB_ST_REGIONAL_id
+ PRIMARY KEY
+ (regional_id)
+    USING INDEX 
+    TABLESPACE TBS_INDEX
+    PCTFREE    10
+    INITRANS   2
+    MAXTRANS   255
+    STORAGE    (
+                INITIAL          64K
+                NEXT             1M
+                MINEXTENTS       1
+                MAXEXTENTS       UNLIMITED
+                PCTINCREASE      0
+               ));
+
+-------------------------------------------------------------------------------------------
+UPDATE SYS_DBLOG SET STATUS=1 WHERE SID='S005';
+COMMIT;

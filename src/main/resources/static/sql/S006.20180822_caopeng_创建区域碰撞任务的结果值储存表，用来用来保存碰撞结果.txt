@@ -1,0 +1,83 @@
+INSERT INTO XZXT.SYS_DBLOG(SID,STATUS)VALUES('S006',0);
+COMMIT;
+-------------------------------------------------------------------------------------------
+
+--创建区域碰撞结果储存表
+CREATE TABLE XZXT.TB_ST_RegionalTaskResult
+(
+    XXZJBH VARCHAR2(23 BYTE),
+    task_id VARCHAR2(100 BYTE),
+    object_type VARCHAR2(10 byte),
+    object_type_name VARCHAR2(100 byte),
+    object_value varchar2(50),
+    DJSJ DATE               DEFAULT sysdate
+)TABLESPACE TBS_BIGDATA
+  PCTUSED    0
+  PCTFREE    10
+  INITRANS   1
+  MAXTRANS   255
+  STORAGE    (
+              INITIAL          64K
+              NEXT             1M
+              MINEXTENTS       1
+              MAXEXTENTS       UNLIMITED
+              PCTINCREASE      0
+              BUFFER_POOL      DEFAULT
+             )
+  LOGGING
+  NOCOMPRESS
+  NOCACHE
+  NOPARALLEL
+  MONITORING;
+
+COMMENT ON table XZXT.TB_ST_RegionalTaskResult is '区域碰撞结果储存表';
+COMMENT ON COLUMN XZXT.TB_ST_RegionalTaskResult.XXZJBH IS '主键编号';
+
+COMMENT ON COLUMN XZXT.TB_ST_RegionalTaskResult.task_id IS '所属任务ID';
+
+COMMENT ON COLUMN XZXT.TB_ST_RegionalTaskResult.object_type IS '对象类型编码';
+
+COMMENT ON COLUMN XZXT.TB_ST_RegionalTaskResult.object_type_name IS '对象类型名称';
+
+COMMENT ON COLUMN XZXT.TB_ST_RegionalTaskResult.object_value IS '对象值';
+
+COMMENT ON COLUMN XZXT.TB_ST_RegionalTaskResult.DJSJ IS '登记时间';
+
+--创建主键
+CREATE UNIQUE INDEX PK_TaskResult_XXZJBH ON XZXT.TB_ST_RegionalTaskResult
+(XXZJBH)
+LOGGING
+TABLESPACE TBS_INDEX
+PCTFREE    10
+INITRANS   2
+MAXTRANS   255
+STORAGE    (
+            INITIAL          64K
+            NEXT             1M
+            MINEXTENTS       1
+            MAXEXTENTS       UNLIMITED
+            PCTINCREASE      0
+            BUFFER_POOL      DEFAULT
+           )
+NOPARALLEL;
+
+ALTER TABLE XZXT.TB_ST_RegionalTaskResult ADD (
+  CONSTRAINT PK_TaskResult_XXZJBH
+ PRIMARY KEY
+ (XXZJBH)
+    USING INDEX 
+    TABLESPACE TBS_INDEX
+    PCTFREE    10
+    INITRANS   2
+    MAXTRANS   255
+    STORAGE    (
+                INITIAL          64K
+                NEXT             1M
+                MINEXTENTS       1
+                MAXEXTENTS       UNLIMITED
+                PCTINCREASE      0
+               ));
+
+-------------------------------------------------------------------------------------------
+UPDATE XZXT.SYS_DBLOG SET STATUS=1 WHERE SID='S006';
+COMMIT;

@@ -11,6 +11,7 @@ import com.founder.interservice.service.DataService;
 import com.founder.interservice.service.IphoneTrackService;
 import com.founder.interservice.util.DateUtil;
 import com.founder.interservice.util.EasyUIPage;
+import com.founder.interservice.util.HttpClient;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -34,7 +35,7 @@ import java.util.Map;
  * @Version: 1.0
  */
 @Controller
-@CrossOrigin
+@CrossOrigin //跨域访问
 public class DataController {
 
     @Autowired
@@ -70,6 +71,7 @@ public class DataController {
     @RequestMapping(value = "/toGjzs",method = {RequestMethod.POST,RequestMethod.GET})
     public String toGjzs(String objValue, String kssj, String jssj, Model model){
         try{
+            //先调动网安接口拿取数据入库保存
             List<String> imsis = new ArrayList<>();
             JSONObject jsonObject = iphoneTrackService.getObjectRelation(objValue);
             if(jsonObject != null){
@@ -97,9 +99,9 @@ public class DataController {
         }catch(Exception e){
             e.printStackTrace();
         }
-        model.addAttribute("jzgjzs", objValue);
-        model.addAttribute("jzgjzs", kssj);
-        model.addAttribute("jzgjzs", jssj);
+        model.addAttribute("objValue", objValue);
+        model.addAttribute("kssj", kssj);
+        model.addAttribute("jssj", jssj);
         return "jzgjzs";
     }
 
@@ -113,7 +115,8 @@ public class DataController {
     * @date: 2018/8/16 0016-17:23
     */
     @RequestMapping(value = "/toGjzsPgis",method = {RequestMethod.GET,RequestMethod.POST})
-    public String toGjzsPgis(RedirectAttributes redirectAttributes,
+    public void toGjzsPgis(
+                           HttpServletResponse httpServletResponse,
                            String objValue, String kssj, String jssj){
         String paramStr = null;
         try{
@@ -164,12 +167,13 @@ public class DataController {
                     }
                 }
             }
-           // httpServletResponse.sendRedirect(PGIS_URL + "markers="+paramStr);
-            redirectAttributes.addFlashAttribute("markers",paramStr);
-            return "redirect:"+ PGIS_URL;
+            //httpServletResponse.sendRedirect(PGIS_URL + "markers="+paramStr);
+            //使用post发送请求
+            HttpClient httpClient = new HttpClient(httpServletResponse);
+            httpClient.setParameter("markers",paramStr);
+            httpClient.sendByPost(PGIS_URL);
         }catch (Exception e){
             e.printStackTrace();
-            return "redirect:"+ PGIS_URL;
         }
     }
     /**
@@ -280,20 +284,27 @@ public class DataController {
             trackFilter.setJssj(jssj);
             trackFilter.setBegin(begin);
             trackFilter.setEnd(end);
-            trackFilter.setObjectvalue(getImsiStr(objValue));
-            Map<String,Object> resultMap = dataService.queryTracksList(trackFilter);
-            int total = (int)resultMap.get("total");
-            List<Track> tracks = (List<Track>)resultMap.get("tracks");
-            if(tracks != null && !tracks.isEmpty()){
-                trackVOS = new ArrayList<>();
-                for (Track track: tracks) {
-                    TrackVO trackVO = new TrackVO();
-                    BeanUtils.copyProperties(track,trackVO);
-                    trackVOS.add(trackVO);
+            String imsiStr = getImsiStr(objValue);
+            if(imsiStr != null && !imsiStr.isEmpty()){
+                trackFilter.setObjectvalue(imsiStr);
+                Map<String,Object> resultMap = dataService.queryTracksList(trackFilter);
+                int total = (int)resultMap.get("total");
+                List<Track> tracks = (List<Track>)resultMap.get("tracks");
+                if(tracks != null && !tracks.isEmpty()){
+                    trackVOS = new ArrayList<>();
+                    for (Track track: tracks) {
+                        TrackVO trackVO = new TrackVO();
+                        BeanUtils.copyProperties(track,trackVO);
+                        trackVOS.add(trackVO);
+                    }
                 }
+                objectMap.put("total", total);
+                objectMap.put("rows", trackVOS);
+            }else{
+                objectMap.put("total", 0);
+                objectMap.put("rows", new ArrayList<>());
             }
-            objectMap.put("total", total);
-            objectMap.put("rows", trackVOS);
+
         }catch (Exception e){
             e.printStackTrace();
         }

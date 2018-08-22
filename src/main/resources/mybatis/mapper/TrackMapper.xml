@@ -29,30 +29,35 @@
     </sql>
 
     <select id="getTracks" parameterType="trackFilter" resultType="track">
-        select
-          tt.*
-        from (
-            select
-            t.xxzjbh,
-            t.address,
-            t.objecttype,
-            t.objecttypename,
-            t.objectvalue,
-            t.j,
-            t.w,
-            t.timestr,
-            t.timestamp,
-            rownum as rn
-            from track t
+            select *
+                from (
+                  select
+                        t1.*,
+                        rownum as rn
+                    from (
+                        select
+                            t.xxzjbh,
+                            t.address,
+                            t.objecttype,
+                            t.objecttypename,
+                            t.objectvalue,
+                            t.j,
+                            t.w,
+                            t.timestr,
+                            t.timestamp
+                        from track t
+                        <where>
+                            <include refid="queryTrack_where"/>
+                        </where>
+                        order by t.timestamp desc
+                 )t1
+                <where>
+                    and rownum <![CDATA[ <= ]]> #{end }
+                </where>
+            ) t2
             <where>
-                <include refid="queryTrack_where"/>
-                and rownum <![CDATA[ <= ]]> #{end }
+                rn <![CDATA[ > ]]> #{begin }
             </where>
-        )tt
-        <where>
-            and tt.rn <![CDATA[ > ]]> #{begin }
-        </where>
-        order by tt.timestamp desc
     </select>
     <select id="getTracksTotalCount" parameterType="trackFilter" resultType="java.lang.Integer">
         select count(*)
@@ -106,7 +111,7 @@
                                 or
                                 to_char(to_date(t.timestr,'yyyy-MM-dd HH24:mi:ss'),'HH24:mi') between '00:00' and '06:00' then '夜间'
                         end as daystr
-                    from XZXT.track t
+                    from track t
                     <where>
                         <include refid="queryTrack_where"/>
                     </where>
@@ -114,7 +119,7 @@
                 where t1.daystr = #{base}
             ) t2
           group by t2.address
-          order by count(*)
+          order by count(*) desc
         )
         where rownum <![CDATA[ <= ]]> 5
     </select>

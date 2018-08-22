@@ -148,20 +148,20 @@ public class IphoneTrackServiceImpl implements IphoneTrackService {
                             }
                             object.put("wxhms",wxhms);
                             object.put("qqhms",qqhms);
-                        }
-                        if(sjhms.isEmpty()){
-                            sjhms.add(object);
-                        }else{
-                            boolean b = false;
-                            for (JSONObject o:sjhms){
-                                if(o.getString("objValue").equals(children.getString("objValue"))){
-                                    b = true;
-                                    break;
-                                }else{
-                                    continue;
+                            if(sjhms.isEmpty()){
+                                sjhms.add(object);
+                            }else{
+                                boolean b = false;
+                                for (JSONObject o:sjhms){
+                                    if(o.getString("objValue").equals(children.getString("objValue"))){
+                                        b = true;
+                                        break;
+                                    }else{
+                                        continue;
+                                    }
                                 }
+                                if(!b){sjhms.add(object);}
                             }
-                            if(!b){sjhms.add(object);}
                         }
                     }
                 }
