@@ -52,7 +52,8 @@ public class RegionalAnalysisController {
     public ModelAndView sendRegionalAnalysisTask(String paramStr){
         try{
             paramStr = "{\"taskName\":\"test\",\"perform\":{\"expression\":\"A1∩A2\",\"regional\":[{\"endTime\":1534867200000,\"lc\":[{\"j\":106.2829,\"w\":29.4457},{\"j\":106.301,\"w\":29.4536},{\"j\":106.3032,\"w\":29.4534},{\"j\":106.3012,\"w\":29.4428},{\"j\":106.2919,\"w\":29.4350}],\"name\":\"A1\",\"source\":[0],\"startTime\":1534262400000},{\"endTime\":1534867200000,\"lc\":[{\"j\":106.2720,\"w\":29.4415},{\"j\":106.2817,\"w\":29.4449},{\"j\":106.2850,\"w\":29.4421},{\"j\":106.2950,\"w\":29.4334},{\"j\":106.2740,\"w\":29.4340}],\"name\":\"A2\",\"source\":[0],\"startTime\":1534262400000}]},\"taskCaseId\":\"65\"}";
-            String taskId = "123123131231";//HttpUtil.doPost(REGION_ALANALYSIS_URL,paramStr);
+            //String taskId = "123123131231";
+            String taskId = HttpUtil.doPost(REGION_ALANALYSIS_URL,paramStr);
             ModelAndView modelAndView = new ModelAndView();
             if(taskId != null && !taskId.isEmpty()){
                 JSONObject jsonObject = JSONObject.parseObject(paramStr);

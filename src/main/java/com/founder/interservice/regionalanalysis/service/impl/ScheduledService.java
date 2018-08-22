@@ -53,7 +53,7 @@ public class ScheduledService {
      * @date: 2018/8/22 0022-16:35
      */
     @Scheduled(cron = "0 0/1 * * * ?") //每隔五分钟执行一次
-    public String queryTaskResult(){
+    public void queryTaskResult(){
         System.out.println("=============开始执行定时任务================");
         try{
             //1 下去查询任务表中 progress = 0  and status = QUEUEING的任务
@@ -65,16 +65,16 @@ public class ScheduledService {
             if(taskList != null && !taskList.isEmpty()){
                 for (RegionalTask task:taskList) {
                     String status_url = REGIONAL_ANALYSIS_TASK_STATUS + "&taskId="+task.getTaskId();
-//                    String statusStr = HttpUtil.doGet(status_url);
-                    String statusStr = "{\"progress\":1,\"state\":\"FINISHED\"}";
+                    String statusStr = HttpUtil.doGet(status_url);
+                    //String statusStr = "{\"progress\":1,\"state\":\"FINISHED\"}";
                     if(statusStr != null && !statusStr.isEmpty()){
                         JSONObject jsonObject = JSONObject.parseObject(statusStr);
                         int progress = jsonObject.getIntValue("progress");
                         String state = jsonObject.getString("state");
                         if(progress == 1 && "FINISHED".equals(state)){ //任务执行完成  这时需要去取回任务结果值
                             String info_url = REGIONAL_ANALYSIS_TASK_INFO + "taskId=" + task.getTaskId();
-                            //String taskInfoResult = HttpUtil.doGet(info_url);
-                            String taskInfoResult = "{\"results\":[{\"objectType\":6424,\"objectTypeName\":\"汽车蓝色号牌\",\"objectValue\":\"渝B7T762\"},{\"objectType\":4314,\"objectTypeName\":\"IMSI\",\"objectValue\":\"460092380008864\"},{\"objectType\":4329,\"objectTypeName\":\"MAC地址\",\"objectValue\":\"DAA119018598\"}],\"status\":\"ok\"}";
+                            String taskInfoResult = HttpUtil.doGet(info_url);
+                            //String taskInfoResult = "{\"results\":[{\"objectType\":6424,\"objectTypeName\":\"汽车蓝色号牌\",\"objectValue\":\"渝B7T762\"},{\"objectType\":4314,\"objectTypeName\":\"IMSI\",\"objectValue\":\"460092380008864\"},{\"objectType\":4329,\"objectTypeName\":\"MAC地址\",\"objectValue\":\"DAA119018598\"}],\"status\":\"ok\"}";
                             if(taskInfoResult!= null && !taskInfoResult.isEmpty()){
                                 JSONObject o = JSONObject.parseObject(taskInfoResult);
                                 JSONArray jsonArray = o.getJSONArray("results");
@@ -103,7 +103,6 @@ public class ScheduledService {
         }catch (Exception e){
             e.printStackTrace();
         }
-        return null;
     }
 
 }
