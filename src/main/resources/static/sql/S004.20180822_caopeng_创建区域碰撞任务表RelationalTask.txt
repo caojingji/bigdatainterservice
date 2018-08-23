@@ -5,7 +5,7 @@ COMMIT;
 --创建区域碰撞任务的实体表
 CREATE TABLE XZXT.TB_ST_REGIONALTASK
 (
-    task_id VARCHAR2(500 BYTE),
+    task_id VARCHAR2(100 BYTE),
     task_name VARCHAR2(50 BYTE),
     expression VARCHAR2(100 BYTE),
     progress varchar2(10),

@@ -196,7 +196,6 @@ public class DataController {
             TrackFilter trackFilter = new TrackFilter();
             trackFilter.setKssj(kssj);
             trackFilter.setJssj(jssj);
-            trackFilter.setObjectvalue(getImsiStr(objValue));
             if("01".equals(base)){
                 trackFilter.setBase("夜间");
             }else if ("02".equals(base)) {
@@ -206,15 +205,22 @@ public class DataController {
             }else if("04".equals(base)){
                 trackFilter.setBase("傍晚");
             }
-            List<Track> tracks = dataService.queryTracksByRSD(trackFilter);
-            if(tracks != null && !tracks.isEmpty()){
-                trackVOS = new ArrayList<>();
-                for (Track track: tracks) {
-                    TrackVO trackVO = new TrackVO();
-                    BeanUtils.copyProperties(track,trackVO);
-                    trackVOS.add(trackVO);
+            String imsis = getImsiStr(objValue);
+            if(imsis != null && !imsis.isEmpty()){
+                trackFilter.setObjectvalue(imsis);
+                List<Track> tracks = dataService.queryTracksByRSD(trackFilter);
+                if(tracks != null && !tracks.isEmpty()){
+                    trackVOS = new ArrayList<>();
+                    for (Track track: tracks) {
+                        TrackVO trackVO = new TrackVO();
+                        BeanUtils.copyProperties(track,trackVO);
+                        trackVOS.add(trackVO);
+                    }
                 }
+            }else{
+                trackVOS = new ArrayList<>();
             }
+
         }catch (Exception e){
             e.printStackTrace();
         }
@@ -238,15 +244,20 @@ public class DataController {
             TrackFilter trackFilter = new TrackFilter();
             trackFilter.setKssj(kssj);
             trackFilter.setJssj(jssj);
-            trackFilter.setObjectvalue(getImsiStr(objValue));
-            List<Track> tracks = dataService.queryTrackBefore5(trackFilter);
-            if(tracks != null && !tracks.isEmpty()){
-                trackVOS = new ArrayList<>();
-                for (Track track: tracks) {
-                    TrackVO trackVO = new TrackVO();
-                    BeanUtils.copyProperties(track,trackVO);
-                    trackVOS.add(trackVO);
+            String imsis = getImsiStr(objValue);
+            if(imsis != null && !imsis.isEmpty()){
+                trackFilter.setObjectvalue(imsis);
+                List<Track> tracks = dataService.queryTrackBefore5(trackFilter);
+                if(tracks != null && !tracks.isEmpty()){
+                    trackVOS = new ArrayList<>();
+                    for (Track track: tracks) {
+                        TrackVO trackVO = new TrackVO();
+                        BeanUtils.copyProperties(track,trackVO);
+                        trackVOS.add(trackVO);
+                    }
                 }
+            }else{
+                trackVOS = new ArrayList<>();
             }
         }catch (Exception e){
             e.printStackTrace();

@@ -14,9 +14,8 @@ import com.founder.interservice.util.ResultVOUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.scheduling.annotation.Scheduled;
-import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
 import java.util.ArrayList;
@@ -30,7 +29,7 @@ import java.util.List;
  * @CreateDate： 2018-08-21 18:57
  * @Version: 1.0
  */
-@RestController
+@Controller
 @CrossOrigin  //跨域访问
 public class RegionalAnalysisController {
 
@@ -38,6 +37,12 @@ public class RegionalAnalysisController {
     private RegionalAnalysisService regionalAnalysisService;
     @Value(value = "${wabigdata.regionalAnalysisTask.url}")
     private String REGION_ALANALYSIS_URL; //发送任务接口
+
+
+    @RequestMapping(value = "/toParamJsp")
+    public String toParamJsp(){
+        return "taskParam";
+    }
 
     /**
      *
@@ -48,10 +53,13 @@ public class RegionalAnalysisController {
      * @Author: cao peng
      * @date: 2018/8/22 0022-16:34
      */
-    @RequestMapping(value = "/sendRegionalAnalysisTask")
+    @ResponseBody
+    @RequestMapping(value = "/sendRegionalAnalysisTask",method = {RequestMethod.GET,RequestMethod.POST})
     public ModelAndView sendRegionalAnalysisTask(String paramStr){
         try{
-            paramStr = "{\"taskName\":\"test\",\"perform\":{\"expression\":\"A1∩A2\",\"regional\":[{\"endTime\":1534867200000,\"lc\":[{\"j\":106.2829,\"w\":29.4457},{\"j\":106.301,\"w\":29.4536},{\"j\":106.3032,\"w\":29.4534},{\"j\":106.3012,\"w\":29.4428},{\"j\":106.2919,\"w\":29.4350}],\"name\":\"A1\",\"source\":[0],\"startTime\":1534262400000},{\"endTime\":1534867200000,\"lc\":[{\"j\":106.2720,\"w\":29.4415},{\"j\":106.2817,\"w\":29.4449},{\"j\":106.2850,\"w\":29.4421},{\"j\":106.2950,\"w\":29.4334},{\"j\":106.2740,\"w\":29.4340}],\"name\":\"A2\",\"source\":[0],\"startTime\":1534262400000}]},\"taskCaseId\":\"65\"}";
+            if(paramStr == null || "".equals(paramStr)){
+                paramStr = "{\"taskName\":\"test\",\"perform\":{\"expression\":\"A1∩A2\",\"regional\":[{\"endTime\":1534867200000,\"lc\":[{\"j\":106.2829,\"w\":29.4457},{\"j\":106.301,\"w\":29.4536},{\"j\":106.3032,\"w\":29.4534},{\"j\":106.3012,\"w\":29.4428},{\"j\":106.2919,\"w\":29.4350}],\"name\":\"A1\",\"source\":[0],\"startTime\":1534262400000},{\"endTime\":1534867200000,\"lc\":[{\"j\":106.2720,\"w\":29.4415},{\"j\":106.2817,\"w\":29.4449},{\"j\":106.2850,\"w\":29.4421},{\"j\":106.2950,\"w\":29.4334},{\"j\":106.2740,\"w\":29.4340}],\"name\":\"A2\",\"source\":[0],\"startTime\":1534262400000}]},\"taskCaseId\":\"65\"}";
+            }
             //String taskId = "123123131231";
             String taskId = HttpUtil.doPost(REGION_ALANALYSIS_URL,paramStr);
             ModelAndView modelAndView = new ModelAndView();

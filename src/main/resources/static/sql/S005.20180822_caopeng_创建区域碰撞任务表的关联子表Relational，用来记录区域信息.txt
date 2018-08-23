@@ -6,7 +6,7 @@ COMMIT;
 CREATE TABLE XZXT.TB_ST_REGIONAL
 (
     regional_id VARCHAR2(23 BYTE),
-    task_id VARCHAR2(500 BYTE),
+    task_id VARCHAR2(100 BYTE),
     start_time Date DEFAULT sysdate,
     end_time Date DEFAULT sysdate,
     lc varchar2(1000),

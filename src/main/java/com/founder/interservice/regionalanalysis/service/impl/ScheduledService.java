@@ -4,7 +4,6 @@ import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.founder.interservice.regionalanalysis.model.RegionalTask;
 import com.founder.interservice.regionalanalysis.model.RegionalTaskResult;
-import com.founder.interservice.regionalanalysis.repository.RegionalRepository;
 import com.founder.interservice.regionalanalysis.repository.RegionalTaskRepository;
 import com.founder.interservice.regionalanalysis.repository.RegionalTaskResultRepository;
 import com.founder.interservice.util.HttpUtil;
@@ -15,8 +14,8 @@ import org.springframework.data.domain.Example;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Transactional;
 
-import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 
@@ -36,8 +35,6 @@ public class ScheduledService {
     @Value(value = "${wabigdata.regionalAnalysisTaskInfo.url}")
     private String REGIONAL_ANALYSIS_TASK_INFO; //获取任务结果
 
-    @Autowired
-    private RegionalRepository regionalRepository;
     @Autowired
     private RegionalTaskRepository regionalTaskRepository;
     @Autowired
@@ -93,6 +90,7 @@ public class ScheduledService {
                                         if(results == null || results.isEmpty()){
                                             taskResultRepository.save(taskResults);
                                         }
+                                        regionalTaskRepository.updateStatusByTaskId(task.getTaskId());
                                     }
                                 }
                             }
