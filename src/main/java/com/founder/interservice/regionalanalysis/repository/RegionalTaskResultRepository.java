@@ -7,6 +7,7 @@ import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 
 import javax.transaction.Transactional;
+import java.util.List;
 
 /**
  * @ClassName： RegionalRepository
@@ -16,4 +17,5 @@ import javax.transaction.Transactional;
  * @Version: 1.0
  */
 public interface RegionalTaskResultRepository extends JpaRepository<RegionalTaskResult,String> {
+
 }

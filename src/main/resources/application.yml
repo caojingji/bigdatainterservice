@@ -5,10 +5,14 @@ spring:
     view:
       prefix: /WEB-INF/jsp/
       suffix: .jsp
+  jackson:
+    date-format: yyyy-MM-dd HH:mm:ss
+    time-zone: GMT+8
 server:
   port: 8080
   servlet:
     context-path: /
+
 mybatis:
     type-aliases-package: com.founder.interservice.model
     mapper-locations: classpath:mybatis/mapper/*.xml
@@ -38,3 +42,4 @@ wabigdata:
 logging:
   level:
     com.founder.interservice.mapper : trace
+    com.founder.interservice.regionalanalysis.mapper: trace

@@ -9,5 +9,6 @@
         <typeAlias type="com.founder.interservice.model.Track" alias="track" />
         <typeAlias type="com.founder.interservice.querymodel.RelationFilter" alias="relationFilter" />
         <typeAlias type="com.founder.interservice.querymodel.TrackFilter" alias="trackFilter" />
+        <typeAlias type="com.founder.interservice.regionalanalysis.model.RegionalTask" alias="regionalTask" />
     </typeAliases>
 </configuration>

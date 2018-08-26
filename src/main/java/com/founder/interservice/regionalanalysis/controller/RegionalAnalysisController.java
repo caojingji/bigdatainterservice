@@ -4,23 +4,24 @@ import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.founder.interservice.VO.ResultVO;
 import com.founder.interservice.enums.ResultEnum;
+import com.founder.interservice.model.ResultObj;
+import com.founder.interservice.model.TbStRy;
+import com.founder.interservice.regionalanalysis.VO.RegionalTaskResultVO;
+import com.founder.interservice.regionalanalysis.VO.RegionalTaskVO;
 import com.founder.interservice.regionalanalysis.model.Regional;
 import com.founder.interservice.regionalanalysis.model.RegionalTask;
+import com.founder.interservice.regionalanalysis.model.RegionalTaskResult;
 import com.founder.interservice.regionalanalysis.service.RegionalAnalysisService;
-import com.founder.interservice.util.DateUtil;
-import com.founder.interservice.util.HttpUtil;
-import com.founder.interservice.util.KeyUtil;
-import com.founder.interservice.util.ResultVOUtil;
+import com.founder.interservice.service.IphoneTrackService;
+import com.founder.interservice.util.*;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
+import java.util.*;
 
 /**
  * @ClassName： RegionalAnalysisController
@@ -37,11 +38,130 @@ public class RegionalAnalysisController {
     private RegionalAnalysisService regionalAnalysisService;
     @Value(value = "${wabigdata.regionalAnalysisTask.url}")
     private String REGION_ALANALYSIS_URL; //发送任务接口
-
+    @Autowired
+    private IphoneTrackService iphoneTrackService; //调取网安数据接口
 
     @RequestMapping(value = "/toParamJsp")
     public String toParamJsp(){
         return "taskParam";
+    }
+    @RequestMapping("/toTaskListJsp")
+    public  String toTaskListJsp(){
+        return "qypz/skgjpztask";
+    }
+    /**
+     *
+     * @Description: 根据案事件编号查询其下的任务列表
+     * @Param:
+     * @param asjbh 案事件编号
+     * @return: java.util.List<com.founder.interservice.regionalanalysis.VO.RegionalTaskVO>
+     * @Author: cao peng
+     * @date: 2018/8/25 0025-15:55
+     */
+    @RequestMapping("/queryTasksByAsjbh")
+    @ResponseBody
+    public Map<String,Object> queryTasksByAsjbh(String asjbh,
+                                                @RequestParam(value = "page",defaultValue = "0") int page,
+                                                @RequestParam(value = "rows",defaultValue = "0") int rows){
+        Map<String, Object> resultMap = new HashMap<>();
+        List<RegionalTaskVO> regionalTaskVOS = null;
+        try {
+            EasyUIPage easyUIPage = new EasyUIPage();
+            easyUIPage.setPage(page);
+            easyUIPage.setPagePara(rows);
+            int begin = easyUIPage.getBegin();
+            int end = easyUIPage.getEnd();
+            RegionalTask param = new RegionalTask();
+            param.setTaskCaseId(asjbh);
+            param.setStartNum(begin);
+            param.setEndNum(end);
+            Map<String,Object> regionalMap = regionalAnalysisService.queryTasksByAsjbh(param);
+            int total = (int)regionalMap.get("total");
+            List<RegionalTask> regionalTasks = (List<RegionalTask>)regionalMap.get("regionalTasks");
+            if(regionalTasks != null && regionalTasks.size() > 0){
+                regionalTaskVOS = new ArrayList<>();
+                for (RegionalTask task:regionalTasks) {
+                    RegionalTaskVO taskVO = new RegionalTaskVO();
+                    BeanUtils.copyProperties(task,taskVO);
+                    regionalTaskVOS.add(taskVO);
+                }
+            }
+            resultMap.put("total", total);
+            resultMap.put("rows",regionalTaskVOS);
+        }catch (Exception e){
+            e.printStackTrace();
+            resultMap.put("total", 0);
+            resultMap.put("rows", new ArrayList<>());
+        }
+        return resultMap;
+    }
+
+    @RequestMapping(value = "/getTaskResults",method = {RequestMethod.GET,RequestMethod.POST})
+    @ResponseBody
+    public ModelAndView getTaskResults(RegionalTaskResult param){
+        List<RegionalTaskResult> taskResults = null;
+        List<RegionalTaskResultVO> taskResultVOS = new ArrayList<>();
+        ModelAndView modelAndView = new ModelAndView();
+        try {
+            taskResults = regionalAnalysisService.getTaskResults(param);
+            if(taskResults != null && !taskResults.isEmpty()){
+                for(int i = 0; i <= taskResults.size() - 1; i++){
+                    RegionalTaskResultVO taskResultVO = new RegionalTaskResultVO();
+                    BeanUtils.copyProperties(taskResults.get(i),taskResultVO);
+                    String imsi = taskResults.get(i).getObjectValue();
+                    taskResultVO = getRyxxData(imsi,taskResultVO);
+                    taskResultVOS.add(taskResultVO);
+                }
+            }
+            modelAndView.addObject("taskResultVOS",taskResultVOS);
+            modelAndView.setViewName("qypz/skgjpzjgzs");
+        } catch (Exception e) {
+            e.printStackTrace();
+            modelAndView.addObject("taskResultVOS",taskResultVOS);
+            modelAndView.setViewName("qypz/skgjpzjgzs");
+        }
+        return modelAndView;
+    }
+
+    public RegionalTaskResultVO getRyxxData(String imsi,RegionalTaskResultVO taskResultVO) throws Exception{
+        if(!StringUtil.ckeckEmpty(imsi)){
+            //1、 通过身份证号调取对应的电话号码
+            JSONObject jsonObject = iphoneTrackService.getObjectRelation(imsi);
+            if(jsonObject != null){
+                JSONArray jsonArray = jsonObject.getJSONArray("results");
+                if(jsonArray != null && jsonArray.size() > 0){
+                    for (int j = 0; j <= jsonArray.size() - 1;j++){
+                        JSONObject resObj = jsonArray.getJSONObject(j);
+                        String relativeType = resObj.getString("relativeType");
+                        if (relativeType != null && "4402".equals(relativeType)){
+                            String sjhm = (String) resObj.get("objectToValue");
+                            taskResultVO.setSjhm(sjhm);
+                            break;
+                        }
+                    }
+                }
+            }
+        }
+        //2 通过手机号码调取身份证号
+        if(!StringUtil.ckeckEmpty(taskResultVO.getSjhm())){
+            ResultObj resultObj = iphoneTrackService.getObjectRelationAll(taskResultVO.getSjhm(),"00");
+            if(resultObj != null && "1".equals(resultObj.getObjType())){
+                String zjhm = resultObj.getObjValue();
+                taskResultVO.setZjhm(zjhm);
+            }
+        }
+        //3 通过身份证号调取二代证信息
+        if(!StringUtil.ckeckEmpty(taskResultVO.getZjhm())){
+            TbStRy tbStRy = new Qgckzp().getQgckAllxxXml(taskResultVO.getZjhm());
+            taskResultVO.setAddress(tbStRy.getHjdzXzqhdm());//户籍地址
+            if(tbStRy.getCsrqQsrq() != null){
+                taskResultVO.setCsrq(DateUtil.convertDateToChineseString(tbStRy.getCsrqQsrq()));//出生日期
+                taskResultVO.setAge(DateUtil.getAge(tbStRy.getCsrqQsrq())); //age
+            }
+            taskResultVO.setName(tbStRy.getXm());//姓名
+            taskResultVO.setRyzp(tbStRy.getEdzzplj());//人员照片
+        }
+        return taskResultVO;
     }
 
     /**
@@ -57,9 +177,6 @@ public class RegionalAnalysisController {
     @RequestMapping(value = "/sendRegionalAnalysisTask",method = {RequestMethod.GET,RequestMethod.POST})
     public ModelAndView sendRegionalAnalysisTask(String paramStr){
         try{
-            if(paramStr == null || "".equals(paramStr)){
-                paramStr = "{\"taskName\":\"test\",\"perform\":{\"expression\":\"A1∩A2\",\"regional\":[{\"endTime\":1534867200000,\"lc\":[{\"j\":106.2829,\"w\":29.4457},{\"j\":106.301,\"w\":29.4536},{\"j\":106.3032,\"w\":29.4534},{\"j\":106.3012,\"w\":29.4428},{\"j\":106.2919,\"w\":29.4350}],\"name\":\"A1\",\"source\":[0],\"startTime\":1534262400000},{\"endTime\":1534867200000,\"lc\":[{\"j\":106.2720,\"w\":29.4415},{\"j\":106.2817,\"w\":29.4449},{\"j\":106.2850,\"w\":29.4421},{\"j\":106.2950,\"w\":29.4334},{\"j\":106.2740,\"w\":29.4340}],\"name\":\"A2\",\"source\":[0],\"startTime\":1534262400000}]},\"taskCaseId\":\"65\"}";
-            }
             //String taskId = "123123131231";
             String taskId = HttpUtil.doPost(REGION_ALANALYSIS_URL,paramStr);
             ModelAndView modelAndView = new ModelAndView();

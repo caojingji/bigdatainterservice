@@ -1,15 +1,21 @@
 package com.founder.interservice.regionalanalysis.service.impl;
 
+import com.founder.interservice.regionalanalysis.mapper.RegionalTaskMapper;
 import com.founder.interservice.regionalanalysis.model.Regional;
 import com.founder.interservice.regionalanalysis.model.RegionalTask;
+import com.founder.interservice.regionalanalysis.model.RegionalTaskResult;
 import com.founder.interservice.regionalanalysis.repository.RegionalRepository;
 import com.founder.interservice.regionalanalysis.repository.RegionalTaskRepository;
+import com.founder.interservice.regionalanalysis.repository.RegionalTaskResultRepository;
 import com.founder.interservice.regionalanalysis.service.RegionalAnalysisService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Example;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * @ClassName： RegionalAnalysisServiceImpl
@@ -26,6 +32,10 @@ public class RegionalAnalysisServiceImpl implements RegionalAnalysisService {
     private RegionalRepository regionalRepository;
     @Autowired
     private RegionalTaskRepository regionalTaskRepository;
+    @Autowired
+    private RegionalTaskResultRepository taskResultRepository;
+    @Autowired
+    private RegionalTaskMapper regionalTaskMapper;
 
     @Override
     public void saveRegional(Regional regional) throws Exception {
@@ -49,5 +59,30 @@ public class RegionalAnalysisServiceImpl implements RegionalAnalysisService {
     @Override
     public void saveRegionalTaskList(List<RegionalTask> regionalTasks) throws Exception {
         regionalTaskRepository.save(regionalTasks);
+    }
+
+    @Override
+    public List<RegionalTaskResult> getTaskResults(RegionalTaskResult param) throws Exception{
+        Example<RegionalTaskResult> example = Example.of(param);
+        return taskResultRepository.findAll(example);
+    }
+
+    /**
+    *
+    * @Description: 根据案事件编号查询任务该案事件下的任务
+    * @Param:
+        * @param
+    * @return: java.util.List<com.founder.interservice.regionalanalysis.model.RegionalTask>
+    * @Author: cao peng
+    * @date: 2018/8/25 0025-14:22
+    */
+    @Override
+    public Map<String,Object> queryTasksByAsjbh(RegionalTask param) throws Exception {
+        List<RegionalTask> regionalTasks = regionalTaskMapper.findTaskListByAsjbh(param);
+        int total = regionalTaskMapper.findTaskListByAsjbhTotalCount(param);
+        Map<String, Object> resultMap = new HashMap<>();
+        resultMap.put("total", total);
+        resultMap.put("regionalTasks", regionalTasks);
+        return resultMap;
     }
 }

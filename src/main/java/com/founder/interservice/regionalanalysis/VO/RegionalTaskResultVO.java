@@ -1,4 +1,4 @@
-package com.founder.interservice.regionalanalysis.model;
+package com.founder.interservice.regionalanalysis.VO;
 
 import lombok.Data;
 import org.hibernate.annotations.DynamicUpdate;
@@ -6,7 +6,6 @@ import org.hibernate.annotations.DynamicUpdate;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.Table;
-import javax.persistence.Transient;
 import java.util.Date;
 
 /**
@@ -17,19 +16,18 @@ import java.util.Date;
  * @Version: 1.0
  */
 @Data
-@Entity
-@DynamicUpdate
-@Table(name = "TB_ST_REGIONALTASKRESULT")
-public class RegionalTaskResult {
+public class RegionalTaskResultVO {
 
-    @Id
-    private String XXZJBH;
     private String taskId;
-    private String objectType;
     private String objectTypeName;
     private String objectValue;
     private Date djsj;
-    @Transient
-    private String asjbh;
+    private String zjhm; //证件号码
+    private String address; //户籍地址
+    private String name; //名称
+    private String csrq; //出生日期
+    private String ryzp; //人员照片
+    private String sjhm;//手机号码
+    private int age; //年龄
 
 }

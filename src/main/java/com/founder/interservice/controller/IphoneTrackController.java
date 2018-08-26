@@ -14,6 +14,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import java.util.*;
@@ -49,7 +50,7 @@ public class IphoneTrackController {
      * @param yhCate 用户类别（00：方正；01：嘉崎；02：新德汇；03：天彦；04：海鑫）
      * @return
      */
-    @RequestMapping("/iphoneTrackForSjhm")
+    @RequestMapping(value = "/iphoneTrackForSjhm",method = {RequestMethod.GET,RequestMethod.POST})
     @ResponseBody
     public ResultVO iphoneTrackForSjhm(String objValue, String objType, String kssj, String jssj, String yhCate) {
         ResultVO resultVO = null;

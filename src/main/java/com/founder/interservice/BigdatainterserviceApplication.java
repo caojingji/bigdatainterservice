@@ -11,7 +11,7 @@ import org.springframework.transaction.annotation.EnableTransactionManagement;
 @SpringBootApplication
 @EnableTransactionManagement //开启事务管理
 @EnableScheduling //开启定时任务
-@MapperScan("com.founder.interservice.mapper")
+@MapperScan({"com.founder.interservice.mapper","com.founder.interservice.*.mapper"})
 public class BigdatainterserviceApplication extends SpringBootServletInitializer {
 
     @Override
