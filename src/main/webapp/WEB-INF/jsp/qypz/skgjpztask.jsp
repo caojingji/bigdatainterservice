@@ -24,11 +24,15 @@
 			<table style="width:100%;border-collapse: collapse;background-color: rgba(255,255,255,0.75);text-align:left;" class="cx_table_tj">
 				<tr>
 					<td class="td_r" style="width:10%;">案件编号：</td>
-		            <td style="width:20%;"><input id = "asjbh" name = "asjbh" type="text"/></td>
-		            <td style="width:60%;">
-		            	<a href="javascript:queryTasks();" class="btn_cx" style="margin-left:200px;">查询</a>
-						<a href="javascript:clearZwbz();" class="btn_qkcxtj">重置</a>
-		            </td>
+					<td style="width:20%;"><input name = "asjbh" id = "asjbh" type="text" /></td>
+					<td style="width:60%;">
+					</td>
+				</tr>
+				<tr>
+					<td colspan="6" style="text-align:right;">
+						<a href="javascript:queryTasks();" class="btn_cx">查询</a>
+						<a href="javascript:;" class="btn_qkcxtj" style="margin-right:100px;">重置</a>
+					</td>
 				</tr>
 			</table>
 		</div>

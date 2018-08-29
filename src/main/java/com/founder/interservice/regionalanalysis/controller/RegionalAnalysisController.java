@@ -4,8 +4,8 @@ import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.founder.interservice.VO.ResultVO;
 import com.founder.interservice.enums.ResultEnum;
+import com.founder.interservice.model.AutoTbStRy;
 import com.founder.interservice.model.ResultObj;
-import com.founder.interservice.model.TbStRy;
 import com.founder.interservice.regionalanalysis.VO.RegionalTaskResultVO;
 import com.founder.interservice.regionalanalysis.VO.RegionalTaskVO;
 import com.founder.interservice.regionalanalysis.model.Regional;
@@ -100,28 +100,92 @@ public class RegionalAnalysisController {
     @ResponseBody
     public ModelAndView getTaskResults(RegionalTaskResult param){
         List<RegionalTaskResult> taskResults = null;
+        List<RegionalTaskResultVO> taskResultVOSCph = new ArrayList<>();
         List<RegionalTaskResultVO> taskResultVOS = new ArrayList<>();
-        ModelAndView modelAndView = new ModelAndView();
+        ModelAndView modelAndView = new ModelAndView("qypz/skgjpzjgzs");
         try {
             taskResults = regionalAnalysisService.getTaskResults(param);
+            List<String> cpTypes = Arrays.asList("6424","6422","6423","7888"); //汽车蓝色号码、汽车黄色号码、汽车白色号码，摩托车黄色号码
             if(taskResults != null && !taskResults.isEmpty()){
                 for(int i = 0; i <= taskResults.size() - 1; i++){
+                    String objectType = taskResults.get(i).getObjectType();
                     RegionalTaskResultVO taskResultVO = new RegionalTaskResultVO();
                     BeanUtils.copyProperties(taskResults.get(i),taskResultVO);
-                    String imsi = taskResults.get(i).getObjectValue();
-                    taskResultVO = getRyxxData(imsi,taskResultVO);
-                    taskResultVOS.add(taskResultVO);
+                    if("4314".equals(objectType)){
+                        String imsi = taskResults.get(i).getObjectValue();
+                        taskResultVO = getRyxxData(imsi,taskResultVO);
+                        taskResultVOS.add(taskResultVO);
+                    }else if(cpTypes.contains(objectType)){
+                        String cphm = taskResults.get(i).getObjectValue();
+                        taskResultVO = getJdcData(cphm,taskResultVO);
+                        taskResultVOSCph.add(taskResultVO);
+                    }
                 }
             }
             modelAndView.addObject("taskResultVOS",taskResultVOS);
-            modelAndView.setViewName("qypz/skgjpzjgzs");
+            modelAndView.addObject("taskResultVOSCph",taskResultVOSCph);
         } catch (Exception e) {
             e.printStackTrace();
             modelAndView.addObject("taskResultVOS",taskResultVOS);
-            modelAndView.setViewName("qypz/skgjpzjgzs");
+            modelAndView.addObject("taskResultVOSCph",taskResultVOSCph);
         }
         return modelAndView;
     }
+
+    public RegionalTaskResultVO getJdcData(String cphm,RegionalTaskResultVO taskResultVO) throws Exception{
+        /*1 通过车牌号调取车辆所有人信息*/
+        if(!StringUtil.ckeckEmpty(cphm)){
+            //1、 通过车牌号码调取对应的拥有人信息
+            JSONObject jsonObject = iphoneTrackService.getObjectRelation(cphm);
+            if(jsonObject != null){
+                JSONArray jsonArray = jsonObject.getJSONArray("results");
+                if(jsonArray != null && jsonArray.size() > 0){
+                    for (int j = 0; j <= jsonArray.size() - 1;j++){
+                        JSONObject resObj = jsonArray.getJSONObject(j);
+                        String relativeType = resObj.getString("relativeType");
+                        if (relativeType != null && "4398".equals(relativeType)){ //关系类型为 所有人
+                            String zjhm = (String) resObj.get("objectToValue"); //证件号码
+                            String zjlxName = (String) resObj.get("objectToTypeName"); //证件类型名称
+                            String zjlxCode = (String) resObj.get("objectToType"); //证件类型代码
+                            String objectFromValue = resObj.getString("objectFromValue");
+                            String objectFromTypeName = resObj.getString("objectFromTypeName");
+                            taskResultVO.setObjectValue(objectFromValue);
+                            taskResultVO.setObjectTypeName(objectFromTypeName);
+                            if(StringUtil.ckeckEmpty(taskResultVO.getZjhm())){
+                                taskResultVO.setZjhm(zjhm);
+                                taskResultVO.setZjlx(zjlxName);
+                                taskResultVO.setZjlxCode(zjlxCode);
+                            }else{
+                                if(!taskResultVO.getZjlx().equals("1")){ //如果已经存入不是身份证 则进行覆盖更新
+                                    if(zjlxCode.equals("1")){
+                                        taskResultVO.setZjhm(zjhm);
+                                        taskResultVO.setZjlx(zjlxName);
+                                        taskResultVO.setZjlxCode(zjlxCode);
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        if("1".equals(taskResultVO.getZjlxCode())){ //类型为1  为身份证号
+            //3 通过身份证号调取二代证信息
+            if(!StringUtil.ckeckEmpty(taskResultVO.getZjhm())){
+                AutoTbStRy tbStRy = new Qgckzp().getQgckAllxxXml(taskResultVO.getZjhm());
+                taskResultVO.setXzzDzmc(tbStRy.getXzzDzmc());//现住址
+                taskResultVO.setCsdDzmc(tbStRy.getCsdDzmc());//出生地
+                if(tbStRy.getCsrqRqgzxx() != null){
+                    taskResultVO.setCsrq(DateUtil.convertDateToChineseString(tbStRy.getCsrqRqgzxx()));//出生日期
+                    taskResultVO.setAge(DateUtil.getAge(tbStRy.getCsrqRqgzxx())); //age
+                }
+                taskResultVO.setName(tbStRy.getXm());//姓名
+                taskResultVO.setRyzp(tbStRy.getEdzzplj());//人员照片
+            }
+        }
+        return taskResultVO;
+    }
+
 
     public RegionalTaskResultVO getRyxxData(String imsi,RegionalTaskResultVO taskResultVO) throws Exception{
         if(!StringUtil.ckeckEmpty(imsi)){
@@ -152,11 +216,12 @@ public class RegionalAnalysisController {
         }
         //3 通过身份证号调取二代证信息
         if(!StringUtil.ckeckEmpty(taskResultVO.getZjhm())){
-            TbStRy tbStRy = new Qgckzp().getQgckAllxxXml(taskResultVO.getZjhm());
-            taskResultVO.setAddress(tbStRy.getHjdzXzqhdm());//户籍地址
-            if(tbStRy.getCsrqQsrq() != null){
-                taskResultVO.setCsrq(DateUtil.convertDateToChineseString(tbStRy.getCsrqQsrq()));//出生日期
-                taskResultVO.setAge(DateUtil.getAge(tbStRy.getCsrqQsrq())); //age
+            AutoTbStRy tbStRy = new Qgckzp().getQgckAllxxXml(taskResultVO.getZjhm());
+            taskResultVO.setXzzDzmc(tbStRy.getXzzDzmc());//现住址
+            taskResultVO.setCsdDzmc(tbStRy.getCsdDzmc());//出生地
+            if(tbStRy.getCsrqRqgzxx() != null){
+                taskResultVO.setCsrq(DateUtil.convertDateToChineseString(tbStRy.getCsrqRqgzxx()));//出生日期
+                taskResultVO.setAge(DateUtil.getAge(tbStRy.getCsrqRqgzxx())); //age
             }
             taskResultVO.setName(tbStRy.getXm());//姓名
             taskResultVO.setRyzp(tbStRy.getEdzzplj());//人员照片
@@ -175,11 +240,11 @@ public class RegionalAnalysisController {
      */
     @ResponseBody
     @RequestMapping(value = "/sendRegionalAnalysisTask",method = {RequestMethod.GET,RequestMethod.POST})
-    public ModelAndView sendRegionalAnalysisTask(String paramStr){
+    public ResultVO sendRegionalAnalysisTask(String paramStr){
+        ResultVO resultVO = null;
         try{
             //String taskId = "123123131231";
             String taskId = HttpUtil.doPost(REGION_ALANALYSIS_URL,paramStr);
-            ModelAndView modelAndView = new ModelAndView();
             if(taskId != null && !taskId.isEmpty()){
                 JSONObject jsonObject = JSONObject.parseObject(paramStr);
                 RegionalTask regionalTask = new RegionalTask();
@@ -221,20 +286,15 @@ public class RegionalAnalysisController {
                 if(regionalTask != null){
                     regionalAnalysisService.saveRegionalTask(regionalTask);
                 }
-                ResultVO resultVO = ResultVOUtil.success(taskId);
-                modelAndView.addObject("resultVo",resultVO);
+                resultVO = ResultVOUtil.success(taskId);
             }else{
-                ResultVO resultVO = ResultVOUtil.error(ResultEnum.TASK_SEND_ERROR.getCode(),ResultEnum.TASK_SEND_ERROR.getMessage());
-                modelAndView.addObject("resultVo",resultVO);
+                resultVO = ResultVOUtil.error(ResultEnum.TASK_SEND_ERROR.getCode(),ResultEnum.TASK_SEND_ERROR.getMessage());
             }
-            modelAndView.setViewName("task/taskresult");
-            return modelAndView;
         }catch (Exception e){
             e.printStackTrace();
-            throw new RuntimeException(e);
+            resultVO = ResultVOUtil.error(ResultEnum.TASK_SEND_ERROR.getCode(),ResultEnum.TASK_SEND_ERROR.getMessage());
         }
+        return resultVO;
     }
-
-
 
 }

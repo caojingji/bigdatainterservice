@@ -62,7 +62,7 @@ public class IphoneTrackServiceImpl implements IphoneTrackService {
             resultObj.setObjTypeName(jsonObejct.getString("objTypeName"));
             resultObj.setObjValue(jsonObejct.getString("objValue"));
             JSONArray childrens = jsonObejct.getJSONArray("children");
-            List<String> cphmTypes = Arrays.asList("6424","437","7888"); // 车牌号类别
+            List<String> cphmTypes = Arrays.asList("6424","6422","6423","7888"); //汽车蓝色号码、汽车黄色号码、汽车白色号码，摩托车黄色号码
             List<String> sjhmTypes = Arrays.asList("20","4394"); //手机号码类别
             if(childrens != null && childrens.size() > 0){
                 List<JSONObject> cphms = new ArrayList<JSONObject>();

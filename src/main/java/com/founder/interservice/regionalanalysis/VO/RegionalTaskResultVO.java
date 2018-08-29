@@ -22,8 +22,11 @@ public class RegionalTaskResultVO {
     private String objectTypeName;
     private String objectValue;
     private Date djsj;
+    private String zjlxCode; //证件类型code
+    private String zjlx; //证件类型
     private String zjhm; //证件号码
-    private String address; //户籍地址
+    private String csdDzmc;// 出生地地址名称
+    private String xzzDzmc; //现住址地址名称
     private String name; //名称
     private String csrq; //出生日期
     private String ryzp; //人员照片

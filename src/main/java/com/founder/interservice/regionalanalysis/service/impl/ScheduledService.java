@@ -49,7 +49,7 @@ public class ScheduledService {
      * @Author: cao peng
      * @date: 2018/8/22 0022-16:35
      */
-    @Scheduled(cron = "0 0/1 * * * ?") //每隔五分钟执行一次
+    @Scheduled(cron = "0 0/3 * * * ?") //每隔五分钟执行一次
     public void queryTaskResult(){
         System.out.println("=============开始执行定时任务================");
         try{
