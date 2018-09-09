@@ -17,5 +17,5 @@ public interface RegionalTaskMapper {
 
     public List<RegionalTask> findTaskListByAsjbh(RegionalTask param) throws Exception;
     public int findTaskListByAsjbhTotalCount(RegionalTask param) throws Exception;
-
+    public int quertRegionalCountByTaskId(String taskId) throws Exception;
 }

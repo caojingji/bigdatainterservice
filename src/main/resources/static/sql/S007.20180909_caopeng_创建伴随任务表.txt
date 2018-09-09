@@ -1,0 +1,95 @@
+INSERT INTO SYS_DBLOG(SID,STATUS)VALUES('S007',0);
+COMMIT;
+-------------------------------------------------------------------------------------------
+
+--创建区域碰撞任务的实体表
+CREATE TABLE XZXT.TB_ST_TRACKTOGETHERTASK
+(
+    task_id VARCHAR2(100 BYTE),
+    task_name VARCHAR2(50 BYTE),
+	object_value VARCHAR2(50 BYTE),
+	object_type VARCHAR2(10 BYTE),
+    start_time DATE  DEFAULT sysdate,
+	end_time DATE  DEFAULT sysdate,
+    progress varchar2(10),
+    state varchar2(20),
+    task_case_id VARCHAR2(50 BYTE),
+    DJSJ DATE               DEFAULT sysdate
+)TABLESPACE TBS_BIGDATA
+  PCTUSED    0
+  PCTFREE    10
+  INITRANS   1
+  MAXTRANS   255
+  STORAGE    (
+              INITIAL          64K
+              NEXT             1M
+              MINEXTENTS       1
+              MAXEXTENTS       UNLIMITED
+              PCTINCREASE      0
+              BUFFER_POOL      DEFAULT
+             )
+  LOGGING
+  NOCOMPRESS
+  NOCACHE
+  NOPARALLEL
+  MONITORING;
+
+COMMENT ON table XZXT.TB_ST_TRACKTOGETHERTASK is '伴随任务的实体表';
+COMMENT ON COLUMN XZXT.TB_ST_TRACKTOGETHERTASK.task_id IS '任务编号';
+
+COMMENT ON COLUMN XZXT.TB_ST_TRACKTOGETHERTASK.task_name IS '任务名称';
+
+COMMENT ON COLUMN XZXT.TB_ST_TRACKTOGETHERTASK.object_value IS '对象值';
+
+COMMENT ON COLUMN XZXT.TB_ST_TRACKTOGETHERTASK.object_type IS '对象类型';
+
+COMMENT ON COLUMN XZXT.TB_ST_TRACKTOGETHERTASK.start_time IS '开始时间';
+
+COMMENT ON COLUMN XZXT.TB_ST_TRACKTOGETHERTASK.end_time IS '结束时间';
+
+COMMENT ON COLUMN XZXT.TB_ST_TRACKTOGETHERTASK.progress IS '任务进度';
+
+COMMENT ON COLUMN XZXT.TB_ST_TRACKTOGETHERTASK.state IS '任务状态';
+
+COMMENT ON COLUMN XZXT.TB_ST_TRACKTOGETHERTASK.task_case_id IS '案件编号';
+
+COMMENT ON COLUMN XZXT.TB_ST_TRACKTOGETHERTASK.DJSJ IS '任务登记时间';
+
+--创建主键
+CREATE UNIQUE INDEX PK_TB_ST_TRACKTOGETHERTASK_ID ON XZXT.TB_ST_TRACKTOGETHERTASK
+(task_id)
+LOGGING
+TABLESPACE TBS_INDEX
+PCTFREE    10
+INITRANS   2
+MAXTRANS   255
+STORAGE    (
+            INITIAL          64K
+            NEXT             1M
+            MINEXTENTS       1
+            MAXEXTENTS       UNLIMITED
+            PCTINCREASE      0
+            BUFFER_POOL      DEFAULT
+           )
+NOPARALLEL;
+
+ALTER TABLE XZXT.TB_ST_TRACKTOGETHERTASK ADD (
+  CONSTRAINT PK_TB_ST_TRACKTOGETHERTASK_ID
+ PRIMARY KEY
+ (task_id)
+    USING INDEX 
+    TABLESPACE TBS_INDEX
+    PCTFREE    10
+    INITRANS   2
+    MAXTRANS   255
+    STORAGE    (
+                INITIAL          64K
+                NEXT             1M
+                MINEXTENTS       1
+                MAXEXTENTS       UNLIMITED
+                PCTINCREASE      0
+               ));
+
+-------------------------------------------------------------------------------------------
+UPDATE SYS_DBLOG SET STATUS=1 WHERE SID='S007';
+COMMIT;

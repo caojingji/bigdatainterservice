@@ -17,8 +17,9 @@ public enum ResultEnum {
     OBJTYPE_PARAM_NOTNULL(2,"objType参数必传！"),
     OBJTYPE_PARAM_ERROR(10,"objType参数错误！"),
 
-    PARAM_NOTNULL(3,"objValue参数必传！"),
-
+    OBJVALUE_PARAM_NOTNULL(3,"objValue参数必传！"),
+    PARAM_NOTNULL(13,"缺少必须的参数！"),
+    PARAM_ERROR(12,"参数错误！"),
     IPHONE_PARAM_ERROE(4,"手机号码应为11位数！"),
     IPHONE_PARAM_ERROR1(5,"手机号码不正确！"),
 
@@ -29,6 +30,7 @@ public enum ResultEnum {
     TIME_APRAM_ERROR2(9,"结束时间必须大于开始时间！"),
 
     TASK_SEND_ERROR(22,"任务发送失败！"),
+    REQUEST_URL_ERROR(23,"请求远程地址错误！"),
 
     RESULT_ERROR(55,"发生了未知错误！"),
     ;

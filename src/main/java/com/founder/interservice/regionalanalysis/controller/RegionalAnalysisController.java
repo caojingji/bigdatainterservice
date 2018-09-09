@@ -17,10 +17,14 @@ import com.founder.interservice.util.*;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
+import java.lang.reflect.Array;
 import java.util.*;
 
 /**
@@ -49,6 +53,14 @@ public class RegionalAnalysisController {
     public  String toTaskListJsp(){
         return "qypz/skgjpztask";
     }
+
+    @RequestMapping("/toTaskResultJsp")
+    public ModelAndView toTaskResultJsp(@RequestParam String taskId){
+        ModelAndView modelAndView = new ModelAndView("qypz/skgjpzjgzs");
+        modelAndView.addObject("taskId", taskId);
+        return modelAndView;
+    }
+
     /**
      *
      * @Description: 根据案事件编号查询其下的任务列表
@@ -83,6 +95,7 @@ public class RegionalAnalysisController {
                 for (RegionalTask task:regionalTasks) {
                     RegionalTaskVO taskVO = new RegionalTaskVO();
                     BeanUtils.copyProperties(task,taskVO);
+                    taskVO.setQyCount(regionalAnalysisService.quertRegionalCountByTaskId(taskVO.getTaskId()));
                     regionalTaskVOS.add(taskVO);
                 }
             }
@@ -98,38 +111,29 @@ public class RegionalAnalysisController {
 
     @RequestMapping(value = "/getTaskResults",method = {RequestMethod.GET,RequestMethod.POST})
     @ResponseBody
-    public ModelAndView getTaskResults(RegionalTaskResult param){
-        List<RegionalTaskResult> taskResults = null;
-        List<RegionalTaskResultVO> taskResultVOSCph = new ArrayList<>();
+    public List<RegionalTaskResultVO> getTaskResults( Integer page, Integer size,RegionalTaskResult param){
         List<RegionalTaskResultVO> taskResultVOS = new ArrayList<>();
-        ModelAndView modelAndView = new ModelAndView("qypz/skgjpzjgzs");
         try {
-            taskResults = regionalAnalysisService.getTaskResults(param);
-            List<String> cpTypes = Arrays.asList("6424","6422","6423","7888"); //汽车蓝色号码、汽车黄色号码、汽车白色号码，摩托车黄色号码
+            Page<RegionalTaskResult> resultPage = regionalAnalysisService.findRegionalTaskResult(page,size,param);
+            List<RegionalTaskResult> taskResults = resultPage.getContent();
             if(taskResults != null && !taskResults.isEmpty()){
                 for(int i = 0; i <= taskResults.size() - 1; i++){
-                    String objectType = taskResults.get(i).getObjectType();
                     RegionalTaskResultVO taskResultVO = new RegionalTaskResultVO();
                     BeanUtils.copyProperties(taskResults.get(i),taskResultVO);
-                    if("4314".equals(objectType)){
+                    if("01".equals(param.getObjectType())){
                         String imsi = taskResults.get(i).getObjectValue();
-                        taskResultVO = getRyxxData(imsi,taskResultVO);
-                        taskResultVOS.add(taskResultVO);
-                    }else if(cpTypes.contains(objectType)){
+                        //taskResultVO = getRyxxData(imsi,taskResultVO);
+                    }else if("02".equals(param.getObjectType())){
                         String cphm = taskResults.get(i).getObjectValue();
-                        taskResultVO = getJdcData(cphm,taskResultVO);
-                        taskResultVOSCph.add(taskResultVO);
+                        //taskResultVO = getJdcData(cphm,taskResultVO);
                     }
+                    taskResultVOS.add(taskResultVO);
                 }
             }
-            modelAndView.addObject("taskResultVOS",taskResultVOS);
-            modelAndView.addObject("taskResultVOSCph",taskResultVOSCph);
         } catch (Exception e) {
             e.printStackTrace();
-            modelAndView.addObject("taskResultVOS",taskResultVOS);
-            modelAndView.addObject("taskResultVOSCph",taskResultVOSCph);
         }
-        return modelAndView;
+        return taskResultVOS;
     }
 
     public RegionalTaskResultVO getJdcData(String cphm,RegionalTaskResultVO taskResultVO) throws Exception{
@@ -189,17 +193,21 @@ public class RegionalAnalysisController {
 
     public RegionalTaskResultVO getRyxxData(String imsi,RegionalTaskResultVO taskResultVO) throws Exception{
         if(!StringUtil.ckeckEmpty(imsi)){
-            //1、 通过身份证号调取对应的电话号码
+            //1、 通过IMSI号调取对应的电话号码
             JSONObject jsonObject = iphoneTrackService.getObjectRelation(imsi);
             if(jsonObject != null){
                 JSONArray jsonArray = jsonObject.getJSONArray("results");
                 if(jsonArray != null && jsonArray.size() > 0){
+                    List<String> sjhmList = Arrays.asList();
                     for (int j = 0; j <= jsonArray.size() - 1;j++){
                         JSONObject resObj = jsonArray.getJSONObject(j);
-                        String relativeType = resObj.getString("relativeType");
-                        if (relativeType != null && "4402".equals(relativeType)){
-                            String sjhm = (String) resObj.get("objectToValue");
-                            taskResultVO.setSjhm(sjhm);
+                        String relativeType = resObj.getString("relativeType"); //关联类型  4402（手机-IMSI）
+                        String objectFromType = resObj.getString("objectFromType"); //数据来源值类型  4314(IMSI)
+                        String objectFromValue = resObj.getString("objectFromValue"); //数据来源值
+                        String objectToType = resObj.getString("objectToType"); //所得对象值类型  20（联系方式） 4394（电话号码）
+                        if ("4402".equals(relativeType) && "4314".equals(objectFromType)
+                                && Arrays.asList("20","4394").contains(objectToType) && imsi.equals(objectFromValue)){
+                            taskResultVO.setSjhm(resObj.getString("objectToValue")); //将得到手机号码赋值到对象
                             break;
                         }
                     }
@@ -211,7 +219,27 @@ public class RegionalAnalysisController {
             ResultObj resultObj = iphoneTrackService.getObjectRelationAll(taskResultVO.getSjhm(),"00");
             if(resultObj != null && "1".equals(resultObj.getObjType())){
                 String zjhm = resultObj.getObjValue();
-                taskResultVO.setZjhm(zjhm);
+                if(StringUtil.ckeckEmpty(zjhm)){ //如果第四个接口获取的身份证号为空    则使用第一个接口进行获取
+                    JSONObject jsonObject = iphoneTrackService.getObjectRelation(taskResultVO.getSjhm());
+                    if(jsonObject != null){
+                        JSONArray jsonArray = jsonObject.getJSONArray("results");
+                        if(jsonArray != null && jsonArray.size() > 0){
+                            for (int j = 0; j <= jsonArray.size() - 1;j++){
+                                JSONObject resObj = jsonArray.getJSONObject(j);
+                                String relativeType = resObj.getString("relativeType"); //关联类型  20（联系方式）
+                                String objectFromType = resObj.getString("objectFromType"); //数据来源值类型  20（联系方式） 4394（电话号码）
+                                String objectFromValue = resObj.getString("objectFromValue"); //数据来源值
+                                String objectToType = resObj.getString("objectToType"); //所得对象值类型  1（身份证号码）
+                                if ("20".equals(relativeType) && taskResultVO.getSjhm().equals(objectFromValue)
+                                        && Arrays.asList("20","4394").contains(objectFromType) && "1".equals(objectToType)){
+                                    String zjhm1 = resObj.getString("objectToValue");
+                                    taskResultVO.setZjhm(zjhm1);
+                                    break;
+                                }
+                            }
+                        }
+                    }
+                }
             }
         }
         //3 通过身份证号调取二代证信息

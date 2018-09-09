@@ -25,7 +25,7 @@ public class RegionalTaskVO {
     private String progress; //任务进度 1表示百分百 完成
     private String state; //任务状态 QUEUEING 排队等待、STARTING 开始中、RUNNING 执行中、FINISHED 完成
     private Date djsj; //任务登记时间
-    private String qyCount; //区域个数
+    private int qyCount; //区域个数
     private int startNum;
     private int endNum;
 

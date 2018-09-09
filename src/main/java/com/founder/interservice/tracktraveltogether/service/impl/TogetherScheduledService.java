@@ -1,4 +1,4 @@
-package com.founder.interservice.regionalanalysis.service.impl;
+package com.founder.interservice.tracktraveltogether.service.impl;
 
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
@@ -6,6 +6,10 @@ import com.founder.interservice.regionalanalysis.model.RegionalTask;
 import com.founder.interservice.regionalanalysis.model.RegionalTaskResult;
 import com.founder.interservice.regionalanalysis.repository.RegionalTaskRepository;
 import com.founder.interservice.regionalanalysis.repository.RegionalTaskResultRepository;
+import com.founder.interservice.tracktraveltogether.model.TogetherTaskResult;
+import com.founder.interservice.tracktraveltogether.model.TrackTogetherTask;
+import com.founder.interservice.tracktraveltogether.repository.TogetherTaskResultRepository;
+import com.founder.interservice.tracktraveltogether.repository.TrackTogetherTaskRepository;
 import com.founder.interservice.util.HttpUtil;
 import com.founder.interservice.util.KeyUtil;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,7 +18,6 @@ import org.springframework.data.domain.Example;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Date;
 import java.util.List;
@@ -28,18 +31,15 @@ import java.util.List;
  */
 @Component
 @Async
-public class ScheduledService {
+public class TogetherScheduledService {
 
-    @Value(value = "${wabigdata.regionalAnalysisTaskStatus.url}")
-    private String REGIONAL_ANALYSIS_TASK_STATUS; //获取任务状态
-    @Value(value = "${wabigdata.regionalAnalysisTaskInfo.url}")
-    private String REGIONAL_ANALYSIS_TASK_INFO; //获取任务结果
-
+    @Value(value = "${wabigdata.trackTravelTogetherForPhoneTaskStatus.url}")
+    private String TOGETHER_STATUS_URL; //获取任务状态
+    @Value(value = "${wabigdata.trackTravelTogetherForPhoneTaskInfo.url}")
+    private String TOGETHER_INFO_URL; //获取任务结果
     @Autowired
-    private RegionalTaskRepository regionalTaskRepository;
-    @Autowired
-    private RegionalTaskResultRepository taskResultRepository;
-
+    private TrackTogetherTaskRepository taskRepository;
+    private TogetherTaskResultRepository taskResultRepository;
     /**
      *
      * @Description: 查取任务结果的定时方法
@@ -49,19 +49,19 @@ public class ScheduledService {
      * @Author: cao peng
      * @date: 2018/8/22 0022-16:35
      */
-    @Scheduled(cron = "0 0/3 * * * ?") //每隔五分钟执行一次
+    @Scheduled(cron = "0 0/3 * * * ?") //每隔三分钟执行一次
     public void queryTaskResult(){
         System.out.println("=============开始执行定时任务================");
         try{
             //1 下去查询任务表中 progress = 0  and status = QUEUEING的任务
-            RegionalTask regionalTask = new RegionalTask();
-            regionalTask.setState("QUEUEING");
-            regionalTask.setProgress("0");
-            Example<RegionalTask> taskExample = Example.of(regionalTask);
-            List<RegionalTask> taskList = regionalTaskRepository.findAll(taskExample);
+            TrackTogetherTask togetherTask = new TrackTogetherTask();
+            togetherTask.setState("QUEUEING");
+            togetherTask.setProgress("0");
+            Example<TrackTogetherTask> taskExample = Example.of(togetherTask);
+            List<TrackTogetherTask> taskList = taskRepository.findAll(taskExample);
             if(taskList != null && !taskList.isEmpty()){
-                for (RegionalTask task:taskList) {
-                    String status_url = REGIONAL_ANALYSIS_TASK_STATUS + "&taskId="+task.getTaskId();
+                for (TrackTogetherTask task:taskList) {
+                    String status_url = TOGETHER_STATUS_URL + "&taskId="+task.getTaskId();
                     String statusStr = HttpUtil.doGet(status_url);
                     //String statusStr = "{\"progress\":0.8,\"state\":\"FINISHED\"}";
                     System.out.println("statusStr ======================== " + statusStr);
@@ -70,31 +70,31 @@ public class ScheduledService {
                         int progress = jsonObject.getIntValue("progress");
                         String state = jsonObject.getString("state");
                         if(progress == 1 && "FINISHED".equals(state)){ //任务执行完成  这时需要去取回任务结果值
-                            String info_url = REGIONAL_ANALYSIS_TASK_INFO + "&taskId=" + task.getTaskId();
+                            String info_url = TOGETHER_INFO_URL + "&taskId=" + task.getTaskId();
                             String taskInfoResult = HttpUtil.doGet(info_url);
                             //String taskInfoResult = "{\"results\":[{\"objectType\":6424,\"objectTypeName\":\"汽车蓝色号牌\",\"objectValue\":\"渝B7T762\"},{\"objectType\":4314,\"objectTypeName\":\"IMSI\",\"objectValue\":\"460092380008864\"},{\"objectType\":4329,\"objectTypeName\":\"MAC地址\",\"objectValue\":\"DAA119018598\"}],\"status\":\"ok\"}";
                             if(taskInfoResult!= null && !taskInfoResult.isEmpty()){
                                 JSONObject o = JSONObject.parseObject(taskInfoResult);
-                                JSONArray jsonArray = o.getJSONArray("results");
+                                JSONArray jsonArray = o.getJSONArray("items");
                                 if(jsonArray != null && jsonArray.size() > 0){
-                                    List<RegionalTaskResult> taskResults = jsonArray.toJavaList(RegionalTaskResult.class);
+                                    List<TogetherTaskResult> taskResults = jsonArray.toJavaList(TogetherTaskResult.class);
                                     if(taskResults != null && !taskResults.isEmpty()){
-                                        for (RegionalTaskResult r:taskResults ) {
+                                        for (TogetherTaskResult r:taskResults) {
                                             r.setTaskId(task.getTaskId());
-                                            r.setXXZJBH(KeyUtil.getUniqueKey("TR"));
+                                            r.setXXZJBH(KeyUtil.getUniqueKey("TT"));
                                             r.setDjsj(new Date());
                                         }
-                                        RegionalTaskResult param = new RegionalTaskResult();
+                                        TogetherTaskResult param = new TogetherTaskResult();
                                         param.setTaskId(task.getTaskId());
-                                        Example<RegionalTaskResult> example = Example.of(param);
-                                        List<RegionalTaskResult> results = taskResultRepository.findAll(example);
+                                        Example<TogetherTaskResult> example = Example.of(param);
+                                        List<TogetherTaskResult> results = taskResultRepository.findAll(example);
                                         if(results == null || results.isEmpty()){
                                             taskResultRepository.save(taskResults);
                                         }
-                                        regionalTaskRepository.updateStatusByTaskId(task.getTaskId());
+                                        taskRepository.updateStatusByTaskId(task.getTaskId());
                                     }
                                 }else{
-                                    regionalTaskRepository.updateStatusByTaskId(task.getTaskId());
+                                    taskRepository.updateStatusByTaskId(task.getTaskId());
                                 }
                             }
                         }

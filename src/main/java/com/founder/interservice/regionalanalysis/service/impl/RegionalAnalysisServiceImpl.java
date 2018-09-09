@@ -8,14 +8,15 @@ import com.founder.interservice.regionalanalysis.repository.RegionalRepository;
 import com.founder.interservice.regionalanalysis.repository.RegionalTaskRepository;
 import com.founder.interservice.regionalanalysis.repository.RegionalTaskResultRepository;
 import com.founder.interservice.regionalanalysis.service.RegionalAnalysisService;
+import com.founder.interservice.util.StringUtil;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Example;
+import org.springframework.data.domain.*;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
+import javax.persistence.criteria.*;
 import javax.transaction.Transactional;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * @ClassName： RegionalAnalysisServiceImpl
@@ -48,6 +49,11 @@ public class RegionalAnalysisServiceImpl implements RegionalAnalysisService {
     }
 
     @Override
+    public int quertRegionalCountByTaskId(String taskId) throws Exception {
+        return regionalTaskMapper.quertRegionalCountByTaskId(taskId);
+    }
+
+    @Override
     public void saveRegionalTask(RegionalTask regionalTask) throws Exception {
         List<Regional> regionals = regionalTask.getRegionals();
         if(regionals != null && !regionals.isEmpty()){
@@ -59,6 +65,39 @@ public class RegionalAnalysisServiceImpl implements RegionalAnalysisService {
     @Override
     public void saveRegionalTaskList(List<RegionalTask> regionalTasks) throws Exception {
         regionalTaskRepository.save(regionalTasks);
+    }
+    /**
+    *
+    * @Description: 使用jpa分页查询显示任务结果
+    * @Param:
+        * @param param 封装了查询条件
+    * @return:
+    * @Author: cao peng
+    * @date: 2018/8/30 0030-13:06
+    */
+    @Override
+    public Page<RegionalTaskResult> findRegionalTaskResult(Integer page,Integer size,RegionalTaskResult param) throws Exception {
+        Pageable pageable = new PageRequest(page,size, Sort.Direction.DESC,"djsj");
+        Page<RegionalTaskResult> resultPage = taskResultRepository.findAll(new Specification<RegionalTaskResult>() {
+            @Override
+            public Predicate toPredicate(Root<RegionalTaskResult> root, CriteriaQuery<?> criteriaQuery, CriteriaBuilder criteriaBuilder) {
+                List<Predicate> list = new ArrayList<>();
+                if (!StringUtil.ckeckEmpty(param.getTaskId())) {
+                    list.add(criteriaBuilder.equal(root.get("taskId").as(String.class),param.getTaskId()));
+                }
+                if(!StringUtil.ckeckEmpty(param.getObjectType())){
+                    if("01".equals(param.getObjectType())){
+                        list.add(criteriaBuilder.equal(root.get("objectType").as(String.class),param.getObjectType()));
+                    }else if("02".equals(param.getObjectType())){
+                        Expression<String> exp = root.<String>get("objectType");
+                        list.add(exp.in(Arrays.asList("6424","6422","6423","7888"))); //汽车蓝色号码、汽车黄色号码、汽车白色号码，摩托车黄色号码
+                    }
+                }
+                Predicate[] p = new Predicate[list.size()];
+                return criteriaBuilder.and(list.toArray(p));
+            }
+        },pageable);
+        return resultPage;
     }
 
     @Override

@@ -1,6 +1,6 @@
 spring:
   profiles:
-    active: prod
+    active: dev
   mvc:
     view:
       prefix: /WEB-INF/jsp/
@@ -38,6 +38,13 @@ wabigdata:
     url:  http://www.adu.cq:6080/api?name=regionalAnalysisTaskStatus&key=62bf1b59c14bf770ccbc48767db26c48
   regionalAnalysisTaskInfo:  #获取任务结果
     url:  http://www.adu.cq:6080/api?name=regionalAnalysisTaskInfo&key=62bf1b59c14bf770ccbc48767db26c48
+#IMSI伴随 相关的url
+  trackTravelTogetherForPhoneTask: #提交任务
+    url:  http://www.adu.cq:6080/api?name=trackTravelTogetherForPhoneTask&key=62bf1b59c14bf770ccbc48767db26c48
+  trackTravelTogetherForPhoneTaskStatus: #查询任务状态
+    url:  http://www.adu.cq:6080/api?name=trackTravelTogetherForPhoneTaskStatus&key=62bf1b59c14bf770ccbc48767db26c48
+  trackTravelTogetherForPhoneTaskInfo: #获取任务数据
+    url:  http://www.adu.cq:6080/api?name=trackTravelTogetherForPhoneTaskInfo&key=62bf1b59c14bf770ccbc48767db26c48
 #mysql sql打印
 logging:
   level:

@@ -64,7 +64,7 @@ public class StringUtil {
 	 * @return
 	 */
 	public static boolean ckeckEmpty(String string) {
-		return (string == null) || (string.length() == 0);
+		return (null == string) || ("".equals(string));
 	}
 
 	/**
