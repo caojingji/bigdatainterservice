@@ -14,6 +14,7 @@ import com.founder.interservice.regionalanalysis.model.RegionalTaskResult;
 import com.founder.interservice.regionalanalysis.service.RegionalAnalysisService;
 import com.founder.interservice.service.IphoneTrackService;
 import com.founder.interservice.util.*;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -50,8 +51,10 @@ public class RegionalAnalysisController {
         return "taskParam";
     }
     @RequestMapping("/toTaskListJsp")
-    public  String toTaskListJsp(){
-        return "qypz/skgjpztask";
+    public  ModelAndView toTaskListJsp(@RequestParam String asjbh){
+        ModelAndView modelAndView = new ModelAndView("qypz/skgjpztask");
+        modelAndView.addObject("asjbh", asjbh);
+        return modelAndView;
     }
 
     @RequestMapping("/toTaskResultJsp")
@@ -95,9 +98,28 @@ public class RegionalAnalysisController {
                 for (RegionalTask task:regionalTasks) {
                     RegionalTaskVO taskVO = new RegionalTaskVO();
                     BeanUtils.copyProperties(task,taskVO);
+                    switch (taskVO.getState()){
+                        case "QUEUEING":
+                            taskVO.setState("等候中");
+                            break;
+                        case "STARTING":
+                            taskVO.setState("开始运行");
+                            break;
+                        case "RUNNING":
+                            taskVO.setState("运行中");
+                            break;
+                        case "FINISHED":
+                            taskVO.setState("已完成");
+                            break;
+                        case "default":
+                            taskVO.setState("运行中");
+                            break;
+                    }
                     taskVO.setQyCount(regionalAnalysisService.quertRegionalCountByTaskId(taskVO.getTaskId()));
                     regionalTaskVOS.add(taskVO);
                 }
+            }else{
+                regionalTaskVOS = new ArrayList<>();
             }
             resultMap.put("total", total);
             resultMap.put("rows",regionalTaskVOS);
@@ -122,10 +144,10 @@ public class RegionalAnalysisController {
                     BeanUtils.copyProperties(taskResults.get(i),taskResultVO);
                     if("01".equals(param.getObjectType())){
                         String imsi = taskResults.get(i).getObjectValue();
-                        //taskResultVO = getRyxxData(imsi,taskResultVO);
+                        taskResultVO = getRyxxData(imsi,taskResultVO);
                     }else if("02".equals(param.getObjectType())){
                         String cphm = taskResults.get(i).getObjectValue();
-                        //taskResultVO = getJdcData(cphm,taskResultVO);
+                        taskResultVO = getJdcData(cphm,taskResultVO);
                     }
                     taskResultVOS.add(taskResultVO);
                 }
@@ -148,9 +170,9 @@ public class RegionalAnalysisController {
                         JSONObject resObj = jsonArray.getJSONObject(j);
                         String relativeType = resObj.getString("relativeType");
                         if (relativeType != null && "4398".equals(relativeType)){ //关系类型为 所有人
-                            String zjhm = (String) resObj.get("objectToValue"); //证件号码
-                            String zjlxName = (String) resObj.get("objectToTypeName"); //证件类型名称
-                            String zjlxCode = (String) resObj.get("objectToType"); //证件类型代码
+                            String zjhm = resObj.getString("objectToValue"); //证件号码
+                            String zjlxName = resObj.getString("objectToTypeName"); //证件类型名称
+                            String zjlxCode = resObj.getString("objectToType"); //证件类型代码
                             String objectFromValue = resObj.getString("objectFromValue");
                             String objectFromTypeName = resObj.getString("objectFromTypeName");
                             taskResultVO.setObjectValue(objectFromValue);
@@ -198,17 +220,19 @@ public class RegionalAnalysisController {
             if(jsonObject != null){
                 JSONArray jsonArray = jsonObject.getJSONArray("results");
                 if(jsonArray != null && jsonArray.size() > 0){
-                    List<String> sjhmList = Arrays.asList();
                     for (int j = 0; j <= jsonArray.size() - 1;j++){
                         JSONObject resObj = jsonArray.getJSONObject(j);
                         String relativeType = resObj.getString("relativeType"); //关联类型  4402（手机-IMSI）
                         String objectFromType = resObj.getString("objectFromType"); //数据来源值类型  4314(IMSI)
                         String objectFromValue = resObj.getString("objectFromValue"); //数据来源值
-                        String objectToType = resObj.getString("objectToType"); //所得对象值类型  20（联系方式） 4394（电话号码）
+                        String objectToType = resObj.getString("objectToType"); //所得对象值类型  20（联系方式） 4394（电话号码） 3996（手机号码）
                         if ("4402".equals(relativeType) && "4314".equals(objectFromType)
-                                && Arrays.asList("20","4394").contains(objectToType) && imsi.equals(objectFromValue)){
-                            taskResultVO.setSjhm(resObj.getString("objectToValue")); //将得到手机号码赋值到对象
-                            break;
+                                && Arrays.asList("20","4394","3996").contains(objectToType) && imsi.equals(objectFromValue)){
+                            String sjhm = resObj.getString("objectToValue");
+                            if(null != sjhm && 11 == sjhm.length()){
+                                taskResultVO.setSjhm(sjhm); //将得到手机号码赋值到对象
+                                break;
+                            }
                         }
                     }
                 }
@@ -227,11 +251,11 @@ public class RegionalAnalysisController {
                             for (int j = 0; j <= jsonArray.size() - 1;j++){
                                 JSONObject resObj = jsonArray.getJSONObject(j);
                                 String relativeType = resObj.getString("relativeType"); //关联类型  20（联系方式）
-                                String objectFromType = resObj.getString("objectFromType"); //数据来源值类型  20（联系方式） 4394（电话号码）
+                                String objectFromType = resObj.getString("objectFromType"); //数据来源值类型  20（联系方式） 4394（电话号码） 3996（手机号码）
                                 String objectFromValue = resObj.getString("objectFromValue"); //数据来源值
                                 String objectToType = resObj.getString("objectToType"); //所得对象值类型  1（身份证号码）
                                 if ("20".equals(relativeType) && taskResultVO.getSjhm().equals(objectFromValue)
-                                        && Arrays.asList("20","4394").contains(objectFromType) && "1".equals(objectToType)){
+                                        && Arrays.asList("20","4394","3996").contains(objectFromType) && "1".equals(objectToType)){
                                     String zjhm1 = resObj.getString("objectToValue");
                                     taskResultVO.setZjhm(zjhm1);
                                     break;
@@ -239,6 +263,8 @@ public class RegionalAnalysisController {
                             }
                         }
                     }
+                }else{
+                    taskResultVO.setZjhm(zjhm); //如果第四个接口获取的身份证号码 不为空 则直接赋值
                 }
             }
         }

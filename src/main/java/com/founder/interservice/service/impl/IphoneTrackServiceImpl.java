@@ -4,6 +4,7 @@ import com.alibaba.druid.util.StringUtils;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.founder.interservice.VO.TrackVO;
+import com.founder.interservice.exception.InterServiceException;
 import com.founder.interservice.model.Relation;
 import com.founder.interservice.model.ResultObj;
 import com.founder.interservice.model.Track;
@@ -50,7 +51,7 @@ public class IphoneTrackServiceImpl implements IphoneTrackService {
      * @Author: cao peng
      * @date: 2018/8/15 0015-10:11
      */
-    public ResultObj getObjectRelationAll(String obj,String type) throws Exception{
+    public ResultObj getObjectRelationAll(String obj,String type) throws InterServiceException{
         ResultObj resultObj = null;
         JSONObject jsonObejct = null;
         String url = relationGetAll_url + "&objectValue="+obj;
@@ -186,7 +187,7 @@ public class IphoneTrackServiceImpl implements IphoneTrackService {
      * @return
      */
     @Override
-    public Map<String,Object> iphoneTrackForSjhm(String obj,String kssj,String jssj) throws Exception {
+    public Map<String,Object> iphoneTrackForSjhm(String obj,String kssj,String jssj) throws InterServiceException {
         Map<String,Object> resultMap = null;
         JSONObject jsonObejct = null;
         String url = gettrack_url + "&objectValue="+obj+"&startTime="+kssj+"&endTime="+jssj;
@@ -267,16 +268,16 @@ public class IphoneTrackServiceImpl implements IphoneTrackService {
      * @return
      */
     @Override
-    public JSONObject getObjectRelation(String obj) throws Exception {
+    public JSONObject getObjectRelation(String obj) throws InterServiceException {
         JSONObject jsonObejct = null;
         String url = objectrelation_url+"&objectValue="+obj;
         String result = HttpUtil.doGet(url);
+        //String result = "{\"results\":[{\"ccv \":227,\"first_timestamp\":1531908084000,\"objectFromType\":4394,\"objectFromTypeName\":\"电话号码\",\"objectFromValue\":\"15129457465\",\"objectToType\":4314,\"objectToTypeName\":\"IMSI\",\"objectToValue\":\"460001180780041\",\"relativeType\":4402,\"relativeTypeName\":\"手机-IMSI\",\"source\":1094,\"sourceName\":\"4G-微信\",\"source_md5\":\"cfnQ37fBveUMP7kTZJqoDA==\",\"timestamp\":1533743041000},{\"count\":726,\"first_timestamp\":1531908024000,\"objectFromType\":4394,\"objectFromTypeName\":\"电话号码\",\"objectFromValue\":\"15129457465\",\"objectToType\":4314,\"objectToTypeName\":\"IMSI\",\"objectToValue\":\"460001180780041\",\"relativeType\":4402,\"relativeTypeName\":\"手机-IMSI\",\"source\":1046,\"sourceName\":\"4G认证\",\"source_md5\":\"lgnna+LmDFyEJ+BTVmtmQg==\",\"timestamp\":1533745282000}],\"status\":\"ok\"}";
         if(!StringUtil.ckeckEmpty(result)){
             if(result.startsWith("{") && result.endsWith("}")){
                 jsonObejct = JSONObject.parseObject(result);
             }
         }
-        //String result = "{\"results\":[{\"ccv \":227,\"first_timestamp\":1531908084000,\"objectFromType\":4394,\"objectFromTypeName\":\"电话号码\",\"objectFromValue\":\"15129457465\",\"objectToType\":4314,\"objectToTypeName\":\"IMSI\",\"objectToValue\":\"460001180780041\",\"relativeType\":4402,\"relativeTypeName\":\"手机-IMSI\",\"source\":1094,\"sourceName\":\"4G-微信\",\"source_md5\":\"cfnQ37fBveUMP7kTZJqoDA==\",\"timestamp\":1533743041000},{\"count\":726,\"first_timestamp\":1531908024000,\"objectFromType\":4394,\"objectFromTypeName\":\"电话号码\",\"objectFromValue\":\"15129457465\",\"objectToType\":4314,\"objectToTypeName\":\"IMSI\",\"objectToValue\":\"460001180780041\",\"relativeType\":4402,\"relativeTypeName\":\"手机-IMSI\",\"source\":1046,\"sourceName\":\"4G认证\",\"source_md5\":\"lgnna+LmDFyEJ+BTVmtmQg==\",\"timestamp\":1533745282000}],\"status\":\"ok\"}";
         if(jsonObejct != null){
             JSONArray jsonArray = jsonObejct.getJSONArray("results");
             if(jsonArray != null && jsonArray.size() > 0){

@@ -1,6 +1,11 @@
 package com.founder.interservice.tracktraveltogether.service;
 
+import com.founder.interservice.exception.InterServiceException;
+import com.founder.interservice.tracktraveltogether.model.TogetherTaskResult;
 import com.founder.interservice.tracktraveltogether.model.TrackTogetherTask;
+import org.springframework.data.domain.Page;
+
+import java.util.List;
 
 /**
  * @ClassName： TrackTogetherService
@@ -13,4 +18,6 @@ public interface TrackTogetherService {
     public String sendTrackTogetherTask(TrackTogetherTask trackParam);
 
     public void saveTogetherTask(TrackTogetherTask trackParam);
+
+    public List<TogetherTaskResult> findTogetherTaskResult(String taskId) throws InterServiceException;
 }

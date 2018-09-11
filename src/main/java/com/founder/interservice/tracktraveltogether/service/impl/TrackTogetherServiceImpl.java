@@ -1,8 +1,10 @@
 package com.founder.interservice.tracktraveltogether.service.impl;
 
-import com.founder.interservice.Exception.InterServiceException;
+import com.founder.interservice.exception.InterServiceException;
 import com.founder.interservice.enums.ResultEnum;
+import com.founder.interservice.tracktraveltogether.model.TogetherTaskResult;
 import com.founder.interservice.tracktraveltogether.model.TrackTogetherTask;
+import com.founder.interservice.tracktraveltogether.repository.TogetherTaskResultRepository;
 import com.founder.interservice.tracktraveltogether.repository.TrackTogetherTaskRepository;
 import com.founder.interservice.tracktraveltogether.service.TrackTogetherService;
 import com.founder.interservice.util.HttpUtil;
@@ -11,6 +13,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
+import java.util.List;
 
 /**
  * @ClassName： TrackTogetherServiceImpl
@@ -28,6 +31,8 @@ public class TrackTogetherServiceImpl implements TrackTogetherService {
 
     @Autowired
     private TrackTogetherTaskRepository taskRepository;
+    @Autowired
+    private TogetherTaskResultRepository taskResultRepository;
 
     /**
      *
@@ -51,6 +56,7 @@ public class TrackTogetherServiceImpl implements TrackTogetherService {
                         + "&endTime=" + trackParam.getEndTime().getTime();
                 System.out.println(" 伴随------发送任务URL =================" + url);
                 taskId = HttpUtil.doGet(url);
+                //taskId = "1231231231";
             }
             return taskId;
         }catch (Exception e){
@@ -70,6 +76,23 @@ public class TrackTogetherServiceImpl implements TrackTogetherService {
     public void saveTogetherTask(TrackTogetherTask trackParam){
         try{
             taskRepository.save(trackParam);
+        }catch (Exception e){
+            throw new InterServiceException(ResultEnum.RESULT_ERROR);
+        }
+    }
+    /**
+     *
+     * @Description: 根据任务编号查询伴随结果
+     * @Param:
+     * @param taskId 任务编号
+     * @return: java.util.List<com.founder.interservice.tracktraveltogether.model.TogetherTaskResult>
+     * @Author: cao peng
+     * @date: 2018/9/11 0011-21:23
+     */
+    @Override
+    public List<TogetherTaskResult> findTogetherTaskResult(String taskId) throws InterServiceException{
+        try{
+            return taskResultRepository.findAllByTaskId(taskId);
         }catch (Exception e){
             throw new InterServiceException(ResultEnum.RESULT_ERROR);
         }

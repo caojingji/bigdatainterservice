@@ -4,7 +4,7 @@ import org.springframework.boot.CommandLineRunner;
 import org.springframework.stereotype.Component;
 
 /**
- * Created by libin on 2018/6/7.
+ * Created by caopeng on 2018/6/7.
  */
 @Component
 public class StartConfig implements CommandLineRunner {

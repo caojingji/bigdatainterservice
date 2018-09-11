@@ -4,6 +4,8 @@ import com.founder.interservice.tracktraveltogether.model.TogetherTaskResult;
 import com.founder.interservice.tracktraveltogether.model.TrackTogetherTask;
 import org.springframework.data.jpa.repository.JpaRepository;
 
+import java.util.List;
+
 /**
  * @ClassName： TrackTogetherTaskRepository
  * @Auther： 曹鹏
@@ -12,4 +14,5 @@ import org.springframework.data.jpa.repository.JpaRepository;
  * @Version: 1.0
  */
 public interface TogetherTaskResultRepository extends JpaRepository<TogetherTaskResult,String> {
+    public List<TogetherTaskResult> findAllByTaskId(String taskId);
 }

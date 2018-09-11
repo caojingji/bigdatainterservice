@@ -3,6 +3,7 @@ package com.founder.interservice.tracktraveltogether.model;
 import lombok.Data;
 import org.hibernate.annotations.DynamicUpdate;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.Table;
@@ -30,5 +31,6 @@ public class TrackTogetherTask {
     private String progress;// 任务进度
     private Date startTime; //开始时间
     private Date endTime; //结束时间
+    @Column(insertable = false)
     private Date djsj; //登记时间
 }

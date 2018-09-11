@@ -1,4 +1,4 @@
-package com.founder.interservice.tracktraveltogether.model;
+package com.founder.interservice.tracktraveltogether.vo;
 
 import lombok.Data;
 import org.hibernate.annotations.DynamicUpdate;
@@ -14,23 +14,14 @@ import java.util.Date;
  * @Version: 1.0
  */
 @Data
-@Entity
-@DynamicUpdate
-@Table(name = "TB_ST_TOGETHERTASKRESULT")
-public class TogetherTaskResult {
+public class TogetherTaskResultVO {
 
-    @Id
-    private String XXZJBH;
     private String taskId;
     private String objectType;
     private String objectTypeName;
     private String objectValue;
-    @Column(insertable = false)
+    private String sjhm;
     private Date djsj;
     private int count;
-    @Transient
-    private int startNum;
-    @Transient
-    private int endNum;
 
 }

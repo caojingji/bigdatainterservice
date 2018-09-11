@@ -87,7 +87,7 @@ public class RegionalAnalysisServiceImpl implements RegionalAnalysisService {
                 }
                 if(!StringUtil.ckeckEmpty(param.getObjectType())){
                     if("01".equals(param.getObjectType())){
-                        list.add(criteriaBuilder.equal(root.get("objectType").as(String.class),param.getObjectType()));
+                        list.add(criteriaBuilder.equal(root.get("objectType").as(String.class),"4314"));
                     }else if("02".equals(param.getObjectType())){
                         Expression<String> exp = root.<String>get("objectType");
                         list.add(exp.in(Arrays.asList("6424","6422","6423","7888"))); //汽车蓝色号码、汽车黄色号码、汽车白色号码，摩托车黄色号码

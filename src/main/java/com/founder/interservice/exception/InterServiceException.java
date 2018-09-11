@@ -1,4 +1,4 @@
-package com.founder.interservice.Exception;
+package com.founder.interservice.exception;
 
 import com.founder.interservice.enums.ResultEnum;
 

@@ -24,14 +24,10 @@
 			<table style="width:100%;border-collapse: collapse;background-color: rgba(255,255,255,0.75);text-align:left;" class="cx_table_tj">
 				<tr>
 					<td class="td_r" style="width:10%;">案件编号：</td>
-					<td style="width:20%;"><input name = "asjbh" id = "asjbh" type="text" /></td>
-					<td style="width:60%;">
-					</td>
-				</tr>
-				<tr>
-					<td colspan="6" style="text-align:right;">
-						<a href="javascript:queryTasks();" class="btn_cx">查询</a>
-						<a href="javascript:;" class="btn_qkcxtj" style="margin-right:100px;">重置</a>
+					<td style="width:20%;"><input name = "asjbh" id = "asjbh" type="text" value="${asjbh}"/></td>
+					<td style="width:60%;margin-left:200px;">
+                        <a href="javascript:queryTasks('02');" class="btn_cx">查询</a>
+                        <a href="javascript:$('#asjbh').val('');" class="btn_qkcxtj" style="margin-right:100px;">重置</a>
 					</td>
 				</tr>
 			</table>
@@ -49,7 +45,16 @@
 <script type="text/javascript" src="/js/jquery.easyui.min.js"></script>
 <script type="text/javascript" src="/js/easyui-lang-zh_CN.js"></script>
 <script type="text/javascript">
-function queryTasks(){
+    $(function(){
+        queryTasks("01");
+    });
+function queryTasks(type){
+        var  asjbh;
+        if("01" == type){
+            asjbh = "${asjbh}";
+        }else{
+            asjbh = $("#asjbh").val();
+        }
         var table_title = [
             {title:"任务编号",field:"taskId",align:'center',width:'20%',formatter : function(val,row,index){
                     return "<a onclick=\"showTaskResults('"+row.taskId+"')\" title='点击查看任务推荐结果'>"+row.taskId+"</a>";
@@ -63,9 +68,8 @@ function queryTasks(){
             {title:"登记时间",field:"djsj",align:'center',width:'10%'}
         ];
         var  param= {
-            "asjbh":$("#asjbh").val()
+            "asjbh":asjbh
         };
-        console.log(JSON.stringify(param));
         $("#taskTable").datagrid({
             url: "/queryTasksByAsjbh",
             columns : [table_title],
@@ -80,7 +84,6 @@ function queryTasks(){
             showFooter: true,
             pageNumber:1,
             loadFilter: function(data){
-                console.log(JSON.stringify(data));
                 return data;
             }
         });

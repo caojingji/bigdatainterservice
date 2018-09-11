@@ -23,7 +23,7 @@ import java.util.Date;
 import java.util.List;
 
 /**
- * @ClassName： ScheduledService
+ * @ClassName： TogetherScheduledService
  * @Auther： 曹鹏
  * @Description: 定时获取任务状态和任务结果的定时类
  * @CreateDate： 2018-08-22 16:46
@@ -39,6 +39,7 @@ public class TogetherScheduledService {
     private String TOGETHER_INFO_URL; //获取任务结果
     @Autowired
     private TrackTogetherTaskRepository taskRepository;
+    @Autowired
     private TogetherTaskResultRepository taskResultRepository;
     /**
      *
@@ -49,9 +50,9 @@ public class TogetherScheduledService {
      * @Author: cao peng
      * @date: 2018/8/22 0022-16:35
      */
-    @Scheduled(cron = "0 0/3 * * * ?") //每隔三分钟执行一次
+    @Scheduled(cron = "0 0/1 * * * ?") //每隔三分钟执行一次
     public void queryTaskResult(){
-        System.out.println("=============开始执行定时任务================");
+        System.out.println("=============伴随定时任务开始执行================");
         try{
             //1 下去查询任务表中 progress = 0  and status = QUEUEING的任务
             TrackTogetherTask togetherTask = new TrackTogetherTask();
@@ -63,7 +64,7 @@ public class TogetherScheduledService {
                 for (TrackTogetherTask task:taskList) {
                     String status_url = TOGETHER_STATUS_URL + "&taskId="+task.getTaskId();
                     String statusStr = HttpUtil.doGet(status_url);
-                    //String statusStr = "{\"progress\":0.8,\"state\":\"FINISHED\"}";
+                    //String statusStr = "{\"progress\":1,\"state\":\"FINISHED\"}";
                     System.out.println("statusStr ======================== " + statusStr);
                     if(statusStr != null && !statusStr.isEmpty() && statusStr.startsWith("{") && statusStr.endsWith("}")){
                         JSONObject jsonObject = JSONObject.parseObject(statusStr);
@@ -72,7 +73,7 @@ public class TogetherScheduledService {
                         if(progress == 1 && "FINISHED".equals(state)){ //任务执行完成  这时需要去取回任务结果值
                             String info_url = TOGETHER_INFO_URL + "&taskId=" + task.getTaskId();
                             String taskInfoResult = HttpUtil.doGet(info_url);
-                            //String taskInfoResult = "{\"results\":[{\"objectType\":6424,\"objectTypeName\":\"汽车蓝色号牌\",\"objectValue\":\"渝B7T762\"},{\"objectType\":4314,\"objectTypeName\":\"IMSI\",\"objectValue\":\"460092380008864\"},{\"objectType\":4329,\"objectTypeName\":\"MAC地址\",\"objectValue\":\"DAA119018598\"}],\"status\":\"ok\"}";
+                            //String taskInfoResult = "{\"items\":[{\"count\":75,\"objectType\":4394,\"objectTypeName\":\"电话号码\",\"objectValue\":\"460013088311061\"},{\"count\":70,\"objectType\":4394,\"objectTypeName\":\"电话号码\",\"objectValue\":\"460029233464484\"},{\"count\":65,\"objectType\":4394,\"objectTypeName\":\"电话号码\",\"objectValue\":\"460013022609934\"},{\"count\":63,\"objectType\":4394,\"objectTypeName\":\"电话号码\",\"objectValue\":\"460013312607010\"},{\"count\":57,\"objectType\":4394,\"objectTypeName\":\"电话号码\",\"objectValue\":\"460018669002987\"},{\"count\":53,\"objectType\":4394,\"objectTypeName\":\"电话号码\",\"objectValue\":\"460008397079525\"},{\"count\":53,\"objectType\":4394,\"objectTypeName\":\"电话号码\",\"objectValue\":\"460020523597601\"},{\"count\":53,\"objectType\":4394,\"objectTypeName\":\"电话号码\",\"objectValue\":\"460003164872839\"}],\"taskId\":\"98f6bcd4621d373cade4e832627b4f6-540-test-api-3-1536231954767\"}";
                             if(taskInfoResult!= null && !taskInfoResult.isEmpty()){
                                 JSONObject o = JSONObject.parseObject(taskInfoResult);
                                 JSONArray jsonArray = o.getJSONArray("items");
