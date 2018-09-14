@@ -1,5 +1,6 @@
 package com.founder.interservice.service;
 
+import com.founder.interservice.exception.InterServiceException;
 import com.founder.interservice.model.Relation;
 import com.founder.interservice.model.Track;
 import com.founder.interservice.querymodel.RelationFilter;
@@ -26,4 +27,6 @@ public interface DataService {
     public List<Track> queryTracksByRSD(TrackFilter trackFilter) throws Exception;
 
     public List<Track> queryTracksListNoPage(TrackFilter trackFilter) throws Exception;
+
+    public List<Track> queryNewLocation(TrackFilter trackFilter) throws InterServiceException;
 }

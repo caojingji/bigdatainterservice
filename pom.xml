@@ -148,6 +148,12 @@
             <artifactId>springloaded</artifactId>
             <version>1.2.6.RELEASE</version>
         </dependency>
+        <!-- 对接新德汇所需jar包 -->
+        <dependency>
+            <groupId>com.founder</groupId>
+            <artifactId>UnifiedService</artifactId>
+            <version>1.0</version>
+        </dependency>
     </dependencies>
 
     <build>

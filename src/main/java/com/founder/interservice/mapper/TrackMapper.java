@@ -1,5 +1,6 @@
 package com.founder.interservice.mapper;
 
+import com.founder.interservice.exception.InterServiceException;
 import com.founder.interservice.model.Track;
 import com.founder.interservice.querymodel.TrackFilter;
 import org.springframework.stereotype.Repository;
@@ -49,4 +50,6 @@ public interface TrackMapper {
     public List<Track> queryTracksListNoPage(TrackFilter trackFilter) throws Exception;
 
     public List<Track> queryTracksByRSD(TrackFilter trackFilter) throws Exception;
+
+    public List<Track> queryNewLocation(TrackFilter trackFilter) throws InterServiceException;
 }

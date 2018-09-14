@@ -14,7 +14,6 @@ import org.springframework.data.domain.Example;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Date;
 import java.util.List;
@@ -49,7 +48,7 @@ public class ScheduledService {
      * @Author: cao peng
      * @date: 2018/8/22 0022-16:35
      */
-    @Scheduled(cron = "0 0/3 * * * ?") //每隔五分钟执行一次
+    @Scheduled(cron = "0 0/1 * * * ?") //每隔三分钟执行一次
     public void queryTaskResult(){
         System.out.println("=============开始执行定时任务================");
         try{
@@ -63,7 +62,7 @@ public class ScheduledService {
                 for (RegionalTask task:taskList) {
                     String status_url = REGIONAL_ANALYSIS_TASK_STATUS + "&taskId="+task.getTaskId();
                     String statusStr = HttpUtil.doGet(status_url);
-                    //String statusStr = "{\"progress\":0.8,\"state\":\"FINISHED\"}";
+                    //String statusStr = "{\"progress\":1,\"state\":\"FINISHED\"}";
                     System.out.println("statusStr ======================== " + statusStr);
                     if(statusStr != null && !statusStr.isEmpty() && statusStr.startsWith("{") && statusStr.endsWith("}")){
                         JSONObject jsonObject = JSONObject.parseObject(statusStr);
@@ -71,38 +70,44 @@ public class ScheduledService {
                         String state = jsonObject.getString("state");
                         if(progress == 1 && "FINISHED".equals(state)){ //任务执行完成  这时需要去取回任务结果值
                             String info_url = REGIONAL_ANALYSIS_TASK_INFO + "&taskId=" + task.getTaskId();
-                            String taskInfoResult = HttpUtil.doGet(info_url);
-                            //String taskInfoResult = "{\"results\":[{\"objectType\":6424,\"objectTypeName\":\"汽车蓝色号牌\",\"objectValue\":\"渝B7T762\"},{\"objectType\":4314,\"objectTypeName\":\"IMSI\",\"objectValue\":\"460092380008864\"},{\"objectType\":4329,\"objectTypeName\":\"MAC地址\",\"objectValue\":\"DAA119018598\"}],\"status\":\"ok\"}";
-                            if(taskInfoResult!= null && !taskInfoResult.isEmpty()){
-                                JSONObject o = JSONObject.parseObject(taskInfoResult);
-                                JSONArray jsonArray = o.getJSONArray("results");
-                                if(jsonArray != null && jsonArray.size() > 0){
-                                    List<RegionalTaskResult> taskResults = jsonArray.toJavaList(RegionalTaskResult.class);
-                                    if(taskResults != null && !taskResults.isEmpty()){
-                                        for (RegionalTaskResult r:taskResults ) {
-                                            r.setTaskId(task.getTaskId());
-                                            r.setXXZJBH(KeyUtil.getUniqueKey("TR"));
-                                            r.setDjsj(new Date());
-                                        }
-                                        RegionalTaskResult param = new RegionalTaskResult();
-                                        param.setTaskId(task.getTaskId());
-                                        Example<RegionalTaskResult> example = Example.of(param);
-                                        List<RegionalTaskResult> results = taskResultRepository.findAll(example);
-                                        if(results == null || results.isEmpty()){
-                                            taskResultRepository.save(taskResults);
-                                        }
-                                        regionalTaskRepository.updateStatusByTaskId(task.getTaskId());
-                                    }
-                                }else{
-                                    regionalTaskRepository.updateStatusByTaskId(task.getTaskId());
-                                }
-                            }
+                            String taskInfoResult = null;//HttpUtil.doGet(info_url);
+                            //String taskInfoResult = "{\"results\":[],\"status\":\"ok\"}";
+                            do {
+                                taskInfoResult = HttpUtil.doGet(info_url);
+                                System.out.println("比对结果 taskInfoResult =============== " + taskInfoResult + "===taskId====" + task.getTaskId());
+                            }while (taskInfoResult!= null && !taskInfoResult.isEmpty() && taskInfoResult.startsWith("{") && taskInfoResult.endsWith("}"));
+                            getAndSaveInfo(taskInfoResult,task);
                         }
                     }
                 }
             }
         }catch (Exception e){
             e.printStackTrace();
+        }
+    }
+
+    public void getAndSaveInfo(String taskInfoResult,RegionalTask task){
+        JSONObject o = JSONObject.parseObject(taskInfoResult);
+        JSONArray jsonArray = o.getJSONArray("results");
+        if(jsonArray != null && jsonArray.size() > 0){
+            List<RegionalTaskResult> taskResults = jsonArray.toJavaList(RegionalTaskResult.class);
+            if(taskResults != null && !taskResults.isEmpty()){
+                for (RegionalTaskResult r:taskResults ) {
+                    r.setTaskId(task.getTaskId());
+                    r.setXXZJBH(KeyUtil.getUniqueKey("TR"));
+                    r.setDjsj(new Date());
+                }
+                RegionalTaskResult param = new RegionalTaskResult();
+                param.setTaskId(task.getTaskId());
+                Example<RegionalTaskResult> example = Example.of(param);
+                List<RegionalTaskResult> results = taskResultRepository.findAll(example);
+                if(results == null || results.isEmpty()){
+                    taskResultRepository.save(taskResults);
+                }
+                regionalTaskRepository.updateStatusByTaskId(task.getTaskId());
+            }
+        }else{
+            regionalTaskRepository.updateStatusByTaskId(task.getTaskId());
         }
     }
 

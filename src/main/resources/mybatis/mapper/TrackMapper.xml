@@ -123,4 +123,25 @@
         )
         where rownum <![CDATA[ <= ]]> 5
     </select>
+
+    <select id="queryNewLocation" parameterType="trackFilter" resultType="track">
+        select * from (
+                select
+                    t.xxzjbh,
+                    t.address,
+                    t.objecttype,
+                    t.objecttypename,
+                    t.objectvalue,
+                    t.j,
+                    t.w,
+                    t.timestr
+                from track t
+                <where>
+                    <include refid="queryTrack_where"/>
+                </where>
+              )
+        where rownum <![CDATA[ <= ]]> 1
+    </select>
+
+
 </mapper>

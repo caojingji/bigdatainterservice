@@ -1,5 +1,6 @@
 package com.founder.interservice.service.impl;
 
+import com.founder.interservice.exception.InterServiceException;
 import com.founder.interservice.mapper.RelationMapper;
 import com.founder.interservice.mapper.TrackMapper;
 import com.founder.interservice.model.Relation;
@@ -67,6 +68,19 @@ public class DataServiceImpl implements DataService {
     @Override
     public List<Track> queryTracksListNoPage(TrackFilter trackFilter) throws Exception{
         return trackMapper.queryTracksListNoPage(trackFilter);
+    }
+    /**
+     *
+     * @Description: 根据条件查询当前最新位置
+     * @Param:
+     * @param trackFilter
+     * @return: java.util.List<com.founder.interservice.model.Track>
+     * @Author: cao peng
+     * @date: 2018/9/13 0013-15:35
+     */
+    @Override
+    public List<Track> queryNewLocation(TrackFilter trackFilter) throws InterServiceException {
+        return trackMapper.queryNewLocation(trackFilter);
     }
 
     /**

@@ -178,7 +178,49 @@ public class DataController {
     }
     /**
      *
-     * @Description:
+     * @Description: 查询指定时间段内最新位置
+     * @Param:
+     * @param objValue
+     * @param kssj
+     * @param jssj
+     * @return: java.util.List<com.founder.interservice.VO.TrackVO>
+     * @Author: cao peng
+     * @date: 2018/9/13 0013-15:28
+     */
+    @RequestMapping(value = "/queryNewLocation",method = {RequestMethod.GET,RequestMethod.POST})
+    @ResponseBody
+    public List<TrackVO> queryNewLocation(String objValue, String kssj, String jssj){
+        List<TrackVO> trackVOS = null;
+        try {
+            TrackFilter trackFilter = new TrackFilter();
+            trackFilter.setKssj(kssj);
+            trackFilter.setJssj(jssj);
+            String imsis = getImsiStr(objValue);
+            if(imsis != null && !imsis.isEmpty()){
+                trackFilter.setObjectvalue(imsis);
+                List<Track> tracks = dataService.queryNewLocation(trackFilter);
+                if(tracks != null && !tracks.isEmpty()){
+                    trackVOS = new ArrayList<>();
+                    for (Track track: tracks) {
+                        TrackVO trackVO = new TrackVO();
+                        BeanUtils.copyProperties(track,trackVO);
+                        trackVOS.add(trackVO);
+                    }
+                }
+            }else{
+                trackVOS = new ArrayList<>();
+            }
+        }catch (Exception e){
+            e.printStackTrace();
+            trackVOS = new ArrayList<>();
+        }
+        return trackVOS;
+    }
+
+
+    /**
+     *
+     * @Description: 根据日时段对查询每个时段 停留时间最多的五个点
      * @Param:
      * @param objValue
      * @param kssj

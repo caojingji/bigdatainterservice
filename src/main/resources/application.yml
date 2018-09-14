@@ -1,6 +1,6 @@
 spring:
   profiles:
-    active: dev
+    active: prod
   mvc:
     view:
       prefix: /WEB-INF/jsp/
@@ -22,6 +22,12 @@ mybatis:
 #    port:
 
 # 系统变量
+
+xdhbigdata:
+  xdhserviceParam:
+    bizCode: XDH002
+    cjServiceId: XDHDS0004
+    getCjDataServiceId: XDHWS0022
 wabigdata:
   objectrelation:
     url:  http://www.adu.cq:6080/api?name=objectRelation&key=62bf1b59c14bf770ccbc48767db26c48
