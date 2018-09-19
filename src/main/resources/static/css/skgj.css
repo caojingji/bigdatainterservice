@@ -117,3 +117,10 @@ li {
 .top-div i,.bottom-div i{font-style: inherit;font-weight:600;}
 .b-lf-img>img{width:98px;margin:0 10px;position:relative;top:-16px;}
 .b-lf-img{display: inline-block;width:30%;}
+.h_title_bs{
+    float: left;
+    width:400px;
+    display: inline-block;
+    height: 80px;
+    margin-left: 24px;
+    background: url(../images/bs-banner.png);}

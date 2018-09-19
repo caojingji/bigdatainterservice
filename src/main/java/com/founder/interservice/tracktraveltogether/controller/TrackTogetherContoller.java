@@ -6,6 +6,7 @@ import com.founder.interservice.exception.InterServiceException;
 import com.founder.interservice.VO.ResultVO;
 import com.founder.interservice.enums.ResultEnum;
 import com.founder.interservice.regionalanalysis.VO.RegionalTaskResultVO;
+import com.founder.interservice.regionalanalysis.model.RegionalTask;
 import com.founder.interservice.regionalanalysis.model.RegionalTaskResult;
 import com.founder.interservice.service.IphoneTrackService;
 import com.founder.interservice.tracktraveltogether.model.TogetherTaskResult;
@@ -19,7 +20,9 @@ import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.ArrayList;
@@ -42,6 +45,53 @@ public class TrackTogetherContoller {
     private TrackTogetherService trackTogetherService;
     @Autowired
     private IphoneTrackService iphoneTrackService; //调取网安数据接口
+
+    /**
+    * 
+    * @Description: 跳转到时空轨迹伴随结果展示
+    * @Param:
+    * @return: ModelAndView
+    * @Author: cao peng
+    * @date: 2018/9/18 0018-10:19
+    */
+    @RequestMapping(value = "/toShowResultJsp")
+    public ModelAndView toShowResultJsp(){
+        ModelAndView modelAndView = new ModelAndView("qybs/skgjbsjgzs");
+        return modelAndView;
+    }
+
+
+
+    /**
+     *
+     * @Description: 根据任务编号查看伴随任务的进行状态
+     * @Param:
+     * @param taskId 任务编号
+     * @return: com.alibaba.fastjson.JSONObject
+     * @Author: cao peng
+     * @date: 2018/9/17 0017-10:09
+     */
+    @RequestMapping(value = "/getTogetherTaskState")
+    @ResponseBody
+    public JSONObject getTogetherTaskState(String taskId){
+        JSONObject jsonObject = new JSONObject();
+        try{
+            TrackTogetherTask task = trackTogetherService.findByTaskId(taskId);
+            if(null != task){
+                jsonObject.put("state", task.getState());
+                jsonObject.put("progress", task.getProgress());
+            }else{
+                jsonObject.put("state", "");
+                jsonObject.put("progress", "");
+            }
+        }catch (InterServiceException e){
+            e.printStackTrace();
+            jsonObject.put("state", "");
+            jsonObject.put("progress", "");
+        }
+        return jsonObject;
+    }
+
 
     /**
      *
@@ -161,9 +211,11 @@ public class TrackTogetherContoller {
             }else{
                 throw new InterServiceException(ResultEnum.PARAM_NOTNULL);
             }
+            //trackParam.setObjectValue("42151645456456");
             if(!StringUtil.ckeckEmpty(trackParam.getObjectValue())){
                 //2 拿到imsi后 再去调用伴随接口
                 String taskId = trackTogetherService.sendTrackTogetherTask(trackParam); //发送任务 并且得到任务编号
+                //String taskId = "123123123";
                 if(!StringUtil.ckeckEmpty(taskId)){
                     trackParam.setTaskId(taskId);
                 }else{

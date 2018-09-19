@@ -1,6 +1,7 @@
 package com.founder.interservice.tracktraveltogether.service;
 
 import com.founder.interservice.exception.InterServiceException;
+import com.founder.interservice.regionalanalysis.model.RegionalTask;
 import com.founder.interservice.tracktraveltogether.model.TogetherTaskResult;
 import com.founder.interservice.tracktraveltogether.model.TrackTogetherTask;
 import org.springframework.data.domain.Page;
@@ -20,4 +21,6 @@ public interface TrackTogetherService {
     public void saveTogetherTask(TrackTogetherTask trackParam);
 
     public List<TogetherTaskResult> findTogetherTaskResult(String taskId) throws InterServiceException;
+
+    public TrackTogetherTask findByTaskId(String taskId) throws InterServiceException;
 }

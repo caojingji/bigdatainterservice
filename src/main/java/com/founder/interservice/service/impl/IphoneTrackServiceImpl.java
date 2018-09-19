@@ -4,6 +4,7 @@ import com.alibaba.druid.util.StringUtils;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.founder.interservice.VO.TrackVO;
+import com.founder.interservice.enums.ResultEnum;
 import com.founder.interservice.exception.InterServiceException;
 import com.founder.interservice.model.Relation;
 import com.founder.interservice.model.ResultObj;
@@ -42,6 +43,23 @@ public class IphoneTrackServiceImpl implements IphoneTrackService {
     @Autowired
     private RelationRepository relationRepository;
 
+    @Override
+    public JSONObject getObjectRelationAll(String obj)throws InterServiceException{
+        JSONObject jsonObject = null;
+        try{
+            String url = relationGetAll_url + "&objectValue="+obj;
+            String result = HttpUtil.doGet(url);
+            if(!StringUtil.ckeckEmpty(result)){
+                if(result.startsWith("{") && result.endsWith("}")){
+                    jsonObject = JSONObject.parseObject(result);
+                }
+            }
+            return jsonObject;
+        }catch (Exception e){
+            throw new InterServiceException(ResultEnum.REQUEST_URL_ERROR);
+        }
+    }
+
     /**
      *
      * @Description:
@@ -64,6 +82,10 @@ public class IphoneTrackServiceImpl implements IphoneTrackService {
         }
         if(jsonObejct != null){
             resultObj = new ResultObj();
+            String objType= jsonObejct.getString("objType");
+            if(!"1".equals(objType)){
+                return resultObj;
+            }
             resultObj.setObjType(jsonObejct.getString("objType"));
             resultObj.setObjTypeName(jsonObejct.getString("objTypeName"));
             resultObj.setObjValue(jsonObejct.getString("objValue"));
@@ -261,6 +283,24 @@ public class IphoneTrackServiceImpl implements IphoneTrackService {
         }
         return resultMap;
     }
+
+    @Override
+    public JSONObject getObjectRelatioNoSave(String obj) throws InterServiceException{
+        try{
+            JSONObject jsonObejct = null;
+            String url = objectrelation_url+"&objectValue="+obj;
+            String result = HttpUtil.doGet(url);
+            if(!StringUtil.ckeckEmpty(result)){
+                if(result.startsWith("{") && result.endsWith("}")){
+                    jsonObejct = JSONObject.parseObject(result);
+                }
+            }
+            return jsonObejct;
+        }catch (Exception e){
+            throw new InterServiceException(ResultEnum.REQUEST_URL_ERROR);
+        }
+    }
+
 
     /**
      * 通过某一对象调取与之有关系的另一对象

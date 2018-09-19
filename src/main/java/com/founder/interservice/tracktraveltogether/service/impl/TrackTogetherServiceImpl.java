@@ -97,4 +97,22 @@ public class TrackTogetherServiceImpl implements TrackTogetherService {
             throw new InterServiceException(ResultEnum.RESULT_ERROR);
         }
     }
+    /**
+     *
+     * @Description: 根据任务编号查看任务进行状态
+     * @Param:
+     * @param taskId 任务编号
+     * @return: com.founder.interservice.tracktraveltogether.model.TrackTogetherTask
+     * @Author: cao peng
+     * @date: 2018/9/17 0017-10:12
+     */
+    @Override
+    public TrackTogetherTask findByTaskId(String taskId) throws InterServiceException {
+        try {
+            return taskRepository.findAllByTaskId(taskId);
+        }catch (Exception e){
+            e.printStackTrace();
+            throw new InterServiceException(ResultEnum.RESULT_ERROR);
+        }
+    }
 }

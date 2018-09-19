@@ -99,6 +99,8 @@
     <select id="queryTracksByRSD" parameterType="trackFilter" resultType="track">
         select * from (
           select t2.address as address,
+                 t2.j,
+                 t2.w,
               count(*) as timestr
             from (
                 select * from (
@@ -118,7 +120,7 @@
                 )  t1
                 where t1.daystr = #{base}
             ) t2
-          group by t2.address
+          group by t2.address,t2.j,t2.w
           order by count(*) desc
         )
         where rownum <![CDATA[ <= ]]> 5

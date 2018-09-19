@@ -18,8 +18,6 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.servlet.ModelAndView;
-import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import javax.servlet.http.HttpServletResponse;
 import java.util.ArrayList;
@@ -44,6 +42,8 @@ public class DataController {
     private IphoneTrackService iphoneTrackService;
     @Value("${wabigdata.pgis.url}")
     private String PGIS_URL;
+    @Value("${wabigdata.pgis_title.url}")
+    private String PGIS_TITLE_URL;
     /**
     *
     * @Description:跳转到轨迹查询界面
@@ -57,21 +57,22 @@ public class DataController {
     public String toGjcx(){
         return "jzgj";
     }
+
+
     /**
-    *
-    * @Description: 跳转到轨迹展示界面 同时调用网安接口查询轨迹信息 将数据入库保存
-    * @Param:
-     * @param objValue 参数值
-     * @param kssj  开始时间
-     * @param jssj  结束时间
-    * @return:
-    * @Author: cao peng
-    * @date: 2018/8/16 0016-10:26
-    */
-    @RequestMapping(value = "/toGjzs",method = {RequestMethod.POST,RequestMethod.GET})
-    public String toGjzs(String objValue, String kssj, String jssj, Model model){
+     *
+     * @Description: 获取和保存网安轨迹数据
+     * @Param:
+     * @param objValue 手机号，QQ号，微信号
+     * @param kssj 轨迹开始时间
+     * @param jssj 轨迹结束时间
+     * @return: void
+     * @Author: cao peng
+     * @date: 2018/9/19 0019-9:56
+     */
+    @RequestMapping(value = "/getAndSaveTrack")
+    public void getAndSaveTrack(String objValue, String kssj, String jssj){
         try{
-            //先调动网安接口拿取数据入库保存
             List<String> imsis = new ArrayList<>();
             JSONObject jsonObject = iphoneTrackService.getObjectRelation(objValue);
             if(jsonObject != null){
@@ -93,12 +94,29 @@ public class DataController {
                 String kssjstr = kssj.contains(" ") ? DateUtil.convertStringToDateTime(kssj).getTime() + "" : DateUtil.convertStringToDate(kssj).getTime() + "";
                 String jssjStr = jssj.contains(" ") ? DateUtil.convertStringToDateTime(jssj).getTime() + "" : DateUtil.convertStringToDate(jssj).getTime() + "";
                 for (String imsi : imsis) {
-                    Map<String, Object> resultMap = iphoneTrackService.iphoneTrackForSjhm(imsi, kssjstr, jssjStr);
+                    iphoneTrackService.iphoneTrackForSjhm(imsi, kssjstr, jssjStr);
                 }
             }
         }catch(Exception e){
             e.printStackTrace();
         }
+    }
+
+
+    /**
+    *
+    * @Description: 跳转到轨迹展示界面 同时调用网安接口查询轨迹信息 将数据入库保存
+    * @Param:
+     * @param objValue 参数值
+     * @param kssj  开始时间
+     * @param jssj  结束时间
+    * @return:
+    * @Author: cao peng
+    * @date: 2018/8/16 0016-10:26
+    */
+    @RequestMapping(value = "/toGjzs",method = {RequestMethod.POST,RequestMethod.GET})
+    public String toGjzs(String objValue, String kssj, String jssj, Model model){
+        getAndSaveTrack(objValue, kssj, jssj);
         model.addAttribute("objValue", objValue);
         model.addAttribute("kssj", kssj);
         model.addAttribute("jssj", jssj);
@@ -115,37 +133,11 @@ public class DataController {
     * @date: 2018/8/16 0016-17:23
     */
     @RequestMapping(value = "/toGjzsPgis",method = {RequestMethod.GET,RequestMethod.POST})
-    public void toGjzsPgis(
-                           HttpServletResponse httpServletResponse,
+    public void toGjzsPgis(HttpServletResponse httpServletResponse,
                            String objValue, String kssj, String jssj){
         String paramStr = null;
         try{
-            //为防止数据没入库 先调用网安接口进行一次数据入库操作
-            List<String> imsis = new ArrayList<>();
-            JSONObject jsonObject = iphoneTrackService.getObjectRelation(objValue);
-            if(jsonObject != null){
-                JSONArray jsonArray = jsonObject.getJSONArray("results");
-                if(jsonArray != null && jsonArray.size() > 0){
-                    for (int i = 0; i <= jsonArray.size() - 1;i++){
-                        JSONObject resObj = jsonArray.getJSONObject(i);
-                        String objectType = resObj.getString("objectToTypeName");
-                        if (objectType != null && "IMSI".equals(objectType)){
-                            String imsi = (String) resObj.get("objectToValue");
-                            if(!imsis.contains(imsi)){
-                                imsis.add(imsi);
-                            }
-                        }
-                    }
-                }
-            }
-            if(imsis != null && !imsis.isEmpty()) {
-                String kssjstr = kssj.contains(" ") ? DateUtil.convertStringToDateTime(kssj).getTime() + "" : DateUtil.convertStringToDate(kssj).getTime() + "";
-                String jssjStr = jssj.contains(" ") ? DateUtil.convertStringToDateTime(jssj).getTime() + "" : DateUtil.convertStringToDate(jssj).getTime() + "";
-                for (String imsi : imsis) {
-                    Map<String, Object> resultMap = iphoneTrackService.iphoneTrackForSjhm(imsi, kssjstr, jssjStr);
-                }
-            }
-
+            getAndSaveTrack(objValue, kssj, jssj);
             /*数据入口后再进行查取操作*/
             TrackFilter trackFilter = new TrackFilter();
             trackFilter.setKssj(kssj);
@@ -170,12 +162,46 @@ public class DataController {
             //httpServletResponse.sendRedirect(PGIS_URL + "markers="+paramStr);
             //使用post发送请求
             HttpClient httpClient = new HttpClient(httpServletResponse);
-            httpClient.setParameter("markers",paramStr);
+            httpClient.setParameter("flag", "search");
+            httpClient.setParameter("markers", paramStr);
             httpClient.sendByPost(PGIS_URL);
         }catch (Exception e){
             e.printStackTrace();
         }
     }
+    /**
+    *
+    * @Description: 最新位置跳转到地图展示
+    * @Param:
+    * @return:
+    * @Author: cao peng
+    * @date: 2018/9/17 0017-12:41
+    */
+    @RequestMapping(value = "/queryNewLocation_pgis")
+    public void queryNewLocation_pgis(HttpServletResponse response,String objValue, String kssj, String jssj){
+        try{
+            TrackFilter trackFilter = new TrackFilter();
+            trackFilter.setKssj(kssj);
+            trackFilter.setJssj(jssj);
+            String imsis = getImsiStr(objValue);
+            if(imsis != null && !imsis.isEmpty()){
+                trackFilter.setObjectvalue(imsis);
+                List<Track> tracks = dataService.queryNewLocation(trackFilter);
+                if(tracks != null && !tracks.isEmpty()){
+                    Track track = tracks.get(0);
+                    response.sendRedirect(PGIS_TITLE_URL+"&jd="+track.getJ()+"&wd="+track.getW()+"&title="+track.getAddress());
+                }else{
+                    response.sendRedirect(PGIS_TITLE_URL+"&jd=&wd=&title=");
+                }
+            }else{
+                response.sendRedirect(PGIS_TITLE_URL+"&jd=&wd=&title=");
+            }
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+    }
+
+
     /**
      *
      * @Description: 查询指定时间段内最新位置
@@ -217,6 +243,52 @@ public class DataController {
         return trackVOS;
     }
 
+    @RequestMapping(value = "/queryTracksByRSD_pgis")
+    public void queryTracksByRSD_pgis(HttpServletResponse servletResponse,String objValue, String kssj, String jssj,String base){
+        String paramStr = null;
+        try {
+            TrackFilter trackFilter = new TrackFilter();
+            trackFilter.setKssj(kssj);
+            trackFilter.setJssj(jssj);
+            if("01".equals(base)){
+                trackFilter.setBase("夜间");
+            }else if ("02".equals(base)) {
+                trackFilter.setBase("上午");
+            }else if("03".equals(base)){
+                trackFilter.setBase("下午");
+            }else if("04".equals(base)){
+                trackFilter.setBase("傍晚");
+            }
+            String imsis = getImsiStr(objValue);
+            if(imsis != null && !imsis.isEmpty()){
+                trackFilter.setObjectvalue(imsis);
+                List<Track> tracks = dataService.queryTracksByRSD(trackFilter);
+                if(tracks != null && !tracks.isEmpty()){
+                    if(tracks.size() == 1){
+                        paramStr = tracks.get(0).getJ() + "," +tracks.get(0).getW();
+                    }else{
+                        for (int i = 0;i < tracks.size(); i++){
+                            if(i == 0){
+                                paramStr = tracks.get(i).getJ() + "," +tracks.get(i).getW() + ";";
+                            }else if(i == tracks.size() - 1 ){
+                                paramStr = paramStr + tracks.get(i).getJ() + "," +tracks.get(i).getW();
+                            }else{
+                                paramStr = paramStr + tracks.get(i).getJ() + "," +tracks.get(i).getW() + ";";
+                            }
+                        }
+                    }
+                }
+                //httpServletResponse.sendRedirect(PGIS_URL + "markers="+paramStr);
+                //使用post发送请求
+                HttpClient httpClient = new HttpClient(servletResponse);
+                httpClient.setParameter("markers",paramStr);
+                httpClient.sendByPost(PGIS_URL);
+            }
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+
+    }
 
     /**
      *
@@ -267,6 +339,50 @@ public class DataController {
             e.printStackTrace();
         }
         return trackVOS;
+    }
+    /**
+    * 
+    * @Description: 关联次数最多的五次 使用地图进行展现
+    * @Param:
+    * @return:
+    * @Author: cao peng
+    * @date: 2018/9/17 0017-12:47
+    */
+    @RequestMapping(value = "/queryTrackBefore5_pgis")
+    public void queryTrackBefore5_pgis(HttpServletResponse httpServletResponse,String objValue, String kssj, String jssj){
+        String paramStr = null;
+        try {
+            TrackFilter trackFilter = new TrackFilter();
+            trackFilter.setKssj(kssj);
+            trackFilter.setJssj(jssj);
+            String imsis = getImsiStr(objValue);
+            if(imsis != null && !imsis.isEmpty()){
+                trackFilter.setObjectvalue(imsis);
+                List<Track> tracks = dataService.queryTrackBefore5(trackFilter);
+                if(tracks != null && !tracks.isEmpty()){
+                    if(tracks.size() == 1){
+                        paramStr = tracks.get(0).getJ() + "," +tracks.get(0).getW();
+                    }else{
+                        for (int i = 0;i < tracks.size(); i++){
+                            if(i == 0){
+                                paramStr = tracks.get(i).getJ() + "," +tracks.get(i).getW() + ";";
+                            }else if(i == tracks.size() - 1 ){
+                                paramStr = paramStr + tracks.get(i).getJ() + "," +tracks.get(i).getW();
+                            }else{
+                                paramStr = paramStr + tracks.get(i).getJ() + "," +tracks.get(i).getW() + ";";
+                            }
+                        }
+                    }
+                }
+                //httpServletResponse.sendRedirect(PGIS_URL + "markers="+paramStr);
+                //使用post发送请求
+                HttpClient httpClient = new HttpClient(httpServletResponse);
+                httpClient.setParameter("markers",paramStr);
+                httpClient.sendByPost(PGIS_URL);
+            }
+        }catch (Exception e){
+            e.printStackTrace();
+        }
     }
 
     /**

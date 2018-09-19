@@ -4,6 +4,7 @@ import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.founder.interservice.VO.ResultVO;
 import com.founder.interservice.enums.ResultEnum;
+import com.founder.interservice.exception.InterServiceException;
 import com.founder.interservice.model.AutoTbStRy;
 import com.founder.interservice.model.ResultObj;
 import com.founder.interservice.regionalanalysis.VO.RegionalTaskResultVO;
@@ -66,6 +67,36 @@ public class RegionalAnalysisController {
         ModelAndView modelAndView = new ModelAndView("qypz/skgjpzjgzs");
         modelAndView.addObject("taskId", taskId);
         return modelAndView;
+    }
+
+    /**
+     *
+     * @Description: 通过任务编号查询任务状态 给嘉琪提供接口
+     * @Param:
+     * @param taskId 任务编号
+     * @return: com.alibaba.fastjson.JSONObject
+     * @Author: cao peng
+     * @date: 2018/9/14 0014-16:42
+     */
+    @RequestMapping(value = "/queryTaskStatus")
+    @ResponseBody
+    public JSONObject queryTaskStatus(String taskId){
+        JSONObject jsonObject = new JSONObject();
+        try{
+            RegionalTask task = regionalAnalysisService.findByTaskId(taskId);
+            if(null != task){
+                jsonObject.put("state", task.getState());
+                jsonObject.put("progress", task.getProgress());
+            }else{
+                jsonObject.put("state", "");
+                jsonObject.put("progress", "");
+            }
+        }catch (InterServiceException e){
+            e.printStackTrace();
+            jsonObject.put("state", "");
+            jsonObject.put("progress", "");
+        }
+        return jsonObject;
     }
 
     /**
@@ -135,6 +166,32 @@ public class RegionalAnalysisController {
         return resultMap;
     }
 
+
+    @RequestMapping(value = "/getTaskResultsSjhm",method = {RequestMethod.GET,RequestMethod.POST})
+    @ResponseBody
+    public List<String> getTaskResultsSjhm( Integer page, Integer size,RegionalTaskResult param){
+        List<String> sjhms = new ArrayList<>();
+        try {
+            Page<RegionalTaskResult> resultPage = regionalAnalysisService.findRegionalTaskResult(page,size,param);
+            List<RegionalTaskResult> taskResults = resultPage.getContent();
+            if(taskResults != null && !taskResults.isEmpty()){
+                for(int i = 0; i <= taskResults.size() - 1; i++){
+                    RegionalTaskResultVO taskResultVO = new RegionalTaskResultVO();
+                    BeanUtils.copyProperties(taskResults.get(i),taskResultVO);
+                    if("01".equals(param.getObjectType())){
+                        String imsi = taskResults.get(i).getObjectValue();
+                        taskResultVO = getRyxxData(imsi,taskResultVO,"sjhm");
+                        sjhms.add(taskResultVO.getSjhm());
+                    }
+                }
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return sjhms;
+    }
+
+
     @RequestMapping(value = "/getTaskResults",method = {RequestMethod.GET,RequestMethod.POST})
     @ResponseBody
     public List<RegionalTaskResultVO> getTaskResults( Integer page, Integer size,RegionalTaskResult param){
@@ -148,7 +205,7 @@ public class RegionalAnalysisController {
                     BeanUtils.copyProperties(taskResults.get(i),taskResultVO);
                     if("01".equals(param.getObjectType())){
                         String imsi = taskResults.get(i).getObjectValue();
-                        taskResultVO = getRyxxData(imsi,taskResultVO);
+                        taskResultVO = getRyxxData(imsi,taskResultVO,"ryxx");
                     }else if("02".equals(param.getObjectType())){
                         String cphm = taskResults.get(i).getObjectValue();
                         taskResultVO = getJdcData(cphm,taskResultVO);
@@ -162,7 +219,7 @@ public class RegionalAnalysisController {
         return taskResultVOS;
     }
 
-    public RegionalTaskResultVO getJdcData(String cphm,RegionalTaskResultVO taskResultVO) throws Exception{
+    private RegionalTaskResultVO getJdcData(String cphm,RegionalTaskResultVO taskResultVO) throws Exception{
         /*1 通过车牌号调取车辆所有人信息*/
         if(!StringUtil.ckeckEmpty(cphm)){
             //1、 通过车牌号码调取对应的拥有人信息
@@ -217,72 +274,99 @@ public class RegionalAnalysisController {
     }
 
 
-    public RegionalTaskResultVO getRyxxData(String imsi,RegionalTaskResultVO taskResultVO) throws Exception{
-        if(!StringUtil.ckeckEmpty(imsi)){
-            //1、 通过IMSI号调取对应的电话号码
-            JSONObject jsonObject = iphoneTrackService.getObjectRelation(imsi);
-            if(jsonObject != null){
-                JSONArray jsonArray = jsonObject.getJSONArray("results");
-                if(jsonArray != null && jsonArray.size() > 0){
-                    for (int j = 0; j <= jsonArray.size() - 1;j++){
-                        JSONObject resObj = jsonArray.getJSONObject(j);
-                        String relativeType = resObj.getString("relativeType"); //关联类型  4402（手机-IMSI）
-                        String objectFromType = resObj.getString("objectFromType"); //数据来源值类型  4314(IMSI)
-                        String objectFromValue = resObj.getString("objectFromValue"); //数据来源值
-                        String objectToType = resObj.getString("objectToType"); //所得对象值类型  20（联系方式） 4394（电话号码） 3996（手机号码）
-                        if ("4402".equals(relativeType) && "4314".equals(objectFromType)
-                                && Arrays.asList("20","4394","3996").contains(objectToType) && imsi.equals(objectFromValue)){
-                            String sjhm = resObj.getString("objectToValue");
-                            if(null != sjhm && 11 == sjhm.length()){
-                                taskResultVO.setSjhm(sjhm); //将得到手机号码赋值到对象
-                                break;
-                            }
-                        }
-                    }
-                }
-            }
-        }
-        //2 通过手机号码调取身份证号
-        if(!StringUtil.ckeckEmpty(taskResultVO.getSjhm())){
-            ResultObj resultObj = iphoneTrackService.getObjectRelationAll(taskResultVO.getSjhm(),"00");
-            if(resultObj != null && "1".equals(resultObj.getObjType())){
-                String zjhm = resultObj.getObjValue();
-                if(StringUtil.ckeckEmpty(zjhm)){ //如果第四个接口获取的身份证号为空    则使用第一个接口进行获取
-                    JSONObject jsonObject = iphoneTrackService.getObjectRelation(taskResultVO.getSjhm());
-                    if(jsonObject != null){
-                        JSONArray jsonArray = jsonObject.getJSONArray("results");
-                        if(jsonArray != null && jsonArray.size() > 0){
-                            for (int j = 0; j <= jsonArray.size() - 1;j++){
-                                JSONObject resObj = jsonArray.getJSONObject(j);
-                                String relativeType = resObj.getString("relativeType"); //关联类型  20（联系方式）
-                                String objectFromType = resObj.getString("objectFromType"); //数据来源值类型  20（联系方式） 4394（电话号码） 3996（手机号码）
-                                String objectFromValue = resObj.getString("objectFromValue"); //数据来源值
-                                String objectToType = resObj.getString("objectToType"); //所得对象值类型  1（身份证号码）
-                                if ("20".equals(relativeType) && taskResultVO.getSjhm().equals(objectFromValue)
-                                        && Arrays.asList("20","4394","3996").contains(objectFromType) && "1".equals(objectToType)){
-                                    String zjhm1 = resObj.getString("objectToValue");
-                                    taskResultVO.setZjhm(zjhm1);
+    private RegionalTaskResultVO getRyxxData(String imsi,RegionalTaskResultVO taskResultVO,String type) throws Exception{
+        if("sjhm".equals(type)){
+            if(!StringUtil.ckeckEmpty(imsi)){
+                //1、 通过IMSI号调取对应的电话号码
+                JSONObject jsonObject = iphoneTrackService.getObjectRelation(imsi);
+                if(jsonObject != null){
+                    JSONArray jsonArray = jsonObject.getJSONArray("results");
+                    if(jsonArray != null && jsonArray.size() > 0){
+                        for (int j = 0; j <= jsonArray.size() - 1;j++){
+                            JSONObject resObj = jsonArray.getJSONObject(j);
+                            String relativeType = resObj.getString("relativeType"); //关联类型  4402（手机-IMSI）
+                            String objectFromType = resObj.getString("objectFromType"); //数据来源值类型  4314(IMSI)
+                            String objectFromValue = resObj.getString("objectFromValue"); //数据来源值
+                            String objectToType = resObj.getString("objectToType"); //所得对象值类型  20（联系方式） 4394（电话号码） 3996（手机号码）
+                            if ("4402".equals(relativeType) && "4314".equals(objectFromType)
+                                    && Arrays.asList("20","4394","3996").contains(objectToType) && imsi.equals(objectFromValue)){
+                                String sjhm = resObj.getString("objectToValue");
+                                if(null != sjhm && 11 == sjhm.length()){
+                                    taskResultVO.setSjhm(sjhm); //将得到手机号码赋值到对象
                                     break;
                                 }
                             }
                         }
                     }
-                }else{
-                    taskResultVO.setZjhm(zjhm); //如果第四个接口获取的身份证号码 不为空 则直接赋值
                 }
             }
-        }
-        //3 通过身份证号调取二代证信息
-        if(!StringUtil.ckeckEmpty(taskResultVO.getZjhm())){
-            AutoTbStRy tbStRy = new Qgckzp().getQgckAllxxXml(taskResultVO.getZjhm());
-            taskResultVO.setXzzDzmc(tbStRy.getXzzDzmc());//现住址
-            taskResultVO.setCsdDzmc(tbStRy.getCsdDzmc());//出生地
-            if(tbStRy.getCsrqRqgzxx() != null){
-                taskResultVO.setCsrq(DateUtil.convertDateToChineseString(tbStRy.getCsrqRqgzxx()));//出生日期
-                taskResultVO.setAge(DateUtil.getAge(tbStRy.getCsrqRqgzxx())); //age
+        }else{
+            if(!StringUtil.ckeckEmpty(imsi)){
+                //1、 通过IMSI号调取对应的电话号码
+                JSONObject jsonObject = iphoneTrackService.getObjectRelation(imsi);
+                if(jsonObject != null){
+                    JSONArray jsonArray = jsonObject.getJSONArray("results");
+                    if(jsonArray != null && jsonArray.size() > 0){
+                        for (int j = 0; j <= jsonArray.size() - 1;j++){
+                            JSONObject resObj = jsonArray.getJSONObject(j);
+                            String relativeType = resObj.getString("relativeType"); //关联类型  4402（手机-IMSI）
+                            String objectFromType = resObj.getString("objectFromType"); //数据来源值类型  4314(IMSI)
+                            String objectFromValue = resObj.getString("objectFromValue"); //数据来源值
+                            String objectToType = resObj.getString("objectToType"); //所得对象值类型  20（联系方式） 4394（电话号码） 3996（手机号码）
+                            if ("4402".equals(relativeType) && "4314".equals(objectFromType)
+                                    && Arrays.asList("20","4394","3996").contains(objectToType) && imsi.equals(objectFromValue)){
+                                String sjhm = resObj.getString("objectToValue");
+                                if(null != sjhm && 11 == sjhm.length()){
+                                    taskResultVO.setSjhm(sjhm); //将得到手机号码赋值到对象
+                                    break;
+                                }
+                            }
+                        }
+                    }
+                }
             }
-            taskResultVO.setName(tbStRy.getXm());//姓名
-            taskResultVO.setRyzp(tbStRy.getEdzzplj());//人员照片
+            //2 通过手机号码调取身份证号
+            if(!StringUtil.ckeckEmpty(taskResultVO.getSjhm())){
+                ResultObj resultObj = iphoneTrackService.getObjectRelationAll(taskResultVO.getSjhm(),"00");
+                if(resultObj != null && "1".equals(resultObj.getObjType())){
+                    String zjhm = resultObj.getObjValue();
+                    if(StringUtil.ckeckEmpty(zjhm)){ //如果第四个接口获取的身份证号为空    则使用第一个接口进行获取
+                        JSONObject jsonObject = iphoneTrackService.getObjectRelation(taskResultVO.getSjhm());
+                        if(jsonObject != null){
+                            JSONArray jsonArray = jsonObject.getJSONArray("results");
+                            if(jsonArray != null && jsonArray.size() > 0){
+                                for (int j = 0; j <= jsonArray.size() - 1;j++){
+                                    JSONObject resObj = jsonArray.getJSONObject(j);
+                                    String relativeType = resObj.getString("relativeType"); //关联类型  20（联系方式）
+                                    String objectFromType = resObj.getString("objectFromType"); //数据来源值类型  20（联系方式） 4394（电话号码） 3996（手机号码）
+                                    String objectFromValue = resObj.getString("objectFromValue"); //数据来源值
+                                    String objectToType = resObj.getString("objectToType"); //所得对象值类型  1（身份证号码）
+                                    if ("20".equals(relativeType) && taskResultVO.getSjhm().equals(objectFromValue)
+                                            && Arrays.asList("20","4394","3996").contains(objectFromType) && "1".equals(objectToType)){
+                                        String zjhm1 = resObj.getString("objectToValue");
+                                        taskResultVO.setZjhm(zjhm1);
+                                        break;
+                                    }
+                                }
+                            }
+                        }
+                    }else{
+                        taskResultVO.setZjhm(zjhm); //如果第四个接口获取的身份证号码 不为空 则直接赋值
+                    }
+                }
+            }
+            //3 通过身份证号调取二代证信息
+            if(!StringUtil.ckeckEmpty(taskResultVO.getZjhm())){
+                AutoTbStRy tbStRy = new Qgckzp().getQgckAllxxXml(taskResultVO.getZjhm());
+                taskResultVO.setXzzDzmc(tbStRy.getXzzDzmc());//现住址
+                taskResultVO.setCsdDzmc(tbStRy.getCsdDzmc());//出生地
+                if(tbStRy.getCsrqRqgzxx() != null){
+                    taskResultVO.setCsrq(DateUtil.convertDateToChineseString(tbStRy.getCsrqRqgzxx()));//出生日期
+                    taskResultVO.setAge(DateUtil.getAge(tbStRy.getCsrqRqgzxx())); //age
+                }
+                taskResultVO.setName(tbStRy.getXm());//姓名
+                taskResultVO.setRyzp(tbStRy.getEdzzplj());//人员照片
+            }
         }
         return taskResultVO;
     }

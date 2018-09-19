@@ -22,7 +22,6 @@ mybatis:
 #    port:
 
 # 系统变量
-
 xdhbigdata:
   xdhserviceParam:
     bizCode: XDH002
@@ -36,7 +35,9 @@ wabigdata:
   relationGetAll:
     url:  http://www.adu.cq:6080/api?name=relationGetAll&key=62bf1b59c14bf770ccbc48767db26c48
   pgis:
-    url:  http://77.1.24.49:8081/lbs/poiController/poiMarkers
+    url:  http://77.1.24.49:8080/lbs/poiController/poiMarkers
+  pgis_title:
+    url:  http://77.1.24.49:8080/lbs?flag=search&jdObj=&wdObj=&inputFlag=&saveFlag=
 #区域碰撞  相关的url
   regionalAnalysisTask:  #提交任务
     url:  http://www.adu.cq:6080/api?name=regionalAnalysisTask&key=62bf1b59c14bf770ccbc48767db26c48

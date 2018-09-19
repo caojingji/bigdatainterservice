@@ -70,12 +70,12 @@ public class ScheduledService {
                         String state = jsonObject.getString("state");
                         if(progress == 1 && "FINISHED".equals(state)){ //任务执行完成  这时需要去取回任务结果值
                             String info_url = REGIONAL_ANALYSIS_TASK_INFO + "&taskId=" + task.getTaskId();
-                            String taskInfoResult = null;//HttpUtil.doGet(info_url);
+                            String taskInfoResult = HttpUtil.doGet(info_url);
                             //String taskInfoResult = "{\"results\":[],\"status\":\"ok\"}";
-                            do {
+                            while(taskInfoResult == null || taskInfoResult.isEmpty() || !taskInfoResult.startsWith("{")){
                                 taskInfoResult = HttpUtil.doGet(info_url);
-                                System.out.println("比对结果 taskInfoResult =============== " + taskInfoResult + "===taskId====" + task.getTaskId());
-                            }while (taskInfoResult!= null && !taskInfoResult.isEmpty() && taskInfoResult.startsWith("{") && taskInfoResult.endsWith("}"));
+                                System.out.println("taskInfoResult ==============" + taskInfoResult);
+                            }
                             getAndSaveInfo(taskInfoResult,task);
                         }
                     }
@@ -86,7 +86,7 @@ public class ScheduledService {
         }
     }
 
-    public void getAndSaveInfo(String taskInfoResult,RegionalTask task){
+    public void getAndSaveInfo(String taskInfoResult,RegionalTask task) throws  Exception{
         JSONObject o = JSONObject.parseObject(taskInfoResult);
         JSONArray jsonArray = o.getJSONArray("results");
         if(jsonArray != null && jsonArray.size() > 0){

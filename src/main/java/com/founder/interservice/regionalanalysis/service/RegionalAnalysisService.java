@@ -1,5 +1,6 @@
 package com.founder.interservice.regionalanalysis.service;
 
+import com.founder.interservice.exception.InterServiceException;
 import com.founder.interservice.regionalanalysis.model.Regional;
 import com.founder.interservice.regionalanalysis.model.RegionalTask;
 import com.founder.interservice.regionalanalysis.model.RegionalTaskResult;
@@ -22,6 +23,7 @@ public interface RegionalAnalysisService {
 
     public void saveRegionalTask(RegionalTask regionalTask) throws Exception;
     public void saveRegionalTaskList(List<RegionalTask> regionalTasks) throws Exception;
+    public RegionalTask findByTaskId(String taskId)throws InterServiceException;
     public List<RegionalTaskResult> getTaskResults(RegionalTaskResult param) throws Exception;
     /**
     *

@@ -12,6 +12,7 @@ import com.founder.interservice.tracktraveltogether.repository.TogetherTaskResul
 import com.founder.interservice.tracktraveltogether.repository.TrackTogetherTaskRepository;
 import com.founder.interservice.util.HttpUtil;
 import com.founder.interservice.util.KeyUtil;
+import com.founder.interservice.util.StringUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Example;
@@ -50,7 +51,7 @@ public class TogetherScheduledService {
      * @Author: cao peng
      * @date: 2018/8/22 0022-16:35
      */
-    //@Scheduled(cron = "0 0/5 * * * ?") //每隔三分钟执行一次
+    @Scheduled(cron = "0 0/2 * * * ?") //每隔三分钟执行一次
     public void queryTaskResult(){
         System.out.println("=============伴随定时任务开始执行================");
         try{
@@ -74,36 +75,41 @@ public class TogetherScheduledService {
                             String info_url = TOGETHER_INFO_URL + "&taskId=" + task.getTaskId();
                             String taskInfoResult = HttpUtil.doGet(info_url);
                             //String taskInfoResult = "{\"items\":[{\"count\":75,\"objectType\":4394,\"objectTypeName\":\"电话号码\",\"objectValue\":\"460013088311061\"},{\"count\":70,\"objectType\":4394,\"objectTypeName\":\"电话号码\",\"objectValue\":\"460029233464484\"},{\"count\":65,\"objectType\":4394,\"objectTypeName\":\"电话号码\",\"objectValue\":\"460013022609934\"},{\"count\":63,\"objectType\":4394,\"objectTypeName\":\"电话号码\",\"objectValue\":\"460013312607010\"},{\"count\":57,\"objectType\":4394,\"objectTypeName\":\"电话号码\",\"objectValue\":\"460018669002987\"},{\"count\":53,\"objectType\":4394,\"objectTypeName\":\"电话号码\",\"objectValue\":\"460008397079525\"},{\"count\":53,\"objectType\":4394,\"objectTypeName\":\"电话号码\",\"objectValue\":\"460020523597601\"},{\"count\":53,\"objectType\":4394,\"objectTypeName\":\"电话号码\",\"objectValue\":\"460003164872839\"}],\"taskId\":\"98f6bcd4621d373cade4e832627b4f6-540-test-api-3-1536231954767\"}";
-                            if(taskInfoResult!= null && !taskInfoResult.isEmpty() && taskInfoResult.startsWith("{") && taskInfoResult.endsWith("}")){
-                                JSONObject o = JSONObject.parseObject(taskInfoResult);
-                                JSONArray jsonArray = o.getJSONArray("items");
-                                if(jsonArray != null && jsonArray.size() > 0){
-                                    List<TogetherTaskResult> taskResults = jsonArray.toJavaList(TogetherTaskResult.class);
-                                    if(taskResults != null && !taskResults.isEmpty()){
-                                        for (TogetherTaskResult r:taskResults) {
-                                            r.setTaskId(task.getTaskId());
-                                            r.setXXZJBH(KeyUtil.getUniqueKey("TT"));
-                                            r.setDjsj(new Date());
-                                        }
-                                        TogetherTaskResult param = new TogetherTaskResult();
-                                        param.setTaskId(task.getTaskId());
-                                        Example<TogetherTaskResult> example = Example.of(param);
-                                        List<TogetherTaskResult> results = taskResultRepository.findAll(example);
-                                        if(results == null || results.isEmpty()){
-                                            taskResultRepository.save(taskResults);
-                                        }
-                                        taskRepository.updateStatusByTaskId(task.getTaskId());
-                                    }
-                                }else{
-                                    taskRepository.updateStatusByTaskId(task.getTaskId());
-                                }
+                            while(StringUtil.ckeckEmpty(taskInfoResult) || !taskInfoResult.startsWith("{")){
+                                taskInfoResult = HttpUtil.doGet(info_url);
                             }
+                            getAndSaveInfo(taskInfoResult,task);
                         }
                     }
                 }
             }
         }catch (Exception e){
             e.printStackTrace();
+        }
+    }
+
+    public void getAndSaveInfo(String taskInfoResult,TrackTogetherTask task) throws  Exception{
+        JSONObject o = JSONObject.parseObject(taskInfoResult);
+        JSONArray jsonArray = o.getJSONArray("items");
+        if(jsonArray != null && jsonArray.size() > 0){
+            List<TogetherTaskResult> taskResults = jsonArray.toJavaList(TogetherTaskResult.class);
+            if(taskResults != null && !taskResults.isEmpty()){
+                for (TogetherTaskResult r:taskResults) {
+                    r.setTaskId(task.getTaskId());
+                    r.setXXZJBH(KeyUtil.getUniqueKey("TT"));
+                    r.setDjsj(new Date());
+                }
+                TogetherTaskResult param = new TogetherTaskResult();
+                param.setTaskId(task.getTaskId());
+                Example<TogetherTaskResult> example = Example.of(param);
+                List<TogetherTaskResult> results = taskResultRepository.findAll(example);
+                if(results == null || results.isEmpty()){
+                    taskResultRepository.save(taskResults);
+                }
+                taskRepository.updateStatusByTaskId(task.getTaskId());
+            }
+        }else{
+            taskRepository.updateStatusByTaskId(task.getTaskId());
         }
     }
 

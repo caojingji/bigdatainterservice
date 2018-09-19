@@ -15,4 +15,7 @@ public interface IphoneTrackService {
     public Map<String,Object> iphoneTrackForSjhm(String obj, String kssj, String jssj) throws InterServiceException;
     public JSONObject getObjectRelation(String obj) throws InterServiceException;
     public ResultObj getObjectRelationAll(String obj, String type) throws InterServiceException;
+
+    public JSONObject getObjectRelationAll(String obj)throws InterServiceException;
+    public JSONObject getObjectRelatioNoSave(String obj) throws InterServiceException;
 }

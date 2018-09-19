@@ -23,6 +23,7 @@
                         <td class="td_r" style="width:10%;"> 参数值：</td>
                         <td style="width:20%;"><input name="paramStr" id="paramStr"/></td>
                     </tr>
+
                     <tr>
                         <td colspan="8" style="text-align:center;">
                             <a href="javascript:queryJzgj();" class="btn_cx">查询</a>

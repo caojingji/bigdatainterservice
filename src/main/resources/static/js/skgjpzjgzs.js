@@ -23,7 +23,7 @@ $(window).resize(function() {
     $(".content_box").css("minHeight",$(window).height()-174);
 })
 var jq22 = {
-    _default:6, //默认显示图片个数
+    _default:6, //默认显示个数
     _loading:6, //每次点击按钮后加载的个数
     page_sj:0, //页码
     page_cph:0,

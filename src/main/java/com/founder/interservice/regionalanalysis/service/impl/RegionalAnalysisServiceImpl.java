@@ -1,5 +1,6 @@
 package com.founder.interservice.regionalanalysis.service.impl;
 
+import com.founder.interservice.exception.InterServiceException;
 import com.founder.interservice.regionalanalysis.mapper.RegionalTaskMapper;
 import com.founder.interservice.regionalanalysis.model.Regional;
 import com.founder.interservice.regionalanalysis.model.RegionalTask;
@@ -65,6 +66,11 @@ public class RegionalAnalysisServiceImpl implements RegionalAnalysisService {
     @Override
     public void saveRegionalTaskList(List<RegionalTask> regionalTasks) throws Exception {
         regionalTaskRepository.save(regionalTasks);
+    }
+
+    @Override
+    public RegionalTask findByTaskId(String taskId)throws InterServiceException {
+        return regionalTaskRepository.findAllByTaskId(taskId);
     }
     /**
     *
