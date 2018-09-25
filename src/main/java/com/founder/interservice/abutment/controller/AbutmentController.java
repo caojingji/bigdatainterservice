@@ -129,8 +129,6 @@ public class AbutmentController {
             jsonObject.put("VIEWTYPE", "3");
             params.put("sysparam", jsonObject.toJSONString()); //参数
 
-            System.out.println("params ============= " + params.toString());
-
             ObjectFactory objectFactory = new ObjectFactory();
             ArrayOfUnifiedServiceParameter parameterList = objectFactory.createArrayOfUnifiedServiceParameter();
             List<UnifiedServiceParameter> parameters = parameterList.getUnifiedServiceParameter();
@@ -154,7 +152,6 @@ public class AbutmentController {
                 JAXBElement result = responseMessage.getResult();
                 String valueXml = (String)result.getValue();
                 //String valueXml = "<?xml version=\"1.0\" encoding=\"utf-8\"?><XZUWSResponse><BizCode>XDH002</BizCode><ServiceId>XDHDS0004</ServiceId><Status>True</Status><Message></Message><Result><Table Count=\"1\" Name=\"Table1\"><Others /><Columns><Column Type=\"string\">URL</Column></Columns><Rows><Row><Value>http://10.154.106.29:10081/Main/HomeNew?H5UqnlKXd2q4NdiHenzBUEw6egqekhISXhAhP9VAwkdpew8shn6TmuqYZOWyssGVnVZ0vqAcEzdEEemcuZXOOQiX1d%2b4OOrh</Value></Row></Rows></Table></Result></XZUWSResponse>";
-                System.out.println("valueXml ====================" + valueXml);
                 Document document = DocumentHelper.parseText(valueXml);
                 Element rootEle = document.getRootElement();
                 System.out.println(rootEle.getName());

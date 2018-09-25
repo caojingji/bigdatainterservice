@@ -281,6 +281,7 @@ public class DataController {
                 //httpServletResponse.sendRedirect(PGIS_URL + "markers="+paramStr);
                 //使用post发送请求
                 HttpClient httpClient = new HttpClient(servletResponse);
+                httpClient.setParameter("flag", "search");
                 httpClient.setParameter("markers",paramStr);
                 httpClient.sendByPost(PGIS_URL);
             }
@@ -377,6 +378,7 @@ public class DataController {
                 //httpServletResponse.sendRedirect(PGIS_URL + "markers="+paramStr);
                 //使用post发送请求
                 HttpClient httpClient = new HttpClient(httpServletResponse);
+                httpClient.setParameter("flag", "search");
                 httpClient.setParameter("markers",paramStr);
                 httpClient.sendByPost(PGIS_URL);
             }

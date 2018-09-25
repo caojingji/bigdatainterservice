@@ -84,7 +84,7 @@ public class IphoneTrackServiceImpl implements IphoneTrackService {
             resultObj = new ResultObj();
             String objType= jsonObejct.getString("objType");
             if(!"1".equals(objType)){
-                return resultObj;
+                return null;
             }
             resultObj.setObjType(jsonObejct.getString("objType"));
             resultObj.setObjTypeName(jsonObejct.getString("objTypeName"));
