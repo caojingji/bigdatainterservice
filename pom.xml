@@ -198,7 +198,7 @@
     <repositories>
         <repository>
             <id>founder</id>
-            <url>http://47.92.108.28:8081/nexus/content/groups/public/</url>
+            <url>http://localhost:8081/nexus/content/groups/public/</url>
             <releases>
                 <enabled>true</enabled>
             </releases>
@@ -228,7 +228,7 @@
         <!-- 公司的maven plugin仓库 -->
         <pluginRepository>
             <id>founder</id>
-            <url>http://47.92.108.28:8081/nexus/content/groups/public/</url>
+            <url>http://localhost:8081/nexus/content/groups/public/</url>
             <releases>
                 <enabled>true</enabled>
             </releases>
