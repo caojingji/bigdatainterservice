@@ -327,9 +327,9 @@ public class RegionalAnalysisController {
             }
             //2 通过手机号码调取身份证号
             if(!StringUtil.ckeckEmpty(taskResultVO.getSjhm())){
-                ResultObj resultObj = iphoneTrackService.getObjectRelationAll(taskResultVO.getSjhm(),"00");
-                if(resultObj != null && "1".equals(resultObj.getObjType())){
-                    String zjhm = resultObj.getObjValue();
+                JSONObject jsonObj = iphoneTrackService.getObjectRelationAll(taskResultVO.getSjhm());
+                if(jsonObj != null && "1".equals(jsonObj.getString("objType"))){
+                    String zjhm = jsonObj.getString("objValue");
                     if(StringUtil.ckeckEmpty(zjhm)){ //如果第四个接口获取的身份证号为空    则使用第一个接口进行获取
                         JSONObject jsonObject = iphoneTrackService.getObjectRelation(taskResultVO.getSjhm());
                         if(jsonObject != null){
