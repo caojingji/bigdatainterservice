@@ -61,23 +61,27 @@ public class ScheduledService {
             if(taskList != null && !taskList.isEmpty()){
                 for (RegionalTask task:taskList) {
                     String status_url = REGIONAL_ANALYSIS_TASK_STATUS + "&taskId="+task.getTaskId();
+                    System.out.println("taskId = " + task.getTaskId());
+                    System.out.println("status_url = " + status_url);
                     String statusStr = HttpUtil.doGet(status_url);
                     //String statusStr = "{\"progress\":1,\"state\":\"FINISHED\"}";
                     System.out.println("statusStr ======================== " + statusStr);
-                    if(statusStr != null && !statusStr.isEmpty() && statusStr.startsWith("{") && statusStr.endsWith("}")){
-                        JSONObject jsonObject = JSONObject.parseObject(statusStr);
-                        int progress = jsonObject.getIntValue("progress");
-                        String state = jsonObject.getString("state");
-                        if(progress == 1 && "FINISHED".equals(state)){ //任务执行完成  这时需要去取回任务结果值
-                            String info_url = REGIONAL_ANALYSIS_TASK_INFO + "&taskId=" + task.getTaskId();
-                            String taskInfoResult = HttpUtil.doGet(info_url);
-                            //String taskInfoResult = "{\"results\":[],\"status\":\"ok\"}";
-                            while(taskInfoResult == null || taskInfoResult.isEmpty() || !taskInfoResult.startsWith("{")){
-                                taskInfoResult = HttpUtil.doGet(info_url);
-                                System.out.println("taskInfoResult ==============" + taskInfoResult);
-                            }
-                            getAndSaveInfo(taskInfoResult,task);
+                    while(statusStr == null || statusStr.isEmpty() || !statusStr.startsWith("{")){
+                        statusStr = HttpUtil.doGet(status_url);
+                        System.out.println("statusStr ======================== " + statusStr);
+                    }
+                    JSONObject jsonObject = JSONObject.parseObject(statusStr);
+                    int progress = jsonObject.getIntValue("progress");
+                    String state = jsonObject.getString("state");
+                    if(progress == 1 && "FINISHED".equals(state)){ //任务执行完成  这时需要去取回任务结果值
+                        String info_url = REGIONAL_ANALYSIS_TASK_INFO + "&taskId=" + task.getTaskId();
+                        String taskInfoResult = HttpUtil.doGet(info_url);
+                        //String taskInfoResult = "{\"results\":[],\"status\":\"ok\"}";
+                        while(taskInfoResult == null || taskInfoResult.isEmpty() || !taskInfoResult.startsWith("{")){
+                            taskInfoResult = HttpUtil.doGet(info_url);
+                            System.out.println("taskInfoResult ==============" + taskInfoResult);
                         }
+                        getAndSaveInfo(taskInfoResult,task);
                     }
                 }
             }

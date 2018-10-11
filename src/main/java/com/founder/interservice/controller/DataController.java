@@ -2,7 +2,9 @@ package com.founder.interservice.controller;
 
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
+import com.founder.interservice.VO.ResultVO;
 import com.founder.interservice.VO.TrackVO;
+import com.founder.interservice.enums.ResultEnum;
 import com.founder.interservice.model.Relation;
 import com.founder.interservice.model.Track;
 import com.founder.interservice.querymodel.RelationFilter;
@@ -12,12 +14,14 @@ import com.founder.interservice.service.IphoneTrackService;
 import com.founder.interservice.util.DateUtil;
 import com.founder.interservice.util.EasyUIPage;
 import com.founder.interservice.util.HttpClient;
+import com.founder.interservice.util.ResultVOUtil;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.http.HttpServletResponse;
 import java.util.ArrayList;
@@ -71,7 +75,9 @@ public class DataController {
      * @date: 2018/9/19 0019-9:56
      */
     @RequestMapping(value = "/getAndSaveTrack")
-    public void getAndSaveTrack(String objValue, String kssj, String jssj){
+    @ResponseBody
+    public ResultVO getAndSaveTrack(String objValue, String kssj, String jssj){
+        ResultVO resultVO = null;
         try{
             List<String> imsis = new ArrayList<>();
             JSONObject jsonObject = iphoneTrackService.getObjectRelation(objValue);
@@ -97,9 +103,12 @@ public class DataController {
                     iphoneTrackService.iphoneTrackForSjhm(imsi, kssjstr, jssjStr);
                 }
             }
+            resultVO = ResultVOUtil.success();
         }catch(Exception e){
             e.printStackTrace();
+            resultVO = ResultVOUtil.error(ResultEnum.REQUEST_URL_ERROR.getCode(),ResultEnum.REQUEST_URL_ERROR.getMessage());
         }
+        return resultVO;
     }
 
 
@@ -115,12 +124,15 @@ public class DataController {
     * @date: 2018/8/16 0016-10:26
     */
     @RequestMapping(value = "/toGjzs",method = {RequestMethod.POST,RequestMethod.GET})
-    public String toGjzs(String objValue, String kssj, String jssj, Model model){
+    public ModelAndView toGjzs(String objValue, String kssj, String jssj){
         getAndSaveTrack(objValue, kssj, jssj);
-        model.addAttribute("objValue", objValue);
-        model.addAttribute("kssj", kssj);
-        model.addAttribute("jssj", jssj);
-        return "jzgjzs";
+
+        ModelAndView modelAndView = new ModelAndView();
+        modelAndView.addObject("objValue", objValue);
+        modelAndView.addObject("kssj", kssj);
+        modelAndView.addObject("jssj", jssj);
+        modelAndView.setViewName("jzgjzs");
+        return modelAndView;
     }
 
     /**
@@ -189,6 +201,7 @@ public class DataController {
                 List<Track> tracks = dataService.queryNewLocation(trackFilter);
                 if(tracks != null && !tracks.isEmpty()){
                     Track track = tracks.get(0);
+                    System.out.println("track.getAddress() ======  " + track.getAddress());
                     response.sendRedirect(PGIS_TITLE_URL+"&jd="+track.getJ()+"&wd="+track.getW()+"&title="+track.getAddress());
                 }else{
                     response.sendRedirect(PGIS_TITLE_URL+"&jd=&wd=&title=");

@@ -3,7 +3,7 @@ spring:
     driver-class-name: oracle.jdbc.driver.OracleDriver
     username: XZXT
     password: XZXT
-    url: jdbc:oracle:thin:@127.0.0.1:1521:orcl
+    url: jdbc:oracle:thin:@127.0.0.1:1521:cqxzxtsid
   #配置jpa 使其展示sql语句
   jpa:
     show-sql: true
