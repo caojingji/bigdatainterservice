@@ -60,6 +60,88 @@ public class TrackTogetherContoller {
         return modelAndView;
     }
 
+    /**
+     * 自动发送伴随任务
+     * @param objectValue
+     * @param taskCaseId
+     * @param startTime
+     * @param endTime
+     * @return
+     */
+    @RequestMapping(value = "/autoSendTrackTogetherTask")
+    @ResponseBody
+    public ResultVO autoSendTrackTogetherTask(String objectValue,String taskCaseId,String startTime,String endTime){
+        ResultVO resultVO = null;
+        try{
+            TrackTogetherTask trackParam = new TrackTogetherTask();
+            String taskName = DateUtil.convertDatetimeToChineseString(new Date())+"-"+taskCaseId+"-"+objectValue+"时空区域伴随";
+            trackParam.setObjectValue(objectValue);
+            trackParam.setTaskName(taskName);
+            trackParam.setTaskCaseId(taskCaseId);
+            if(StringUtil.ckeckEmpty(trackParam.getObjectType())){
+                trackParam.setObjectType("4314");
+            }
+            if(!StringUtil.ckeckEmpty(startTime)){
+                Date kssj = startTime.contains(" ") ? DateUtil.convertStringToDateTime(startTime): DateUtil.convertStringToDate(startTime);
+                trackParam.setStartTime(kssj);
+            }else{
+                throw new InterServiceException(ResultEnum.PARAM_NOTNULL);
+            }
+            if(!StringUtil.ckeckEmpty(endTime)){
+                Date jssj = endTime.contains(" ") ? DateUtil.convertStringToDateTime(endTime) : DateUtil.convertStringToDate(endTime);
+                trackParam.setEndTime(jssj);
+            }else{
+                throw new InterServiceException(ResultEnum.PARAM_NOTNULL);
+            }
+            //1 现使用手机号码调出imsi
+            if(!StringUtil.ckeckEmpty(trackParam.getObjectValue())){
+                JSONObject jsonObject = iphoneTrackService.getObjectRelation(trackParam.getObjectValue());
+                if(jsonObject != null){
+                    JSONArray jsonArray = jsonObject.getJSONArray("results");
+                    if(jsonArray != null && jsonArray.size() > 0){
+                        for (int j = 0; j <= jsonArray.size() - 1;j++){
+                            JSONObject resObj = jsonArray.getJSONObject(j);
+                            String relativeType = resObj.getString("relativeType"); //关联类型  4402（手机-IMSI）
+                            String objectFromType = resObj.getString("objectFromType"); //数据来源值类型  20（联系方式） 4394（电话号码） 3996（手机号码）
+                            String objectFromValue = resObj.getString("objectFromValue"); //数据来源值
+                            String objectToType = resObj.getString("objectToType"); //所得对象值类型  4314(IMSI)
+                            if ("4402".equals(relativeType) && "4314".equals(objectToType)
+                                    && Arrays.asList("20","4394","3996").contains(objectFromType) && trackParam.getObjectValue().equals(objectFromValue)){
+                                String imsi = resObj.getString("objectToValue");
+                                if(!StringUtil.ckeckEmpty(imsi)){
+                                    trackParam.setObjectValue(imsi); //将得到手机号码赋值到对象
+                                    break;
+                                }
+                            }
+                        }
+                    }
+                }
+            }else{
+                throw new InterServiceException(ResultEnum.PARAM_NOTNULL);
+            }
+            //trackParam.setObjectValue("42151645456456");
+            if(!StringUtil.ckeckEmpty(trackParam.getObjectValue())){
+                //2 拿到imsi后 再去调用伴随接口
+                String taskId = trackTogetherService.sendTrackTogetherTask(trackParam); //发送任务 并且得到任务编号
+                //String taskId = "123123123";
+                if(!StringUtil.ckeckEmpty(taskId)){
+                    trackParam.setTaskId(taskId);
+                }else{
+                    throw new InterServiceException(ResultEnum.TASK_SEND_ERROR);
+                }
+                trackParam.setProgress("0");
+                trackParam.setState("QUEUEING");
+                trackTogetherService.saveTogetherTask(trackParam);
+                resultVO = ResultVOUtil.success(taskId);
+            }else{
+                throw new InterServiceException(ResultEnum.PARAM_NOTNULL);
+            }
+        }catch (InterServiceException e){
+            e.printStackTrace();
+            resultVO = ResultVOUtil.error(e.getCode(),e.getMessage());
+        }
+        return resultVO;
+    }
 
 
     /**
@@ -180,7 +262,7 @@ public class TrackTogetherContoller {
                 throw new InterServiceException(ResultEnum.PARAM_NOTNULL);
             }
             if(!StringUtil.ckeckEmpty(endTime)){
-                Date jssj = startTime.contains(" ") ? DateUtil.convertStringToDateTime(startTime) : DateUtil.convertStringToDate(startTime);
+                Date jssj = endTime.contains(" ") ? DateUtil.convertStringToDateTime(endTime) : DateUtil.convertStringToDate(endTime);
                 trackParam.setEndTime(jssj);
             }else{
                 throw new InterServiceException(ResultEnum.PARAM_NOTNULL);

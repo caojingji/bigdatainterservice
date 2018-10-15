@@ -56,7 +56,6 @@ public class AbutmentController {
             params.put("asjbh", asjbh);
             params.put("sfzh", sfzh);
             params.put("type", type);
-            System.out.println("params ============= " + params.toString());
 
             ObjectFactory objectFactory = new ObjectFactory();
             ArrayOfUnifiedServiceParameter parameterList = objectFactory.createArrayOfUnifiedServiceParameter();

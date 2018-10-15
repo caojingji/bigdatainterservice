@@ -5,16 +5,14 @@ import com.alibaba.fastjson.JSONObject;
 import com.founder.interservice.VO.ResultVO;
 import com.founder.interservice.VO.TrackVO;
 import com.founder.interservice.enums.ResultEnum;
+import com.founder.interservice.model.AutoTbStRy;
 import com.founder.interservice.model.Relation;
 import com.founder.interservice.model.Track;
 import com.founder.interservice.querymodel.RelationFilter;
 import com.founder.interservice.querymodel.TrackFilter;
 import com.founder.interservice.service.DataService;
 import com.founder.interservice.service.IphoneTrackService;
-import com.founder.interservice.util.DateUtil;
-import com.founder.interservice.util.EasyUIPage;
-import com.founder.interservice.util.HttpClient;
-import com.founder.interservice.util.ResultVOUtil;
+import com.founder.interservice.util.*;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -24,6 +22,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.http.HttpServletResponse;
+import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -62,6 +61,15 @@ public class DataController {
         return "jzgj";
     }
 
+    /**
+     * 通过身份证调取全国常口库中的二代证信息
+     */
+    @RequestMapping("/queryQgckEdzxx")
+    @ResponseBody
+    public AutoTbStRy queryQgckEdzxx(String sfzh){
+        AutoTbStRy tbStRy = new Qgckzp().getQgckAllxxXml(sfzh);
+        return tbStRy;
+    }
 
     /**
      *
@@ -125,7 +133,7 @@ public class DataController {
     */
     @RequestMapping(value = "/toGjzs",method = {RequestMethod.POST,RequestMethod.GET})
     public ModelAndView toGjzs(String objValue, String kssj, String jssj){
-        getAndSaveTrack(objValue, kssj, jssj);
+        //getAndSaveTrack(objValue, kssj, jssj);
 
         ModelAndView modelAndView = new ModelAndView();
         modelAndView.addObject("objValue", objValue);
@@ -149,7 +157,7 @@ public class DataController {
                            String objValue, String kssj, String jssj){
         String paramStr = null;
         try{
-            getAndSaveTrack(objValue, kssj, jssj);
+            //getAndSaveTrack(objValue, kssj, jssj);
             /*数据入口后再进行查取操作*/
             TrackFilter trackFilter = new TrackFilter();
             trackFilter.setKssj(kssj);
@@ -201,8 +209,8 @@ public class DataController {
                 List<Track> tracks = dataService.queryNewLocation(trackFilter);
                 if(tracks != null && !tracks.isEmpty()){
                     Track track = tracks.get(0);
-                    System.out.println("track.getAddress() ======  " + track.getAddress());
-                    response.sendRedirect(PGIS_TITLE_URL+"&jd="+track.getJ()+"&wd="+track.getW()+"&title="+track.getAddress());
+                    String address = URLEncoder.encode(track.getAddress(),"UTF-8");
+                    response.sendRedirect(PGIS_TITLE_URL+"&jd="+track.getJ()+"&wd="+track.getW()+"&title="+address);
                 }else{
                     response.sendRedirect(PGIS_TITLE_URL+"&jd=&wd=&title=");
                 }

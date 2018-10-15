@@ -61,7 +61,6 @@ public class ScheduledService {
             if(taskList != null && !taskList.isEmpty()){
                 for (RegionalTask task:taskList) {
                     String status_url = REGIONAL_ANALYSIS_TASK_STATUS + "&taskId="+task.getTaskId();
-                    System.out.println("taskId = " + task.getTaskId());
                     System.out.println("status_url = " + status_url);
                     String statusStr = HttpUtil.doGet(status_url);
                     //String statusStr = "{\"progress\":1,\"state\":\"FINISHED\"}";
@@ -79,7 +78,6 @@ public class ScheduledService {
                         //String taskInfoResult = "{\"results\":[],\"status\":\"ok\"}";
                         while(taskInfoResult == null || taskInfoResult.isEmpty() || !taskInfoResult.startsWith("{")){
                             taskInfoResult = HttpUtil.doGet(info_url);
-                            System.out.println("taskInfoResult ==============" + taskInfoResult);
                         }
                         getAndSaveInfo(taskInfoResult,task);
                     }
