@@ -61,11 +61,11 @@ public class TrackTogetherContoller {
     }
 
     /**
-     * 自动发送伴随任务
-     * @param objectValue
-     * @param taskCaseId
-     * @param startTime
-     * @param endTime
+     * 自动发送 时空区域伴随任务
+     * @param objectValue 服务标识号
+     * @param taskCaseId 案事件编号
+     * @param startTime 开始时间 yyyy-MM-dd HH:mm:ss || yyyy-MM-dd
+     * @param endTime 结束时间 yyyy-MM-dd HH:mm:ss|| yyyy-MM-dd
      * @return
      */
     @RequestMapping(value = "/autoSendTrackTogetherTask")
@@ -75,8 +75,7 @@ public class TrackTogetherContoller {
         try{
             TrackTogetherTask trackParam = new TrackTogetherTask();
             String taskName = DateUtil.convertDatetimeToChineseString(new Date())+"-"+taskCaseId+"-"+objectValue+"时空区域伴随";
-            trackParam.setObjectValue(objectValue);
-            trackParam.setTaskName(taskName);
+            //trackParam.setTaskName(taskName);
             trackParam.setTaskCaseId(taskCaseId);
             if(StringUtil.ckeckEmpty(trackParam.getObjectType())){
                 trackParam.setObjectType("4314");
@@ -109,7 +108,7 @@ public class TrackTogetherContoller {
                                     && Arrays.asList("20","4394","3996").contains(objectFromType) && trackParam.getObjectValue().equals(objectFromValue)){
                                 String imsi = resObj.getString("objectToValue");
                                 if(!StringUtil.ckeckEmpty(imsi)){
-                                    trackParam.setObjectValue(imsi); //将得到手机号码赋值到对象
+                                    trackParam.setObjectValue(imsi); //将得到IMSI赋值到对象
                                     break;
                                 }
                             }
