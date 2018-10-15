@@ -141,6 +141,7 @@
                 <where>
                     <include refid="queryTrack_where"/>
                 </where>
+                order by t.timestamp desc
               )
         where rownum <![CDATA[ <= ]]> 1
     </select>
