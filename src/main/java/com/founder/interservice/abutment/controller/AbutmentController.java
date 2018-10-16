@@ -1,8 +1,11 @@
 package com.founder.interservice.abutment.controller;
 
+import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.founder.interservice.exception.InterServiceException;
+import com.founder.interservice.model.AutoTbStRy;
+import com.founder.interservice.util.Qgckzp;
 import com.founder.interservice.util.StringUtil;
 import org.dom4j.Document;
 import org.dom4j.DocumentHelper;
@@ -91,6 +94,35 @@ public class AbutmentController {
                 String resultJson = valueEle.getTextTrim();
                 if(!StringUtil.ckeckEmpty(resultJson)){
                     jsonArray = JSONArray.parseArray(resultJson);
+                    JSONArray jsonArrayNew = new JSONArray();//通过身份证号查找二代证信息后的JSONArray
+                    for (int i = 0 ;i<jsonArray.size();i++){
+                        JSONObject json = jsonArray.getJSONObject(i);
+                        JSONObject jsonNew = new JSONObject();
+                        String sfzhStr = json.get("WFFZKYRY_CYZJ_ZJHM").toString();//获取身份证号
+                        AutoTbStRy tbStRy = new Qgckzp().getQgckAllxxXml(sfzhStr);//通过身份证获取二代证信息
+                        String imgJson = tbStRy.getEdzzplj();
+                        jsonNew.put("WFFZKYRY_HJDZ_DZMC",json.get("WFFZKYRY_HJDZ_DZMC"));//WFFZKYRY_HJDZ_DZMC WFFZKYRY_CSRQ WFFZKYRY_XM WFFZKYRY_CYZJ_ZJHM WFFZKYRY_XZZ_DZMC EDZZPLJ WFFZKYRY_XBDM
+                        jsonNew.put("WFFZKYRY_CSRQ",json.get("WFFZKYRY_CSRQ"));
+                        jsonNew.put("WFFZKYRY_XM",json.get("WFFZKYRY_XM"));
+                        jsonNew.put("WFFZKYRY_CYZJ_ZJHM",json.get("WFFZKYRY_CYZJ_ZJHM"));
+                        jsonNew.put("WFFZKYRY_XZZ_DZMC",json.get("WFFZKYRY_XZZ_DZMC"));
+                        String sex = "";
+                        String sexStr = json.get("WFFZKYRY_XBDM").toString();
+                        switch(sexStr){
+                            case "0":
+                                sex = "未知的性别";break;
+                            case "1":
+                                sex = "男";break;
+                            case "2":
+                                sex = "女";break;
+                            case "9":
+                                sex = "未说明的性别";break;
+                        }
+                        jsonNew.put("WFFZKYRY_XBDM",sex);
+                        jsonNew.put("EDZZPLJ",imgJson);
+                        jsonArrayNew.add(jsonNew);
+                        return jsonArrayNew;
+                    }
                 }else{
                     return new JSONArray();
                 }
