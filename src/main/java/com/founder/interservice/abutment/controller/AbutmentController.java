@@ -95,6 +95,9 @@ public class AbutmentController {
                 if(!StringUtil.ckeckEmpty(resultJson)){
                     jsonArray = JSONArray.parseArray(resultJson);
                     JSONArray jsonArrayNew = new JSONArray();//通过身份证号查找二代证信息后的JSONArray
+                    if (!"tb_xw_wffzkyry".equals(type)){
+                        return jsonArray;
+                    }
                     for (int i = 0 ;i<jsonArray.size();i++){
                         JSONObject json = jsonArray.getJSONObject(i);
                         JSONObject jsonNew = new JSONObject();
@@ -107,7 +110,7 @@ public class AbutmentController {
                         jsonNew.put("WFFZKYRY_CYZJ_ZJHM",json.get("WFFZKYRY_CYZJ_ZJHM"));
                         jsonNew.put("WFFZKYRY_XZZ_DZMC",json.get("WFFZKYRY_XZZ_DZMC"));
                         String sex = "";
-                        String sexStr = json.get("WFFZKYRY_XBDM").toString();
+                        String sexStr = tbStRy.getXbdm();
                         switch(sexStr){
                             case "0":
                                 sex = "未知的性别";break;
