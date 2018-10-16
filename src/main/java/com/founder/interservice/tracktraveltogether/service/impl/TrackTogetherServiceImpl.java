@@ -2,6 +2,7 @@ package com.founder.interservice.tracktraveltogether.service.impl;
 
 import com.founder.interservice.exception.InterServiceException;
 import com.founder.interservice.enums.ResultEnum;
+import com.founder.interservice.tracktraveltogether.mapper.TrackTogetherMapper;
 import com.founder.interservice.tracktraveltogether.model.TogetherTaskResult;
 import com.founder.interservice.tracktraveltogether.model.TrackTogetherTask;
 import com.founder.interservice.tracktraveltogether.repository.TogetherTaskResultRepository;
@@ -33,7 +34,8 @@ public class TrackTogetherServiceImpl implements TrackTogetherService {
     private TrackTogetherTaskRepository taskRepository;
     @Autowired
     private TogetherTaskResultRepository taskResultRepository;
-
+    @Autowired
+    private TrackTogetherMapper trackTogetherMapper;
     /**
      *
      * @Description: 发送伴随任务 并且返回任务编号
@@ -49,7 +51,7 @@ public class TrackTogetherServiceImpl implements TrackTogetherService {
             String taskId = null;
             if(trackParam != null){
                 String url = TOGETHER_TASK_URL + "&objectType=" + trackParam.getObjectType()
-                        + "&objectValue=" + trackParam.getObjectValue()
+                        + "&objectValue=" + trackParam.getImsi()
                         + "&taskName="+trackParam.getTaskName()
                         + "&taskCaseId=" + trackParam.getTaskCaseId()
                         + "&startTime=" + trackParam.getStartTime().getTime()
@@ -114,5 +116,15 @@ public class TrackTogetherServiceImpl implements TrackTogetherService {
             e.printStackTrace();
             throw new InterServiceException(ResultEnum.RESULT_ERROR);
         }
+    }
+
+    /**
+     * 根据案事件编号和服务标识号查询伴随任务列表
+     * @param taskParam
+     * @return
+     */
+    @Override
+    public List<TrackTogetherTask> queryTasksByAsjbhAndFwbsh(TrackTogetherTask taskParam) {
+        return trackTogetherMapper.queryTasksByAsjbhAndFwbsh(taskParam);
     }
 }

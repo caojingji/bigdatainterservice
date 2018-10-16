@@ -23,4 +23,6 @@ public interface TrackTogetherService {
     public List<TogetherTaskResult> findTogetherTaskResult(String taskId) throws InterServiceException;
 
     public TrackTogetherTask findByTaskId(String taskId) throws InterServiceException;
+
+    public List<TrackTogetherTask> queryTasksByAsjbhAndFwbsh(TrackTogetherTask taskParam);
 }

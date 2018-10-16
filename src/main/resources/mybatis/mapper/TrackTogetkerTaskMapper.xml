@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.founder.interservice.tracktraveltogether.mapper.TrackTogetherMapper">
+
+    <select id="queryTasksByAsjbhAndFwbsh" parameterType="trackTogetherTask" resultType="trackTogetherTask">
+        select t2.*
+            from (
+              select t1.*,
+                  rownum as rn
+                from (
+                    select
+                        t.TASK_ID as taskId,
+                        t.TASK_NAME as taskName,
+                        t.OBJECT_VALUE as objectValue,
+                        t.STATE as state,
+                        t.TASK_CASE_ID as taskCaseId,
+                        t.START_TIME as startTime,
+                        t.END_TIME as endTime,
+                        t.DJSJ as djsj
+                    from TB_ST_TRACKTOGETHERTASK t
+                      where t.TASK_CASE_ID = #{taskCaseId}
+                          and t.OBJECT_VALUE = #{objectValue}
+                      order by t.djsj
+              ) t1
+              where rownum <![CDATA[ <= ]]> #{end }
+            ) t2
+          where rn <![CDATA[ > ]]> #{begin }
+    </select>
+</mapper>

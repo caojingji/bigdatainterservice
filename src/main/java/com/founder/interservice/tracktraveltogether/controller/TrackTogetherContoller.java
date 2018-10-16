@@ -13,7 +13,9 @@ import com.founder.interservice.tracktraveltogether.model.TogetherTaskResult;
 import com.founder.interservice.tracktraveltogether.model.TrackTogetherTask;
 import com.founder.interservice.tracktraveltogether.service.TrackTogetherService;
 import com.founder.interservice.tracktraveltogether.vo.TogetherTaskResultVO;
+import com.founder.interservice.tracktraveltogether.vo.TrackTogetherTaskVO;
 import com.founder.interservice.util.DateUtil;
+import com.founder.interservice.util.EasyUIPage;
 import com.founder.interservice.util.ResultVOUtil;
 import com.founder.interservice.util.StringUtil;
 import org.springframework.beans.BeanUtils;
@@ -25,10 +27,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.http.HttpServletRequest;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Date;
-import java.util.List;
+import java.util.*;
 
 /**
  * @ClassName： TrackTogetherContoller
@@ -55,9 +54,86 @@ public class TrackTogetherContoller {
     * @date: 2018/9/18 0018-10:19
     */
     @RequestMapping(value = "/toShowResultJsp")
-    public ModelAndView toShowResultJsp(){
-        ModelAndView modelAndView = new ModelAndView("qybs/skgjbsjgzs");
+    public ModelAndView toShowResultJsp(String taskId){
+        ModelAndView modelAndView = new ModelAndView("gjbs/skgjbsjgzs");
+        modelAndView.addObject("taskId", taskId);
         return modelAndView;
+    }
+
+    /**
+     * 跳转到伴随任务列表界面
+     * asjbh：案事件编号
+     * fwbsh：服务标识号
+     * @return
+     */
+    @RequestMapping(value = "/toTrackTogetherTrackList")
+    public ModelAndView toTrackTogetherTrackList(String asjbh,String fwbsh){
+        ModelAndView modelAndView = new ModelAndView("gjbs/skgjbstask");
+        modelAndView.addObject("asjbh", asjbh);
+        modelAndView.addObject("fwbsh", fwbsh);
+        return modelAndView;
+    }
+
+    /**
+     * 根据案事件编号和服务标识号查询其下的伴随任务列表
+     * asjbh: 案事件编号
+     * fwbsh：服务标识号
+     * @return
+     */
+    @RequestMapping(value = "queryTasksByAsjbhAndFwbsh")
+    @ResponseBody
+    public Map<String,Object> queryTasksByAsjbhAndFwbsh(String asjbh, String fwbsh,
+                                                        @RequestParam(value = "page",defaultValue = "0") int page,
+                                                        @RequestParam(value = "rows",defaultValue = "0") int rows){
+        Map<String, Object> resultMap = new HashMap<>();
+        List<TrackTogetherTaskVO> togetherTaskVOS = null;
+        try{
+            EasyUIPage easyUIPage = new EasyUIPage();
+            easyUIPage.setPage(page);
+            easyUIPage.setPagePara(rows);
+            int begin = easyUIPage.getBegin();
+            int end = easyUIPage.getEnd();
+            TrackTogetherTask taskParam = new TrackTogetherTask();
+            taskParam.setObjectValue(fwbsh);
+            taskParam.setTaskCaseId(asjbh);
+            taskParam.setBegin(begin);
+            taskParam.setEnd(end);
+            List<TrackTogetherTask> togetherTaskLsit = trackTogetherService.queryTasksByAsjbhAndFwbsh(taskParam);
+            if(null != togetherTaskLsit && !togetherTaskLsit.isEmpty()){
+                togetherTaskVOS = new ArrayList<>();
+                for (TrackTogetherTask task : togetherTaskLsit) {
+                    TrackTogetherTaskVO togetherTaskVO = new TrackTogetherTaskVO();
+                    BeanUtils.copyProperties(task,togetherTaskVO);
+                    switch (togetherTaskVO.getState()){
+                        case "QUEUEING":
+                            togetherTaskVO.setState("等候中");
+                            break;
+                        case "STARTING":
+                            togetherTaskVO.setState("开始运行");
+                            break;
+                        case "RUNNING":
+                            togetherTaskVO.setState("运行中");
+                            break;
+                        case "FINISHED":
+                            togetherTaskVO.setState("已完成");
+                            break;
+                        case "default":
+                            togetherTaskVO.setState("运行中");
+                            break;
+                    }
+                    togetherTaskVOS.add(togetherTaskVO);
+                }
+            }else{
+                togetherTaskVOS = new ArrayList<>();
+            }
+            resultMap.put("total", togetherTaskVOS.size());
+            resultMap.put("rows",togetherTaskVOS);
+        }catch (InterServiceException e){
+            e.printStackTrace();
+            resultMap.put("total", 0);
+            resultMap.put("rows", new ArrayList<>());
+        }
+        return resultMap;
     }
 
     /**
@@ -77,6 +153,7 @@ public class TrackTogetherContoller {
             String taskName = DateUtil.convertDatetimeToChineseString(new Date())+"-"+taskCaseId+"-"+objectValue+"时空区域伴随";
             //trackParam.setTaskName(taskName);
             trackParam.setTaskCaseId(taskCaseId);
+            trackParam.setObjectValue(objectValue);
             if(StringUtil.ckeckEmpty(trackParam.getObjectType())){
                 trackParam.setObjectType("4314");
             }
@@ -108,7 +185,7 @@ public class TrackTogetherContoller {
                                     && Arrays.asList("20","4394","3996").contains(objectFromType) && trackParam.getObjectValue().equals(objectFromValue)){
                                 String imsi = resObj.getString("objectToValue");
                                 if(!StringUtil.ckeckEmpty(imsi)){
-                                    trackParam.setObjectValue(imsi); //将得到IMSI赋值到对象
+                                    trackParam.setImsi(imsi); //将得到IMSI赋值到对象
                                     break;
                                 }
                             }

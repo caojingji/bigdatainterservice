@@ -1,6 +1,9 @@
 package com.founder.interservice.tracktraveltogether.mapper;
 
+import com.founder.interservice.tracktraveltogether.model.TrackTogetherTask;
 import org.springframework.stereotype.Repository;
+
+import java.util.List;
 
 /**
  * @ClassName： TrackTogetherMapper
@@ -10,5 +13,11 @@ import org.springframework.stereotype.Repository;
  * @Version: 1.0
  */
 @Repository
-public class TrackTogetherMapper {
+public interface TrackTogetherMapper {
+    /**
+     * 根据案事件编号和服务标识号查询伴随任务列表
+     * @param taskParam
+     * @return
+     */
+    public List<TrackTogetherTask> queryTasksByAsjbhAndFwbsh(TrackTogetherTask taskParam);
 }

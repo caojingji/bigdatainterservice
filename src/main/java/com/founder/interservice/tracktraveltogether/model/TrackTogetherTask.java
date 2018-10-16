@@ -3,10 +3,7 @@ package com.founder.interservice.tracktraveltogether.model;
 import lombok.Data;
 import org.hibernate.annotations.DynamicUpdate;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.Table;
+import javax.persistence.*;
 import java.util.Date;
 
 /**
@@ -24,6 +21,7 @@ public class TrackTogetherTask {
     @Id
     private String taskId; //任务编号
     private String objectValue; //对象值
+    private String imsi; //imsi
     private String objectType; //对象类型
     private String taskName; //任务名称
     private String taskCaseId; //案件编号
@@ -33,4 +31,9 @@ public class TrackTogetherTask {
     private Date endTime; //结束时间
     @Column(insertable = false)
     private Date djsj; //登记时间
+    //单独给实体添加私有属性
+    @Transient
+    private int begin;
+    @Transient
+    private int end;
 }
