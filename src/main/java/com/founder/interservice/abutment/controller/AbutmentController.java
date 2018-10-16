@@ -121,15 +121,14 @@ public class AbutmentController {
                         jsonNew.put("WFFZKYRY_XBDM",sex);
                         jsonNew.put("EDZZPLJ",imgJson);
                         jsonArrayNew.add(jsonNew);
-                        return jsonArrayNew;
                     }
+                    return jsonArrayNew;
                 }else{
                     return new JSONArray();
                 }
             }else{
                 return new JSONArray();
             }
-            return jsonArray;
         }catch (Exception e){
             e.printStackTrace();
             return new JSONArray();
