@@ -1,0 +1,92 @@
+INSERT INTO XZXT.SYS_DBLOG(SID,STATUS)VALUES('S010',0);
+COMMIT;
+-------------------------------------------------------------------------------------------
+
+--创建查询日志记录功能表
+CREATE TABLE XZXT.TB_ST_QUERYLOG
+(
+    XXZJBH VARCHAR2(30 BYTE),
+    CXR_SFZH VARCHAR2(20 BYTE),
+    CXR_XM VARCHAR2(50 BYTE),
+    CXR_JH VARCHAR2(50 BYTE),
+    CXR_LXDH varchar2(15 BYTE),
+    CXBSH varchar2(20 BYTE),
+    BSHLXDM varchar2(10 BYTE),
+    BSHLXMC varchar2(50 BYTE),
+    DJSJ DATE               DEFAULT sysdate
+)TABLESPACE TBS_BIGDATA
+  PCTUSED    0
+  PCTFREE    10
+  INITRANS   1
+  MAXTRANS   255
+  STORAGE    (
+              INITIAL          64K
+              NEXT             1M
+              MINEXTENTS       1
+              MAXEXTENTS       UNLIMITED
+              PCTINCREASE      0
+              BUFFER_POOL      DEFAULT
+             )
+  LOGGING
+  NOCOMPRESS
+  NOCACHE
+  NOPARALLEL
+  MONITORING;
+
+COMMENT ON table XZXT.TB_ST_QUERYLOG is '查询日志记录功能表';
+COMMENT ON COLUMN XZXT.TB_ST_QUERYLOG.XXZJBH IS '信息主键编号，主键';
+
+COMMENT ON COLUMN XZXT.TB_ST_QUERYLOG.CXR_SFZH IS '查询人身份证号';
+
+COMMENT ON COLUMN XZXT.TB_ST_QUERYLOG.CXR_XM IS '查询人姓名';
+
+COMMENT ON COLUMN XZXT.TB_ST_QUERYLOG.CXR_JH IS '查询警号';
+
+COMMENT ON COLUMN XZXT.TB_ST_QUERYLOG.CXR_LXDH IS '查询人联系电话';
+
+COMMENT ON COLUMN XZXT.TB_ST_QUERYLOG.CXBSH IS '查询标识号';
+
+COMMENT ON COLUMN XZXT.TB_ST_QUERYLOG.BSHLXDM IS '标识号类型代码';
+
+COMMENT ON COLUMN XZXT.TB_ST_QUERYLOG.BSHLXMC IS '标识号类型名称';
+
+COMMENT ON COLUMN XZXT.TB_ST_QUERYLOG.DJSJ IS '登记时间';
+
+--创建主键
+CREATE UNIQUE INDEX PK_QueryLog_XXZJBH ON XZXT.TB_ST_QUERYLOG
+(XXZJBH)
+LOGGING
+TABLESPACE TBS_INDEX
+PCTFREE    10
+INITRANS   2
+MAXTRANS   255
+STORAGE    (
+            INITIAL          64K
+            NEXT             1M
+            MINEXTENTS       1
+            MAXEXTENTS       UNLIMITED
+            PCTINCREASE      0
+            BUFFER_POOL      DEFAULT
+           )
+NOPARALLEL;
+
+ALTER TABLE XZXT.TB_ST_QUERYLOG ADD (
+  CONSTRAINT PK_QueryLog_XXZJBH
+ PRIMARY KEY
+ (XXZJBH)
+    USING INDEX 
+    TABLESPACE TBS_INDEX
+    PCTFREE    10
+    INITRANS   2
+    MAXTRANS   255
+    STORAGE    (
+                INITIAL          64K
+                NEXT             1M
+                MINEXTENTS       1
+                MAXEXTENTS       UNLIMITED
+                PCTINCREASE      0
+               ));
+
+-------------------------------------------------------------------------------------------
+UPDATE XZXT.SYS_DBLOG SET STATUS=1 WHERE SID='S010';
+COMMIT;
