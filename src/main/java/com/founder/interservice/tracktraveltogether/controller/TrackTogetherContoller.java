@@ -144,16 +144,18 @@ public class TrackTogetherContoller {
      */
     @RequestMapping(value = "/autoSendTrackTogetherTask")
     @ResponseBody
-    public ResultVO autoSendTrackTogetherTask(String objectValue,String taskCaseId,String startTime,String endTime){
+    public ResultVO autoSendTrackTogetherTask(String objectValue,String objectType,String taskCaseId,String startTime,String endTime){
         ResultVO resultVO = null;
         try{
             TrackTogetherTask trackParam = new TrackTogetherTask();
             String taskName = DateUtil.convertDatetimeToChineseString(new Date())+"-"+taskCaseId+"-"+objectValue+"时空轨迹伴随";
-            //trackParam.setTaskName(taskName);
+            trackParam.setTaskName(taskName);
             trackParam.setTaskCaseId(taskCaseId);
             trackParam.setObjectValue(objectValue);
             if(StringUtil.ckeckEmpty(trackParam.getObjectType())){
                 trackParam.setObjectType("4314");
+            }else{
+                trackParam.setObjectType(objectType);
             }
             if(!StringUtil.ckeckEmpty(startTime)){
                 Date kssj = startTime.contains(" ") ? DateUtil.convertStringToDateTime(startTime): DateUtil.convertStringToDate(startTime);
