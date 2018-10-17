@@ -5,6 +5,7 @@ import com.alibaba.fastjson.JSONObject;
 import com.founder.interservice.exception.InterServiceException;
 import com.founder.interservice.VO.ResultVO;
 import com.founder.interservice.enums.ResultEnum;
+import com.founder.interservice.model.AutoTbStRy;
 import com.founder.interservice.regionalanalysis.VO.RegionalTaskResultVO;
 import com.founder.interservice.regionalanalysis.model.RegionalTask;
 import com.founder.interservice.regionalanalysis.model.RegionalTaskResult;
@@ -14,10 +15,7 @@ import com.founder.interservice.tracktraveltogether.model.TrackTogetherTask;
 import com.founder.interservice.tracktraveltogether.service.TrackTogetherService;
 import com.founder.interservice.tracktraveltogether.vo.TogetherTaskResultVO;
 import com.founder.interservice.tracktraveltogether.vo.TrackTogetherTaskVO;
-import com.founder.interservice.util.DateUtil;
-import com.founder.interservice.util.EasyUIPage;
-import com.founder.interservice.util.ResultVOUtil;
-import com.founder.interservice.util.StringUtil;
+import com.founder.interservice.util.*;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -292,6 +290,48 @@ public class TrackTogetherContoller {
                                 }
                             }
                         }
+                    }
+                    //2 通过手机号码调取身份证号
+                    if(!StringUtil.ckeckEmpty(taskResultVO.getSjhm())){
+                        JSONObject jsonObj = iphoneTrackService.getObjectRelationAll(taskResultVO.getSjhm());
+                        if(jsonObj != null && "1".equals(jsonObj.getString("objType"))){
+                            String zjhm = jsonObj.getString("objValue");
+                            if(StringUtil.ckeckEmpty(zjhm)){ //如果第四个接口获取的身份证号为空    则使用第一个接口进行获取
+                                JSONObject jsonObject = iphoneTrackService.getObjectRelation(taskResultVO.getSjhm());
+                                if(jsonObject != null){
+                                    JSONArray jsonArray = jsonObject.getJSONArray("results");
+                                    if(jsonArray != null && jsonArray.size() > 0){
+                                        for (int j = 0; j <= jsonArray.size() - 1;j++){
+                                            JSONObject resObj = jsonArray.getJSONObject(j);
+                                            String relativeType = resObj.getString("relativeType"); //关联类型  20（联系方式）
+                                            String objectFromType = resObj.getString("objectFromType"); //数据来源值类型  20（联系方式） 4394（电话号码） 3996（手机号码）
+                                            String objectFromValue = resObj.getString("objectFromValue"); //数据来源值
+                                            String objectToType = resObj.getString("objectToType"); //所得对象值类型  1（身份证号码）
+                                            if ("20".equals(relativeType) && taskResultVO.getSjhm().equals(objectFromValue)
+                                                    && Arrays.asList("20","4394","3996").contains(objectFromType) && "1".equals(objectToType)){
+                                                String zjhm1 = resObj.getString("objectToValue");
+                                                taskResultVO.setZjhm(zjhm1);
+                                                break;
+                                            }
+                                        }
+                                    }
+                                }
+                            }else{
+                                taskResultVO.setZjhm(zjhm); //如果第四个接口获取的身份证号码 不为空 则直接赋值
+                            }
+                        }
+                    }
+                    //3 通过身份证号调取二代证信息
+                    if(!StringUtil.ckeckEmpty(taskResultVO.getZjhm())){
+                        AutoTbStRy tbStRy = new Qgckzp().getQgckAllxxXml(taskResultVO.getZjhm());
+                        taskResultVO.setXzzDzmc(tbStRy.getXzzDzmc());//现住址
+                        taskResultVO.setCsdDzmc(tbStRy.getCsdDzmc());//出生地
+                        if(tbStRy.getCsrqRqgzxx() != null){
+                            taskResultVO.setCsrq(DateUtil.convertDateToChineseString(tbStRy.getCsrqRqgzxx()));//出生日期
+                            taskResultVO.setAge(DateUtil.getAge(tbStRy.getCsrqRqgzxx())); //age
+                        }
+                        taskResultVO.setName(tbStRy.getXm());//姓名
+                        taskResultVO.setRyzp(tbStRy.getEdzzplj());//人员照片
                     }
                     taskResultVOS.add(taskResultVO);
                 }
