@@ -1,0 +1,13 @@
+﻿INSERT INTO XZXT.SYS_DBLOG(SID,STATUS)VALUES('S009',0);
+COMMIT;
+-------------------------------------------------------------------------------------------
+
+--给伴随任务表中添加IMSI字段
+ALTER TABLE XZXT.TB_ST_TRACKTOGETHERTASK
+ ADD (IMSI  VARCHAR2(50 BYTE));
+
+COMMENT ON COLUMN XZXT.TB_ST_TRACKTOGETHERTASK.IMSI IS 'IMSI';
+
+-------------------------------------------------------------------------------------------
+UPDATE XZXT.SYS_DBLOG SET STATUS=1 WHERE SID='S009';
+COMMIT;
