@@ -24,6 +24,7 @@ public class Querylog {
     private String cxbsh;//查询标识号
     private String bshlxdm;//标识号类型代码
     private String bshlxmc;//标识号类型名称
+    private String asjbh;//案事件编号
     @Column(insertable = false)
     private Date djsj;//登记时间
 
