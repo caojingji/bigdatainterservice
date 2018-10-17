@@ -80,7 +80,7 @@ public class TrackTogetherContoller {
      * fwbsh：服务标识号
      * @return
      */
-    @RequestMapping(value = "queryTasksByAsjbhAndFwbsh")
+    @RequestMapping(value = "/queryTasksByAsjbhAndFwbsh")
     @ResponseBody
     public Map<String,Object> queryTasksByAsjbhAndFwbsh(String asjbh, String fwbsh,
                                                         @RequestParam(value = "page",defaultValue = "0") int page,
@@ -150,7 +150,7 @@ public class TrackTogetherContoller {
         ResultVO resultVO = null;
         try{
             TrackTogetherTask trackParam = new TrackTogetherTask();
-            String taskName = DateUtil.convertDatetimeToChineseString(new Date())+"-"+taskCaseId+"-"+objectValue+"时空区域伴随";
+            String taskName = DateUtil.convertDatetimeToChineseString(new Date())+"-"+taskCaseId+"-"+objectValue+"时空轨迹伴随";
             //trackParam.setTaskName(taskName);
             trackParam.setTaskCaseId(taskCaseId);
             trackParam.setObjectValue(objectValue);

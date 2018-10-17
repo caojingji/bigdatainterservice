@@ -67,7 +67,7 @@ li {
     margin-left: 24px;
     background: url(../images/jzgjzs.png);
 }
-.h_title4,.h_title3{float: left;
+.h_title4,.h_title3,.h_title5{float: left;
     width:400px;
     display: inline-block;
     height: 80px;
@@ -76,6 +76,7 @@ li {
     background: url(../images/skgjpz.png);
 }
 .h_title4{background: url(../images/qypzrwlb.png);}
+.h_title5{background: url(../images/skgjbsrwlb.png);}
 .color1{color:#ec704c;}
 .datebox-h{width:228px;height:24px;line-height: 24px;}
 .content_box {
@@ -85,7 +86,7 @@ li {
     background: #e8e5e4;
 }
 .float-div{float: left;width:33%;margin:15px 0;}
-.xx-box{width:89%;height:240px;margin:0 auto;border:1px solid #ccc;background: #fff;position: relative;}
+.xx-box{width:89%;height:240px;margin:0 auto;border:5px solid #ccc;background: #fff;position: relative;}
 .result{display: table;width:100%;}
 .lf-img{display: inline-block;width:30%;}
 .lf-img>img{width:98px;margin:0 10px;position: absolute;top:50%;margin-top:-60px;}
@@ -99,7 +100,7 @@ li {
 .xx-line>.green{color:#40ea0a;}
 .xx-line>.yellow{color:#eac710;}
 .xx-line>.orange{color:#ce4b22;}
-.xx-box:hover{box-shadow: 0 0 20px 0 rgba(41,27,41,.5);}
+.xx-box:hover{box-shadow: 0 0 20px 0 rgba(0, 0, 0, 0.7);}
 .xx-line>.label{display: inline-block;margin:0 5px;padding:2px 5px;background: #e23e35;height: 20px;
     line-height: 20px;
     border-radius: 11px;

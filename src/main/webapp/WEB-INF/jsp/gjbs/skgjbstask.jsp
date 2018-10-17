@@ -14,7 +14,7 @@
 <body>
 <div id="nipic_search">
 	<div id="header">		
-		<h5 class="h_title4"></h5>
+		<h5 class="h_title5"></h5>
 	</div>	
 	<!--内容-->
 	<div id="content_box0" class="content_box">
@@ -23,13 +23,13 @@
 			<h6 class="cx_t">查询条件</h6>
 			<table style="width:100%;border-collapse: collapse;background-color: rgba(255,255,255,0.75);text-align:left;" class="cx_table_tj">
 				<tr>
-					<td class="td_r" style="width:10%;">案件编号：</td>
+					<td class="td_r" style="width:25%;font-weight: 600;">案件编号：</td>
 					<td style="width:20%;"><input name = "asjbh" id = "asjbh" type="text" value="${asjbh}"/></td>
-					<td class="td_r" style="width:10%;">服务标识号：</td>
-					<td style="width:20%;"><input name = "fwbsh" id = "fwbsh" type="text" value="${fwbsh}"/></td>
+					<td class="td_r" style="width:10%;font-weight: 600;">服务标识号：</td>
+					<td style="width:45%;"><input name = "fwbsh" id = "fwbsh" type="text" value="${fwbsh}"/></td>
 				</tr>
 				<tr>
-					<td style="width:60%;margin-left:200px;">
+					<td style="text-align: center" colspan="4">
 						<a href="javascript:queryTasks('02');" class="btn_cx">查询</a>
 						<a href="javascript:$('#asjbh').val('');$('#fwbsh').val('');" class="btn_qkcxtj" style="margin-right:100px;">重置</a>
 					</td>

@@ -133,11 +133,11 @@
 <script type="text/javascript" src="js/jquery.hover3d.min.js"></script>
 <script>
 $(function(){
-	$(".float-div").hover3d({
+	/*$(".float-div").hover3d({
 		selector: ".xx-box",
 		shine: true,
 		sensitivity: 20,
-	});
+	});*/
 });
 </script>
 </body>
