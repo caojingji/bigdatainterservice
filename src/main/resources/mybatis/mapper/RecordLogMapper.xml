@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.founder.interservice.recordLog.mapper.RecordLogMapper">
+
+    <insert id="saveQueryLog" parameterType="com.founder.interservice.recordLog.model.Querylog">
+        INSERT INTO TB_ST_QUERYLOG
+          (XXZJBH,
+          CXR_SFZH,
+          CXR_XM,
+          CXR_JH,
+          CXR_LXDH,
+          CXBSH,
+          BSHLXDM,
+          BSHLXMC,
+          ASJBH,
+          DJSJ)
+        VALUES
+          (#{xxzjbh },
+          #{cxr_sfzh },
+          #{cxr_xm },
+          #{cxr_jh },
+          #{cxr_lxdh },
+          #{cxbsh },
+          #{bshlxdm },
+          #{bshlxmc },
+          #{asjbh },
+          SYSDATE)
+    </insert>
+
+
+
+</mapper>
