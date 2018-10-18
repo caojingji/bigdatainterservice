@@ -18,6 +18,8 @@ var jq22 = {
             url:"/getTogetherTaskResults",
             beforeSend:beforeSendFn(true),
             success:function(data) {
+                $("#content_box0 div.more").show();
+                $("#content_box0 ul.list").hide();
                 if (null != data && data.length > 0) {
                     for (var i = 0; i < data.length; i++) {
                         var ryzpStr = "";
@@ -62,6 +64,8 @@ var jq22 = {
             url:"/getTogetherTaskResults",
             beforeSend:beforeSendFn(false),
             success:function(data) {
+                $("#content_box0 div.more").show();
+                $("#content_box0 ul.list").hide();
                 if (null != data && data.length > 0) {
                     for (var i = 0; i < data.length; i++) {
                         var ryzpStr = "";
