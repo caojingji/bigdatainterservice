@@ -26,7 +26,7 @@ public class RecordLogController {
     @Autowired
     private RecordLogService recordLogService;
 
-    @RequestMapping(value = "/saveQueryLog",method = RequestMethod.GET)
+    @RequestMapping(value = "/saveQueryLog",method = {RequestMethod.GET,RequestMethod.POST})
     @ResponseBody
     public ResultVO saveQueryLog(Querylog querylog){
         ResultVO resultVO = null;
