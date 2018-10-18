@@ -25,6 +25,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.http.HttpServletRequest;
+import java.text.SimpleDateFormat;
 import java.util.*;
 
 /**
@@ -148,7 +149,7 @@ public class TrackTogetherContoller {
         ResultVO resultVO = null;
         try{
             TrackTogetherTask trackParam = new TrackTogetherTask();
-            String taskName = DateUtil.convertDatetimeToChineseString(new Date())+"-"+taskCaseId+"-"+objectValue+"时空轨迹伴随";
+            String taskName = new SimpleDateFormat("yyyyMMddHHmm").format(new Date())+"@"+taskCaseId+"@"+objectValue;
             trackParam.setTaskName(taskName);
             trackParam.setTaskCaseId(taskCaseId);
             trackParam.setObjectValue(objectValue);
@@ -262,10 +263,11 @@ public class TrackTogetherContoller {
      */
     @RequestMapping(value = "/getTogetherTaskResults",method = {RequestMethod.GET,RequestMethod.POST})
     @ResponseBody
-    public List<TogetherTaskResultVO> getTaskResults(String taskId){
+    public List<TogetherTaskResultVO> getTaskResults(Integer page, Integer size,String taskId){
         List<TogetherTaskResultVO> taskResultVOS = new ArrayList<>();
         try {
-            List<TogetherTaskResult> taskResults = trackTogetherService.findTogetherTaskResult(taskId);
+            Page<TogetherTaskResult> resultPage = trackTogetherService.findTogetherTaskResult( page, size,taskId);
+            List<TogetherTaskResult> taskResults = resultPage.getContent();
             if(taskResults != null && !taskResults.isEmpty()){
                 for(int i = 0; i <= taskResults.size() - 1; i++){
                     TogetherTaskResultVO taskResultVO = new TogetherTaskResultVO();

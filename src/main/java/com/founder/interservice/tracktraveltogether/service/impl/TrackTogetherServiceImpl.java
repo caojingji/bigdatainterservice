@@ -2,6 +2,7 @@ package com.founder.interservice.tracktraveltogether.service.impl;
 
 import com.founder.interservice.exception.InterServiceException;
 import com.founder.interservice.enums.ResultEnum;
+import com.founder.interservice.regionalanalysis.model.RegionalTaskResult;
 import com.founder.interservice.tracktraveltogether.mapper.TrackTogetherMapper;
 import com.founder.interservice.tracktraveltogether.model.TogetherTaskResult;
 import com.founder.interservice.tracktraveltogether.model.TrackTogetherTask;
@@ -9,11 +10,20 @@ import com.founder.interservice.tracktraveltogether.repository.TogetherTaskResul
 import com.founder.interservice.tracktraveltogether.repository.TrackTogetherTaskRepository;
 import com.founder.interservice.tracktraveltogether.service.TrackTogetherService;
 import com.founder.interservice.util.HttpUtil;
+import com.founder.interservice.util.StringUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
+import javax.persistence.criteria.*;
 import javax.transaction.Transactional;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 /**
@@ -59,9 +69,11 @@ public class TrackTogetherServiceImpl implements TrackTogetherService {
                 System.out.println(" 伴随------发送任务URL =================" + url);
                 taskId = HttpUtil.doGet(url);
                 //taskId = "1231231231";
+                System.out.println("taskId ===============" +taskId);
             }
             return taskId;
         }catch (Exception e){
+            e.printStackTrace();
             throw new InterServiceException(ResultEnum.REQUEST_URL_ERROR);
         }
     }
@@ -92,9 +104,24 @@ public class TrackTogetherServiceImpl implements TrackTogetherService {
      * @date: 2018/9/11 0011-21:23
      */
     @Override
-    public List<TogetherTaskResult> findTogetherTaskResult(String taskId) throws InterServiceException{
+    public Page<TogetherTaskResult> findTogetherTaskResult(Integer page, Integer size,String taskId) throws InterServiceException{
         try{
-            return taskResultRepository.findAllByTaskId(taskId);
+            TogetherTaskResult param = new TogetherTaskResult();
+            param.setTaskId(taskId);
+            //return taskResultRepository.findAllByTaskId(taskId);
+            Pageable pageable = new PageRequest(page,size, Sort.Direction.DESC,"djsj");
+            Page<TogetherTaskResult> resultPage = taskResultRepository.findAll(new Specification<TogetherTaskResult>() {
+                @Override
+                public Predicate toPredicate(Root<TogetherTaskResult> root, CriteriaQuery<?> criteriaQuery, CriteriaBuilder criteriaBuilder) {
+                    List<Predicate> list = new ArrayList<>();
+                    if (!StringUtil.ckeckEmpty(taskId)) {
+                        list.add(criteriaBuilder.equal(root.get("taskId").as(String.class),taskId));
+                    }
+                    Predicate[] p = new Predicate[list.size()];
+                    return criteriaBuilder.and(list.toArray(p));
+                }
+            },pageable);
+            return resultPage;
         }catch (Exception e){
             throw new InterServiceException(ResultEnum.RESULT_ERROR);
         }

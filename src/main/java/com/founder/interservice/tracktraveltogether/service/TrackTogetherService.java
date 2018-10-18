@@ -20,7 +20,7 @@ public interface TrackTogetherService {
 
     public void saveTogetherTask(TrackTogetherTask trackParam);
 
-    public List<TogetherTaskResult> findTogetherTaskResult(String taskId) throws InterServiceException;
+    public Page<TogetherTaskResult> findTogetherTaskResult(Integer page, Integer size,String taskId) throws InterServiceException;
 
     public TrackTogetherTask findByTaskId(String taskId) throws InterServiceException;
 
