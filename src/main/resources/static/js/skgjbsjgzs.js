@@ -23,6 +23,12 @@ var jq22 = {
                 if (null != data && data.length > 0) {
                     for (var i = 0; i < data.length; i++) {
                         var ryzpStr = "";
+                        var name = data[i].name==null?"":data[i].name;
+                        var age =  data[i].age==null?"":data[i].age;
+                        var zjhm = data[i].zjhm==null?"":data[i].zjhm;
+                        var csrq = data[i].csrq==null?"":data[i].csrq;
+                        var sjhm = data[i].sjhm==null?"":data[i].sjhm;
+                        var xzzDzmc = data[i].xzzDzmc==null?"":data[i].xzzDzmc;
                         if (null != data[i].ryzp && "" != data[i].ryzp) {
                             ryzpStr = "<img src=\"data:image/gif;base64," + data[i].ryzp + "\"/>";
                         } else {
@@ -33,11 +39,11 @@ var jq22 = {
                             "<div class='xx-box'>" +
                             "<div class='lf-img'>" + ryzpStr + "</div>" +
                             "<div class='rg-xx'>" +
-                            "<div class='xx-line'><span class='xx-xm'>" + data[i].name + "</span><span>" + data[i].age + "</span><i class='fa fa-external-link'></i><i class='fa fa-folder-open-o'></i><span class='c125'></span></div>" +
-                            "<div class='xx-line'><i class='fa fa-id-card orange' title='身份证号'></i><span>" + data[i].zjhm + "</span></div>" +
-                            "<div class='xx-line'><i class='fa fa-user yellow' title='出生日期'></i><span>" + data[i].csrq + "</span></div>" +
-                            "<div class='xx-line'><i class='fa fa-phone' title='电话号码'></i><span>" + data[i].sjhm + "</span></div>" +
-                            "<div class='xx-line'><i class='fa fa-map-marker green' title='现住址'></i><span>" + data[i].xzzDzmc + "</span></div>" +
+                            "<div class='xx-line'><span class='xx-xm'>" + name + "</span><span>" + age + "</span><i class='fa fa-external-link'></i><i class='fa fa-folder-open-o'></i><span class='c125'></span></div>" +
+                            "<div class='xx-line'><i class='fa fa-id-card orange' title='身份证号'></i><span>" + zjhm + "</span></div>" +
+                            "<div class='xx-line'><i class='fa fa-user yellow' title='出生日期'></i><span>" + csrq + "</span></div>" +
+                            "<div class='xx-line'><i class='fa fa-phone' title='电话号码'></i><span>" + sjhm + "</span></div>" +
+                            "<div class='xx-line'><i class='fa fa-map-marker green' title='现住址'></i><span>" + xzzDzmc + "</span></div>" +
                             "<div class='xx-line over'><span class='label'>前科人员</span><span class='label'>高危人员</span><span class='label'>刑侦关注人员</span></div>" +
                             "</div>" +
                             "</div>" +
@@ -69,20 +75,27 @@ var jq22 = {
                 if (null != data && data.length > 0) {
                     for (var i = 0; i < data.length; i++) {
                         var ryzpStr = "";
+                        var name = data[i].name==null?"":data[i].name;
+                        var age =  data[i].age==null?"":data[i].age;
+                        var zjhm = data[i].zjhm==null?"":data[i].zjhm;
+                        var csrq = data[i].csrq==null?"":data[i].csrq;
+                        var sjhm = data[i].sjhm==null?"":data[i].sjhm;
+                        var xzzDzmc = data[i].xzzDzmc==null?"":data[i].xzzDzmc;
                         if (null != data[i].ryzp && "" != data[i].ryzp) {
                             ryzpStr = "<img src=\"data:image/gif;base64," + data[i].ryzp + "\"/>";
                         } else {
                             ryzpStr = "<img src=\"/images/timg.jpg\" style = \"height:121px;width:100px;\"/>";
                         }
+
                         $("#content_box0 div[class='result']").append("<div class='float-div'>" +
                             "<div class='xx-box'>" +
                             "<div class='lf-img'>" + ryzpStr + "</div>" +
                             "<div class='rg-xx'>" +
-                            "<div class='xx-line'><span class='xx-xm'>" + data[i].name + "</span><span>" + data[i].age + "</span><i class='fa fa-external-link'></i><i class='fa fa-folder-open-o'></i><span class='c125'></span></div>" +
-                            "<div class='xx-line'><i class='fa fa-id-card orange' title='身份证号'></i><span>" + data[i].zjhm + "</span></div>" +
-                            "<div class='xx-line'><i class='fa fa-user yellow' title='出生日期'></i><span>" + data[i].csrq + "</span></div>" +
-                            "<div class='xx-line'><i class='fa fa-phone' title='电话号码'></i><span>" + data[i].sjhm + "</span></div>" +
-                            "<div class='xx-line'><i class='fa fa-map-marker green' title='现住址'></i><span>" + data[i].xzzDzmc + "</span></div>" +
+                            "<div class='xx-line'><span class='xx-xm'>" + name + "</span><span>" + age + "</span><i class='fa fa-external-link'></i><i class='fa fa-folder-open-o'></i><span class='c125'></span></div>" +
+                            "<div class='xx-line'><i class='fa fa-id-card orange' title='身份证号'></i><span>" + zjhm + "</span></div>" +
+                            "<div class='xx-line'><i class='fa fa-user yellow' title='出生日期'></i><span>" + csrq + "</span></div>" +
+                            "<div class='xx-line'><i class='fa fa-phone' title='电话号码'></i><span>" + sjhm + "</span></div>" +
+                            "<div class='xx-line'><i class='fa fa-map-marker green' title='现住址'></i><span>" + xzzDzmc + "</span></div>" +
                             "<div class='xx-line over'><span class='label'>前科人员</span><span class='label'>高危人员</span><span class='label'>刑侦关注人员</span></div>" +
                             "</div>" +
                             "</div>" +

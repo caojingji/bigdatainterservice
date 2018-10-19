@@ -1,0 +1,101 @@
+﻿INSERT INTO XZXT.SYS_DBLOG(SID,STATUS)VALUES('S011',0);
+COMMIT;
+-------------------------------------------------------------------------------------------
+
+--创建呈请审批日志记录表
+CREATE TABLE XZXT.TB_ST_SPLOG
+(
+    XXZJBH VARCHAR2(30 BYTE),
+	SP_TITLE VARCHAR2(200 BYTE),
+    CQR_SFZH VARCHAR2(20 BYTE),
+    CQR_XM VARCHAR2(50 BYTE),
+    CQR_JH VARCHAR2(50 BYTE),
+    CQR_LXDH varchar2(15 BYTE),
+    SPBSH varchar2(20 BYTE),
+    BSHLXDM varchar2(10 BYTE),
+    BSHLXMC varchar2(50 BYTE),
+    ASJBH varchar2(50 BYTE),
+    SPZT varchar2(10 byte),
+    DJSJ DATE               DEFAULT sysdate
+)TABLESPACE TBS_BIGDATA
+  PCTUSED    0
+  PCTFREE    10
+  INITRANS   1
+  MAXTRANS   255
+  STORAGE    (
+              INITIAL          64K
+              NEXT             1M
+              MINEXTENTS       1
+              MAXEXTENTS       UNLIMITED
+              PCTINCREASE      0
+              BUFFER_POOL      DEFAULT
+             )
+  LOGGING
+  NOCOMPRESS
+  NOCACHE
+  NOPARALLEL
+  MONITORING;
+
+COMMENT ON table XZXT.TB_ST_SPLOG is '查询日志记录功能表';
+COMMENT ON COLUMN XZXT.TB_ST_SPLOG.XXZJBH IS '信息主键编号，主键';
+
+COMMENT ON COLUMN XZXT.TB_ST_SPLOG.SP_TITLE IS '审批标题';
+
+COMMENT ON COLUMN XZXT.TB_ST_SPLOG.CQR_SFZH IS '呈请审批人身份证号';
+
+COMMENT ON COLUMN XZXT.TB_ST_SPLOG.CQR_XM IS '呈请审批人姓名';
+
+COMMENT ON COLUMN XZXT.TB_ST_SPLOG.CQR_JH IS '呈请审批人警号';
+
+COMMENT ON COLUMN XZXT.TB_ST_SPLOG.CQR_LXDH IS '呈请审批人联系电话';
+
+COMMENT ON COLUMN XZXT.TB_ST_SPLOG.SPBSH IS '审批标识号';
+
+COMMENT ON COLUMN XZXT.TB_ST_SPLOG.BSHLXDM IS '标识号类型代码';
+
+COMMENT ON COLUMN XZXT.TB_ST_SPLOG.BSHLXMC IS '标识号类型名称';
+
+COMMENT ON COLUMN XZXT.TB_ST_SPLOG.ASJBH IS '案事件编号';
+
+COMMENT ON COLUMN XZXT.TB_ST_SPLOG.SPZT IS '审批状态';
+
+COMMENT ON COLUMN XZXT.TB_ST_SPLOG.DJSJ IS '登记时间';
+
+--创建主键
+CREATE UNIQUE INDEX PK_SpLog_XXZJBH ON XZXT.TB_ST_SPLOG
+(XXZJBH)
+LOGGING
+TABLESPACE TBS_INDEX
+PCTFREE    10
+INITRANS   2
+MAXTRANS   255
+STORAGE    (
+            INITIAL          64K
+            NEXT             1M
+            MINEXTENTS       1
+            MAXEXTENTS       UNLIMITED
+            PCTINCREASE      0
+            BUFFER_POOL      DEFAULT
+           )
+NOPARALLEL;
+
+ALTER TABLE XZXT.TB_ST_SPLOG ADD (
+  CONSTRAINT PK_SpLog_XXZJBH
+ PRIMARY KEY
+ (XXZJBH)
+    USING INDEX 
+    TABLESPACE TBS_INDEX
+    PCTFREE    10
+    INITRANS   2
+    MAXTRANS   255
+    STORAGE    (
+                INITIAL          64K
+                NEXT             1M
+                MINEXTENTS       1
+                MAXEXTENTS       UNLIMITED
+                PCTINCREASE      0
+               ));
+
+-------------------------------------------------------------------------------------------
+UPDATE XZXT.SYS_DBLOG SET STATUS=1 WHERE SID='S011';
+COMMIT;

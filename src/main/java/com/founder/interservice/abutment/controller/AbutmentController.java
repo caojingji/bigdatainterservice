@@ -3,13 +3,18 @@ package com.founder.interservice.abutment.controller;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
+import com.founder.interservice.VO.ResultVO;
+import com.founder.interservice.enums.ResultEnum;
 import com.founder.interservice.exception.InterServiceException;
 import com.founder.interservice.model.AutoTbStRy;
-import com.founder.interservice.util.Qgckzp;
-import com.founder.interservice.util.StringUtil;
+import com.founder.interservice.splog.model.SpLog;
+import com.founder.interservice.splog.service.SpLogService;
+import com.founder.interservice.util.*;
+import org.apache.http.HttpResponse;
 import org.dom4j.Document;
 import org.dom4j.DocumentHelper;
 import org.dom4j.Element;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -20,6 +25,7 @@ import unifiedservice.*;
 
 import javax.servlet.http.HttpServletResponse;
 import javax.xml.bind.JAXBElement;
+import java.io.IOException;
 import java.util.*;
 
 /**
@@ -38,7 +44,9 @@ public class AbutmentController {
     @Value(value = "${xdhbigdata.xdhserviceParam.cjServiceId}")
     private String cjServiceId;
     @Value(value = "${xdhbigdata.xdhserviceParam.getCjDataServiceId}")
-    private String getCjDateServiceId;
+    private String getCjDataServiceId;
+    @Autowired
+    private SpLogService spLogService;
     /**
      *
      * @Description: 获取新德惠采集的数据
@@ -59,76 +67,41 @@ public class AbutmentController {
             params.put("asjbh", asjbh);
             params.put("sfzh", sfzh);
             params.put("type", type);
-
-            ObjectFactory objectFactory = new ObjectFactory();
-            ArrayOfUnifiedServiceParameter parameterList = objectFactory.createArrayOfUnifiedServiceParameter();
-            List<UnifiedServiceParameter> parameters = parameterList.getUnifiedServiceParameter();
-
-            UnifiedServiceParameter  parameter = null;
-            if(null != params && !params.isEmpty()){
-                for (Map.Entry<String,Object> entry:params.entrySet()) {
-                    parameter = objectFactory.createUnifiedServiceParameter();
-                    parameter.setName(objectFactory.createUnifiedServiceParameterName(entry.getKey()));
-                    parameter.setValue(objectFactory.createUnifiedServiceParameterValue(entry.getValue()));
-                    parameters.add(parameter);
+            String resultJson = UnifiedServiceUtil.sendRequest(bizCode,getCjDataServiceId,params);
+            if(!StringUtil.ckeckEmpty(resultJson)){
+                jsonArray = JSONArray.parseArray(resultJson);
+                JSONArray jsonArrayNew = new JSONArray();//通过身份证号查找二代证信息后的JSONArray
+                if (!"tb_xw_wffzkyry".equals(type)){
+                    return jsonArray;
                 }
-            }else{
-                return new JSONArray();
-            }
-
-            UnifiedService service = new UnifiedService();
-            IUnifiedService iUnifiedService = service.getBasicHttpBindingIUnifiedService();
-            ResponseMessage responseMessage = iUnifiedService.query(bizCode,getCjDateServiceId,parameterList);
-            Boolean status = responseMessage.isStatus();
-            if(status){
-                JAXBElement result = responseMessage.getResult();
-                String valueXml = (String)result.getValue();
-                //String valueXml = "<?xml version=\"1.0\" encoding=\"utf-8\"?><XZUWSResponse><BizCode>XDH002</BizCode><ServiceId>XDHDS0004</ServiceId><Status>True</Status><Message></Message><Result><Table Count=\"1\" Name=\"Table1\"><Others /><Columns><Column Type=\"string\">URL</Column></Columns><Rows><Row><Value>http://10.154.106.29:10081/Main/HomeNew?H5UqnlKXd2q4NdiHenzBUEw6egqekhISXhAhP9VAwkdpew8shn6TmuqYZOWyssGVnVZ0vqAcEzdEEemcuZXOOQiX1d%2b4OOrh</Value></Row></Rows></Table></Result></XZUWSResponse>";
-                System.out.println("valueXml ====================" + valueXml);
-                Document document = DocumentHelper.parseText(valueXml);
-                Element rootEle = document.getRootElement();
-                System.out.println(rootEle.getName());
-                Element resultEle = rootEle.element("Result");
-                Element tableEle = resultEle.element("Table");
-                Element valueEle = tableEle.element("Rows").element("Row").element("Value");
-                String resultJson = valueEle.getTextTrim();
-                if(!StringUtil.ckeckEmpty(resultJson)){
-                    jsonArray = JSONArray.parseArray(resultJson);
-                    JSONArray jsonArrayNew = new JSONArray();//通过身份证号查找二代证信息后的JSONArray
-                    if (!"tb_xw_wffzkyry".equals(type)){
-                        return jsonArray;
+                for (int i = 0 ;i<jsonArray.size();i++){
+                    JSONObject json = jsonArray.getJSONObject(i);
+                    JSONObject jsonNew = new JSONObject();
+                    String sfzhStr = json.get("WFFZKYRY_CYZJ_ZJHM").toString();//获取身份证号
+                    AutoTbStRy tbStRy = new Qgckzp().getQgckAllxxXml(sfzhStr);//通过身份证获取二代证信息
+                    String imgJson = tbStRy.getEdzzplj();
+                    jsonNew.put("WFFZKYRY_HJDZ_DZMC",json.get("WFFZKYRY_HJDZ_DZMC"));//WFFZKYRY_HJDZ_DZMC WFFZKYRY_CSRQ WFFZKYRY_XM WFFZKYRY_CYZJ_ZJHM WFFZKYRY_XZZ_DZMC EDZZPLJ WFFZKYRY_XBDM
+                    jsonNew.put("WFFZKYRY_CSRQ",json.get("WFFZKYRY_CSRQ"));
+                    jsonNew.put("WFFZKYRY_XM",json.get("WFFZKYRY_XM"));
+                    jsonNew.put("WFFZKYRY_CYZJ_ZJHM",json.get("WFFZKYRY_CYZJ_ZJHM"));
+                    jsonNew.put("WFFZKYRY_XZZ_DZMC",json.get("WFFZKYRY_XZZ_DZMC"));
+                    String sex = "";
+                    String sexStr = tbStRy.getXbdm();
+                    switch(sexStr){
+                        case "0":
+                            sex = "未知的性别";break;
+                        case "1":
+                            sex = "男";break;
+                        case "2":
+                            sex = "女";break;
+                        case "9":
+                            sex = "未说明的性别";break;
                     }
-                    for (int i = 0 ;i<jsonArray.size();i++){
-                        JSONObject json = jsonArray.getJSONObject(i);
-                        JSONObject jsonNew = new JSONObject();
-                        String sfzhStr = json.get("WFFZKYRY_CYZJ_ZJHM").toString();//获取身份证号
-                        AutoTbStRy tbStRy = new Qgckzp().getQgckAllxxXml(sfzhStr);//通过身份证获取二代证信息
-                        String imgJson = tbStRy.getEdzzplj();
-                        jsonNew.put("WFFZKYRY_HJDZ_DZMC",json.get("WFFZKYRY_HJDZ_DZMC"));//WFFZKYRY_HJDZ_DZMC WFFZKYRY_CSRQ WFFZKYRY_XM WFFZKYRY_CYZJ_ZJHM WFFZKYRY_XZZ_DZMC EDZZPLJ WFFZKYRY_XBDM
-                        jsonNew.put("WFFZKYRY_CSRQ",json.get("WFFZKYRY_CSRQ"));
-                        jsonNew.put("WFFZKYRY_XM",json.get("WFFZKYRY_XM"));
-                        jsonNew.put("WFFZKYRY_CYZJ_ZJHM",json.get("WFFZKYRY_CYZJ_ZJHM"));
-                        jsonNew.put("WFFZKYRY_XZZ_DZMC",json.get("WFFZKYRY_XZZ_DZMC"));
-                        String sex = "";
-                        String sexStr = tbStRy.getXbdm();
-                        switch(sexStr){
-                            case "0":
-                                sex = "未知的性别";break;
-                            case "1":
-                                sex = "男";break;
-                            case "2":
-                                sex = "女";break;
-                            case "9":
-                                sex = "未说明的性别";break;
-                        }
-                        jsonNew.put("WFFZKYRY_XBDM",sex);
-                        jsonNew.put("EDZZPLJ",imgJson);
-                        jsonArrayNew.add(jsonNew);
-                    }
-                    return jsonArrayNew;
-                }else{
-                    return new JSONArray();
+                    jsonNew.put("WFFZKYRY_XBDM",sex);
+                    jsonNew.put("EDZZPLJ",imgJson);
+                    jsonArrayNew.add(jsonNew);
                 }
+                return jsonArrayNew;
             }else{
                 return new JSONArray();
             }
@@ -162,42 +135,86 @@ public class AbutmentController {
             jsonObject.put("VIEWTYPE", "3");
             params.put("sysparam", jsonObject.toJSONString()); //参数
 
-            ObjectFactory objectFactory = new ObjectFactory();
-            ArrayOfUnifiedServiceParameter parameterList = objectFactory.createArrayOfUnifiedServiceParameter();
-            List<UnifiedServiceParameter> parameters = parameterList.getUnifiedServiceParameter();
-
-            UnifiedServiceParameter  parameter = null;
-            if(null != params && !params.isEmpty()){
-                for (Map.Entry<String,Object> entry:params.entrySet()) {
-                    parameter = objectFactory.createUnifiedServiceParameter();
-                    parameter.setName(objectFactory.createUnifiedServiceParameterName(entry.getKey()));
-                    parameter.setValue(objectFactory.createUnifiedServiceParameterValue(entry.getValue()));
-                    parameters.add(parameter);
-                }
-            }
-
-            UnifiedService service = new UnifiedService();
-            IUnifiedService iUnifiedService = service.getBasicHttpBindingIUnifiedService();
-            ResponseMessage responseMessage = iUnifiedService.query(bizCode,cjServiceId,parameterList);
-
-            Boolean status = responseMessage.isStatus();
-            if(status){
-                JAXBElement result = responseMessage.getResult();
-                String valueXml = (String)result.getValue();
-                //String valueXml = "<?xml version=\"1.0\" encoding=\"utf-8\"?><XZUWSResponse><BizCode>XDH002</BizCode><ServiceId>XDHDS0004</ServiceId><Status>True</Status><Message></Message><Result><Table Count=\"1\" Name=\"Table1\"><Others /><Columns><Column Type=\"string\">URL</Column></Columns><Rows><Row><Value>http://10.154.106.29:10081/Main/HomeNew?H5UqnlKXd2q4NdiHenzBUEw6egqekhISXhAhP9VAwkdpew8shn6TmuqYZOWyssGVnVZ0vqAcEzdEEemcuZXOOQiX1d%2b4OOrh</Value></Row></Rows></Table></Result></XZUWSResponse>";
-                Document document = DocumentHelper.parseText(valueXml);
-                Element rootEle = document.getRootElement();
-                System.out.println(rootEle.getName());
-                Element resultEle = rootEle.element("Result");
-                Element tableEle = resultEle.element("Table");
-                Element valueEle = tableEle.element("Rows").element("Row").element("Value");
-                String url = valueEle.getTextTrim();
-                System.out.println("url ==================== " + url);
+            String url = UnifiedServiceUtil.sendRequest(bizCode,cjServiceId,params);
+            if(!StringUtil.ckeckEmpty(url)){
                 response.sendRedirect(url);
             }
         } catch (Exception e) {
             e.printStackTrace();
             throw new InterServiceException(55,"发生未知错误！");
+        }
+    }
+
+    /**
+     * 跳转到新德汇审批界面
+     * @param asjbh 案事件编号
+     * @param sfzh 身份证号
+     * @param bsh 标识号
+     * @param response
+     */
+    @RequestMapping(value = "/toSpJsp",method = {RequestMethod.GET,RequestMethod.POST})
+    public void toSpJsp(String asjbh, String sfzh, String bsh,String bshlxdm,String bshlxmc, HttpServletResponse response){
+        try{
+
+            LinkedHashMap<String, Object> params = new LinkedHashMap<>();
+            params.put("sysname", "HCZZ-SQSP"); //参数
+            JSONObject jsonObject = new JSONObject();
+            String sqbt = "查看网安数据申请：案事件编号为"+asjbh+";查看对象为"+bsh+";申请人身份证号为"+sfzh;
+            jsonObject.put("ajbh", asjbh);
+            jsonObject.put("sfzh", sfzh);
+            jsonObject.put("sqdx", bsh);
+            jsonObject.put("sqbt",sqbt);
+            params.put("sysparam", jsonObject.toJSONString()); //参数
+            String url = UnifiedServiceUtil.sendRequest(bizCode,cjServiceId,params);
+            if(!StringUtil.ckeckEmpty(url)){
+                //添加审批日志
+                SpLog spLog = new SpLog();
+                spLog.setXxzjbh(KeyUtil.getUniqueKey("SPL"));
+                spLog.setAsjbh(asjbh);
+                spLog.setCqrSfzh(sfzh);
+                spLog.setSpbsh(bsh);
+                spLog.setBshlxdm(bshlxdm);
+                spLog.setBshlxmc(bshlxmc);
+                spLog.setSpTitle(sqbt);
+                spLog.setSpzt("2"); //正在审批
+                spLogService.saveSpLog(spLog);
+                //跳转
+                response.sendRedirect(url);
+            }
+        }catch (Exception e){
+            e.printStackTrace();
+            throw new InterServiceException(55,"发生未知错误！");
+        }
+    }
+
+    /**
+     * 调用新德汇接口获取审批结果
+     * @param asjbh
+     * @param sfzh
+     * @param bsh
+     * @return
+     */
+    @RequestMapping(value = "/getSpResult",method = {RequestMethod.GET,RequestMethod.POST})
+    @ResponseBody
+    public JSONObject getSpResult(String asjbh,String sfzh,String bsh){
+        JSONObject resultObject = null;
+        try{
+            LinkedHashMap<String, Object> params = new LinkedHashMap<>();
+            params.put("sysname", "HCZZ-SPJG"); //参数
+            JSONObject jsonObject = new JSONObject();
+            jsonObject.put("ajbh", asjbh);
+            jsonObject.put("sfzh", sfzh);
+            jsonObject.put("sqdx", bsh);
+            params.put("sysparam", jsonObject.toJSONString()); //参数
+            String url = UnifiedServiceUtil.sendRequest(bizCode,cjServiceId,params);
+            if(!StringUtil.ckeckEmpty(url)){
+                String spjgStr = HttpUtil.doGet(url);
+                resultObject = JSONObject.parseObject(spjgStr);
+            }
+            return resultObject;
+        }catch(Exception e){
+            e.printStackTrace();
+            return resultObject;
         }
     }
 }
