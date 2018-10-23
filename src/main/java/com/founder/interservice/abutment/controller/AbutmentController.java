@@ -86,7 +86,7 @@ public class AbutmentController {
                     jsonNew.put("WFFZKYRY_CYZJ_ZJHM",json.get("WFFZKYRY_CYZJ_ZJHM"));
                     jsonNew.put("WFFZKYRY_XZZ_DZMC",json.get("WFFZKYRY_XZZ_DZMC"));
                     String sex = "";
-                    String sexStr = tbStRy.getXbdm();
+                    String sexStr = null == tbStRy.getXbdm()?"":tbStRy.getXbdm();
                     switch(sexStr){
                         case "0":
                             sex = "未知的性别";break;
