@@ -201,16 +201,34 @@ public class RegionalAnalysisController {
             List<RegionalTaskResult> taskResults = resultPage.getContent();
             if(taskResults != null && !taskResults.isEmpty()){
                 for(int i = 0; i <= taskResults.size() - 1; i++){
-                    RegionalTaskResultVO taskResultVO = new RegionalTaskResultVO();
-                    BeanUtils.copyProperties(taskResults.get(i),taskResultVO);
-                    if("01".equals(param.getObjectType())){
-                        String imsi = taskResults.get(i).getObjectValue();
-                        taskResultVO = getRyxxData(imsi,taskResultVO,"ryxx");
-                    }else if("02".equals(param.getObjectType())){
-                        String cphm = taskResults.get(i).getObjectValue();
-                        taskResultVO = getJdcData(cphm,taskResultVO);
+                    final int j = i;
+                    new Thread(){
+                        public void run(){
+                            RegionalTaskResultVO taskResultVO = new RegionalTaskResultVO();
+                            try{
+                                BeanUtils.copyProperties(taskResults.get(j),taskResultVO);
+                                if("01".equals(param.getObjectType())){
+                                    String imsi = taskResults.get(j).getObjectValue();
+                                    taskResultVO = getRyxxData(imsi,taskResultVO,"ryxx");
+                                }else if("02".equals(param.getObjectType())){
+                                    String cphm = taskResults.get(j).getObjectValue();
+                                    taskResultVO = getJdcData(cphm,taskResultVO);
+                                }
+                            }catch(Exception ex){
+                                ex.printStackTrace();
+                            }
+                            taskResultVOS.add(taskResultVO);
+                        }
+                    }.start();
+                }
+                while (1==1){
+                    try {
+                        if (taskResultVOS.size()==taskResults.size()){
+                            break;
+                        }
+                    }catch (Exception e){
+                        break;
                     }
-                    taskResultVOS.add(taskResultVO);
                 }
             }
         } catch (Exception e) {
