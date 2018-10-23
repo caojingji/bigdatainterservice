@@ -79,14 +79,14 @@ public class AbutmentController {
                     JSONObject jsonNew = new JSONObject();
                     String sfzhStr = json.get("WFFZKYRY_CYZJ_ZJHM").toString();//获取身份证号
                     AutoTbStRy tbStRy = new Qgckzp().getQgckAllxxXml(sfzhStr);//通过身份证获取二代证信息
-                    jsonNew.put("WFFZKYRY_HJDZ_DZMC",json.get("WFFZKYRY_HJDZ_DZMC"));//WFFZKYRY_HJDZ_DZMC WFFZKYRY_CSRQ WFFZKYRY_XM WFFZKYRY_CYZJ_ZJHM WFFZKYRY_XZZ_DZMC EDZZPLJ WFFZKYRY_XBDM
-                    jsonNew.put("WFFZKYRY_CSRQ",json.get("WFFZKYRY_CSRQ"));
-                    jsonNew.put("WFFZKYRY_XM",json.get("WFFZKYRY_XM")==null?tbStRy.getXm():json.get("WFFZKYRY_XM"));
-                    jsonNew.put("WFFZKYRY_CYZJ_ZJHM",json.get("WFFZKYRY_CYZJ_ZJHM")==null?tbStRy.getCyzjZjhm():json.get("WFFZKYRY_CYZJ_ZJHM"));
-                    jsonNew.put("WFFZKYRY_XZZ_DZMC",json.get("WFFZKYRY_XZZ_DZMC")==null?tbStRy.getXzzDzmc():json.get("WFFZKYRY_XZZ_DZMC"));
+                    jsonNew.put("WFFZKYRY_HJDZ_DZMC",StringUtil.ckeckEmpty(json.getString("WFFZKYRY_HJDZ_DZMC"))?tbStRy.getCsdDzmc():json.get("WFFZKYRY_HJDZ_DZMC"));//户籍地址名称（出生地）
+                    jsonNew.put("WFFZKYRY_CSRQ",StringUtil.ckeckEmpty(json.getString("WFFZKYRY_CSRQ"))?tbStRy.getCsrqRqgzxx():json.get("WFFZKYRY_CSRQ"));//出生日期
+                    jsonNew.put("WFFZKYRY_XM",StringUtil.ckeckEmpty(json.getString("WFFZKYRY_XM"))?tbStRy.getXm():json.get("WFFZKYRY_XM"));//姓名
+                    jsonNew.put("WFFZKYRY_CYZJ_ZJHM",StringUtil.ckeckEmpty(json.getString("WFFZKYRY_CYZJ_ZJHM"))?tbStRy.getCyzjZjhm():json.get("WFFZKYRY_CYZJ_ZJHM"));
+                    jsonNew.put("WFFZKYRY_XZZ_DZMC",StringUtil.ckeckEmpty(json.getString("WFFZKYRY_XZZ_DZMC"))?tbStRy.getXzzDzmc():json.get("WFFZKYRY_XZZ_DZMC"));
                     String sex = "";
-                    String imgJson = tbStRy.getEdzzplj()==null?"":tbStRy.getEdzzplj();
-                    String sexStr = null == tbStRy.getXbdm()?"":tbStRy.getXbdm();
+                    String imgJson = StringUtil.ckeckEmpty(tbStRy.getEdzzplj())?"":tbStRy.getEdzzplj();
+                    String sexStr = StringUtil.ckeckEmpty(tbStRy.getXbdm())?"":tbStRy.getXbdm();
                     switch(sexStr){
                         default:
                             sex = "未知的性别";break;
