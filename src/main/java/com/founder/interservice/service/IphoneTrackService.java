@@ -4,6 +4,7 @@ import com.alibaba.fastjson.JSONObject;
 import com.founder.interservice.exception.InterServiceException;
 import com.founder.interservice.model.ResultObj;
 import com.founder.interservice.model.Track;
+import com.founder.interservice.querymodel.RelationLocalFilter;
 
 import java.util.List;
 import java.util.Map;
@@ -18,4 +19,7 @@ public interface IphoneTrackService {
 
     public JSONObject getObjectRelationAll(String obj)throws InterServiceException;
     public JSONObject getObjectRelatioNoSave(String obj) throws InterServiceException;
+
+    public void saveObjectRelationLocal(ResultObj resultObj);
+    public boolean queryObjectRelationLocal(RelationLocalFilter filter);
 }

@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.founder.interservice.mapper.ObjectRelationMapper">
+
+    <insert id="saveIdRelation" parameterType="com.founder.interservice.model.IdcardPhoneCarRalation">
+        insert into xzxt.tb_st_idcardphonecar
+        (xxzjbh,
+        idcard,
+        phone,
+        car,
+        djsj)
+        values
+        (#{xxzjbh},
+        #{idcard},
+        #{phone},
+        #{car},
+        sysdate)
+    </insert>
+
+    <insert id="savePhoenRelation" parameterType="com.founder.interservice.model.PhoneQQWeChatRalation">
+        insert into xzxt.tb_st_phoneqqwechat
+        (xxzjbh
+        ,phone
+        ,qq
+        ,wechat
+        ,djsj)
+        values
+        (#{xxzjbh}
+        ,#{phone}
+        ,#{qq}
+        ,#{wechat}
+        ,sysdate)
+    </insert>
+
+
+    <select id="queryPhoneRelationLocal" parameterType="com.founder.interservice.querymodel.RelationLocalFilter" resultType="java.lang.String">
+        select t.phone from TB_ST_PHONEQQWECHAT t 
+        <where>
+            <if test="phone != null and phone != ''">
+                and t.phone = #{phone}
+            </if>
+            <if test="qq != null and qq != ''">
+                and t.qq = #{qq}
+            </if>
+            <if test="wechat != null and wechat != ''">
+                and t.wechat = #{wechat}
+            </if>
+        </where>
+    </select>
+    <select id="queryIdRelationLocal" parameterType="com.founder.interservice.querymodel.RelationLocalFilter" resultType="java.lang.String">
+        select t.idcard from TB_ST_IDCARDPHONECAR t
+        <where>
+            <if test="idcard != null and idcard != ''">
+                and t.idcard = #{idcard}
+            </if>
+            <if test="phone != null and phone != ''">
+                and t.phone = #{phone}
+            </if>
+            <if test="car != null and car != ''">
+                and t.car = #{car}
+            </if>
+        </where>
+    </select>
+
+</mapper>

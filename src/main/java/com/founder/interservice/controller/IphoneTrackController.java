@@ -6,6 +6,7 @@ import com.alibaba.fastjson.JSONObject;
 import com.founder.interservice.VO.ResultVO;
 import com.founder.interservice.enums.ResultEnum;
 import com.founder.interservice.model.ResultObj;
+import com.founder.interservice.querymodel.RelationLocalFilter;
 import com.founder.interservice.service.IphoneTrackService;
 import com.founder.interservice.util.DateUtil;
 import com.founder.interservice.util.ResultVOUtil;
@@ -35,6 +36,10 @@ public class IphoneTrackController {
         ResultObj resultObj = null;
         try{
             resultObj = iphoneTrackService.getObjectRelationAll(objValue,type);
+            if (resultObj!=null){
+                //查出数据保存入库
+                iphoneTrackService.saveObjectRelationLocal(resultObj);
+            }
         }catch (Exception e){
             e.printStackTrace();
         }
@@ -179,5 +184,17 @@ public class IphoneTrackController {
             resultMap.put("msg", ResultEnum.TIME_PARAM_NOTNULL.getMessage());
         }
         return resultMap;
+    }
+
+    @RequestMapping(value = "/queryObjectRelationLocal",method = {RequestMethod.GET,RequestMethod.POST})
+    @ResponseBody
+    public boolean queryObjectRelationLocal(RelationLocalFilter filter){
+        boolean yesOrNo = false;
+        try{
+            yesOrNo = iphoneTrackService.queryObjectRelationLocal(filter);
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+        return  yesOrNo;
     }
 }
