@@ -16,10 +16,10 @@
           DJSJ)
         VALUES
           (#{xxzjbh },
-          #{cxr_sfzh },
-          #{cxr_xm },
-          #{cxr_jh },
-          #{cxr_lxdh },
+          #{cxrSfzh },
+          #{cxrXm },
+          #{cxrJh },
+          #{cxrLxdh },
           #{cxbsh },
           #{bshlxdm },
           #{bshlxmc },

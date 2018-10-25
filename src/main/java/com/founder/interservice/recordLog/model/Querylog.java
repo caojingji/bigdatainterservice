@@ -17,10 +17,10 @@ import java.util.Date;
 public class Querylog {
     @Id
     private String xxzjbh;//信息主键编号，主键
-    private String cxr_sfzh;//查询人身份证号
-    private String cxr_xm;//查询人姓名
-    private String cxr_jh;//查询警号
-    private String cxr_lxdh;//查询人联系电话
+    private String cxrSfzh;//查询人身份证号
+    private String cxrXm;//查询人姓名
+    private String cxrJh;//查询警号
+    private String cxrLxdh;//查询人联系电话
     private String cxbsh;//查询标识号
     private String bshlxdm;//标识号类型代码
     private String bshlxmc;//标识号类型名称

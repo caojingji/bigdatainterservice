@@ -405,7 +405,7 @@ public class RegionalAnalysisController {
         try{
             //String taskId = "123123131231";
             String taskId = HttpUtil.doPost(REGION_ALANALYSIS_URL,paramStr);
-            if(taskId != null && !taskId.isEmpty()){
+            if( null != taskId && !taskId.isEmpty() && !"Rate limit".equals(taskId)){
                 JSONObject jsonObject = JSONObject.parseObject(paramStr);
                 RegionalTask regionalTask = new RegionalTask();
                 List<Regional> regionalList = null;

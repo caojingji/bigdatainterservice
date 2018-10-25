@@ -10,6 +10,8 @@ import com.founder.interservice.model.Relation;
 import com.founder.interservice.model.Track;
 import com.founder.interservice.querymodel.RelationFilter;
 import com.founder.interservice.querymodel.TrackFilter;
+import com.founder.interservice.recordLog.model.Querylog;
+import com.founder.interservice.recordLog.service.RecordLogService;
 import com.founder.interservice.service.DataService;
 import com.founder.interservice.service.IphoneTrackService;
 import com.founder.interservice.util.*;
@@ -40,6 +42,9 @@ public class DataController {
 
     @Autowired
     private DataService dataService;
+    //查询日志记录
+    @Autowired
+    private RecordLogService recordLogService;
     @Autowired
     private IphoneTrackService iphoneTrackService;
     @Value("${wabigdata.pgis.url}")
@@ -83,7 +88,7 @@ public class DataController {
      */
     @RequestMapping(value = "/getAndSaveTrack")
     @ResponseBody
-    public ResultVO getAndSaveTrack(String objValue, String kssj, String jssj){
+    public ResultVO getAndSaveTrack(String asjbh,String objValue, String kssj, String jssj,String cxrXm,String cxrSfzh,String cxrJh,String cxrLxdh,String objType){
         ResultVO resultVO = null;
         try{
             List<String> imsis = new ArrayList<>();
@@ -110,6 +115,30 @@ public class DataController {
                     iphoneTrackService.iphoneTrackForSjhm(imsi, kssjstr, jssjStr);
                 }
             }
+
+            //添加查询日志记录功能
+            Querylog logParam = new Querylog();
+            logParam.setCxrXm(cxrXm);
+            logParam.setCxrSfzh(cxrSfzh);
+            logParam.setCxrJh(cxrJh);
+            logParam.setCxrLxdh(cxrLxdh);
+            logParam.setAsjbh(asjbh);
+            logParam.setCxbsh(objValue);
+            logParam.setBshlxdm(objType);
+            if(!StringUtil.ckeckEmpty(objType)){
+                switch (objType){
+                    case "001":logParam.setBshlxmc("手机号码");break;
+                    case "002":logParam.setBshlxmc("QQ号码");break;
+                    case "003":logParam.setBshlxmc("微信ID");break;
+                    case "004":logParam.setBshlxmc("身份证号");break;
+                    case "005":logParam.setBshlxmc("车牌号码");break;
+                    default:logParam.setBshlxmc("");break;
+                }
+            }else{
+                logParam.setBshlxmc("");
+            }
+            recordLogService.saveQueryLog(logParam);
+
             resultVO = ResultVOUtil.success();
         }catch(Exception e){
             e.printStackTrace();

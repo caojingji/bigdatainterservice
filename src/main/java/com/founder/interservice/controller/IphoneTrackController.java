@@ -7,6 +7,8 @@ import com.founder.interservice.VO.ResultVO;
 import com.founder.interservice.enums.ResultEnum;
 import com.founder.interservice.model.ResultObj;
 import com.founder.interservice.querymodel.RelationLocalFilter;
+import com.founder.interservice.recordLog.model.Querylog;
+import com.founder.interservice.recordLog.service.RecordLogService;
 import com.founder.interservice.service.IphoneTrackService;
 import com.founder.interservice.util.DateUtil;
 import com.founder.interservice.util.ResultVOUtil;
@@ -29,10 +31,13 @@ public class IphoneTrackController {
 
     @Autowired
     private IphoneTrackService iphoneTrackService;
+    //查询日志记录
+    @Autowired
+    private RecordLogService recordLogService;
 
     @RequestMapping("/getObjectRelationAll")
     @ResponseBody
-    public ResultObj getObjectRelationAll(String objValue,String type){
+    public ResultObj getObjectRelationAll(String asjbh,String cxrXm,String cxrSfzh,String cxrJh,String cxrLxdh,String type,String objValue){
         ResultObj resultObj = null;
         try{
             resultObj = iphoneTrackService.getObjectRelationAll(objValue,type);
@@ -40,6 +45,29 @@ public class IphoneTrackController {
                 //查出数据保存入库
                 iphoneTrackService.saveObjectRelationLocal(resultObj);
             }
+            //添加查询日志
+            //添加查询日志记录功能
+            Querylog logParam = new Querylog();
+            logParam.setCxrXm(cxrXm);
+            logParam.setCxrSfzh(cxrSfzh);
+            logParam.setCxrJh(cxrJh);
+            logParam.setCxrLxdh(cxrLxdh);
+            logParam.setAsjbh(asjbh);
+            logParam.setCxbsh(objValue);
+            logParam.setBshlxdm(type);
+            if(!StringUtil.ckeckEmpty(type)){
+                switch (type){
+                    case "001":logParam.setBshlxmc("手机号码");break;
+                    case "002":logParam.setBshlxmc("QQ号码");break;
+                    case "003":logParam.setBshlxmc("微信ID");break;
+                    case "004":logParam.setBshlxmc("身份证号");break;
+                    case "005":logParam.setBshlxmc("车牌号码");break;
+                    default:logParam.setBshlxmc("");break;
+                }
+            }else{
+                logParam.setBshlxmc("");
+            }
+            recordLogService.saveQueryLog(logParam);
         }catch (Exception e){
             e.printStackTrace();
         }

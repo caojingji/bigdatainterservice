@@ -11,7 +11,7 @@ import java.util.concurrent.Executor;
 /**
  * @ClassName： AsyncConfig
  * @Auther： 曹鹏
- * @Description: 是定时任务可以多线程一步执行
+ * @Description: 是定时任务可以多线程异步执行
  * @CreateDate： 2018-08-22 16:48
  * @Version: 1.0
  */
