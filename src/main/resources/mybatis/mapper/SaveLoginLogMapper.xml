@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.founder.interservice.loginlog.mapper.LoginLogMapper">
+    <mapper namespace="com.founder.interservice.loginlog.mapper.LoginLogMapper">
 
     <insert id="saveLoginLog" parameterType="com.founder.interservice.loginlog.model.LoginLog">
         INSERT INTO TB_ST_LOGINLOG
