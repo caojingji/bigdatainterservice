@@ -7,6 +7,8 @@ import com.founder.interservice.VO.ResultVO;
 import com.founder.interservice.enums.ResultEnum;
 import com.founder.interservice.exception.InterServiceException;
 import com.founder.interservice.model.AutoTbStRy;
+import com.founder.interservice.querymodel.RelationLocalFilter;
+import com.founder.interservice.service.IphoneTrackService;
 import com.founder.interservice.splog.model.SpLog;
 import com.founder.interservice.splog.service.SpLogService;
 import com.founder.interservice.util.*;
@@ -47,6 +49,8 @@ public class AbutmentController {
     private String getCjDataServiceId;
     @Autowired
     private SpLogService spLogService;
+    @Autowired
+    private IphoneTrackService iphoneTrackService;
     /**
      *
      * @Description: 获取新德惠采集的数据
@@ -155,9 +159,8 @@ public class AbutmentController {
      * @param response
      */
     @RequestMapping(value = "/toSpJsp",method = {RequestMethod.GET,RequestMethod.POST})
-    public void toSpJsp(String asjbh, String sfzh, String bsh,String bshlxdm,String bshlxmc, HttpServletResponse response){
+    public void toSpJsp(String asjbh, String sfzh,String bsh,String bshlxdm,String bshlxmc, HttpServletResponse response){
         try{
-
             LinkedHashMap<String, Object> params = new LinkedHashMap<>();
             params.put("sysname", "HCZZ-SQSP"); //参数
             JSONObject jsonObject = new JSONObject();
@@ -166,6 +169,32 @@ public class AbutmentController {
             jsonObject.put("sfzh", sfzh);
             jsonObject.put("sqdx", bsh);
             jsonObject.put("sqbt",sqbt);
+            String level = null;
+            RelationLocalFilter filter = new RelationLocalFilter();
+            if(bshlxdm != null){
+                switch (bshlxdm){
+                    case "001":
+                        filter.setPhone(bsh); break;
+                    case "002":
+                        filter.setQq(bsh); break;
+                    case "003":
+                        filter.setWechat(bsh); break;
+                    case "004":
+                        filter.setIdcard(bsh); break;
+                    case "005":
+                        filter.setCar(bsh); break;
+                }
+                boolean bol = iphoneTrackService.queryObjectRelationLocal(filter);
+                if (bol){
+                    level = "1";
+                }else{
+                    level = "2";
+                }
+            }else{
+                level = "2";
+            }
+            jsonObject.put("level",level);
+            jsonObject.put("sqly","智慧侦查脑图");
             params.put("sysparam", jsonObject.toJSONString()); //参数
             String url = UnifiedServiceUtil.sendRequest(bizCode,cjServiceId,params);
             if(!StringUtil.ckeckEmpty(url)){
@@ -207,6 +236,7 @@ public class AbutmentController {
             jsonObject.put("ajbh", asjbh);
             jsonObject.put("sfzh", sfzh);
             jsonObject.put("sqdx", bsh);
+            jsonObject.put("s1ly","智慧侦查脑图");
             params.put("sysparam", jsonObject.toJSONString()); //参数
             String url = UnifiedServiceUtil.sendRequest(bizCode,cjServiceId,params);
             if(!StringUtil.ckeckEmpty(url)){
@@ -218,5 +248,52 @@ public class AbutmentController {
             e.printStackTrace();
             return resultObject;
         }
+    }
+
+    /**
+     *
+     * @param sfzh 调用者身份证号
+     * @param phone 接受电话号码
+     * @return
+     */
+    @RequestMapping(value = "/sendMessage",method = {RequestMethod.GET,RequestMethod.POST})
+    @ResponseBody
+    public ResultVO sendMessage(String sfzh,String phone){
+        ResultVO resultVO = null;
+        try {
+            //生成短信验证码
+            String verifyCode = String
+                    .valueOf(new Random().nextInt(899999) + 100000);
+            String content = "您的验证码为："+ verifyCode+",该验证码有效时长为1分钟，请在一分钟内输入，且勿透漏给他人！【重庆刑专-智慧侦查脑图】";
+            LinkedHashMap<String, Object> params = new LinkedHashMap<>();
+            params.put("type", "SendMessage"); //参数
+            params.put("sfzh", sfzh);
+            params.put("SendMessage_phone", phone);
+            params.put("SendMessage_content", content);
+            params.put("SendMessage_sender", "重庆刑专-智慧侦查脑图");
+            String url = UnifiedServiceUtil.sendRequest(bizCode,getCjDataServiceId,params);
+            System.out.println("url=============" + url);
+            JSONObject result = new JSONObject();
+            if(!StringUtil.ckeckEmpty(url)){
+                if("短信发送成功!".equals(url)){
+                    result.put("code",verifyCode);
+                    result.put("status",ResultEnum.SUCCESS.getCode());
+                    result.put("message","短信发送成功！");
+                }else{
+                    result.put("code",null);
+                    result.put("status",ResultEnum.TASK_SEND_ERROR.getCode());
+                    result.put("message","短信发送失败！");
+                }
+            }else{
+                result.put("code",null);
+                result.put("status",ResultEnum.TASK_SEND_ERROR.getCode());
+                result.put("message","短信发送失败！");
+            }
+            resultVO = ResultVOUtil.success(result);
+        }catch (InterServiceException e){
+            e.printStackTrace();
+            resultVO = ResultVOUtil.error(ResultEnum.TASK_SEND_ERROR.getCode(),ResultEnum.TASK_SEND_ERROR.getMessage());
+        }
+        return resultVO;
     }
 }
