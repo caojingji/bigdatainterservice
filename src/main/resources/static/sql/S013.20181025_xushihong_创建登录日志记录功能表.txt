@@ -1,0 +1,85 @@
+INSERT INTO XZXT.SYS_DBLOG(SID,STATUS)VALUES('S013',0);
+COMMIT;
+-------------------------------------------------------------------------------------------
+
+--创建查询日志记录功能表
+CREATE TABLE XZXT.TB_ST_LOGINLOG
+(
+	XXZJBH VARCHAR2(30 BYTE),
+    CXR_SFZH VARCHAR2(20 BYTE),
+    CXR_XM VARCHAR2(50 BYTE),
+    CXR_JH VARCHAR2(50 BYTE),
+    CXR_LXDH varchar2(15 BYTE),
+    CXR_DLSJ DATE               DEFAULT sysdate
+)TABLESPACE TBS_BIGDATA
+  PCTUSED    0
+  PCTFREE    10
+  INITRANS   1
+  MAXTRANS   255
+  STORAGE    (
+              INITIAL          64K
+              NEXT             1M
+              MINEXTENTS       1
+              MAXEXTENTS       UNLIMITED
+              PCTINCREASE      0
+              BUFFER_POOL      DEFAULT
+             )
+  LOGGING
+  NOCOMPRESS
+  NOCACHE
+  NOPARALLEL
+  MONITORING;
+
+COMMENT ON table XZXT.TB_ST_LOGINLOG is '查询日志记录功能表';
+
+COMMENT ON COLUMN XZXT.TB_ST_QUERYLOG.XXZJBH IS '信息主键编号，主键';
+
+COMMENT ON COLUMN XZXT.TB_ST_LOGINLOG.CXR_JH IS '查询警号';
+
+COMMENT ON COLUMN XZXT.TB_ST_LOGINLOG.CXR_SFZH IS '查询人身份证号';
+
+COMMENT ON COLUMN XZXT.TB_ST_LOGINLOG.CXR_XM IS '查询人姓名';
+
+COMMENT ON COLUMN XZXT.TB_ST_LOGINLOG.CXR_LXDH IS '查询人联系电话';
+
+COMMENT ON COLUMN XZXT.TB_ST_LOGINLOG.CXR_DLSJ IS '登陆时间';
+
+--创建主键
+CREATE UNIQUE INDEX PK_LoginLog_CXR_JH ON XZXT.TB_ST_LOGINLOG
+(XXZJBH)
+LOGGING
+TABLESPACE TBS_INDEX
+PCTFREE 10
+INITRANS 2
+MAXTRANS 255
+STORAGE  (
+         INITIAL          64K
+            NEXT             1M
+            MINEXTENTS       1
+            MAXEXTENTS       UNLIMITED
+            PCTINCREASE      0
+            BUFFER_POOL      DEFAULT
+           )
+NOPARALLEL;
+
+ALTER TABLE XZXT.TB_ST_LOGINLOG ADD (
+  CONSTRAINT PK_LoginLog_CXR_JH
+ PRIMARY KEY
+ (XXZJBH)
+    USING INDEX
+    TABLESPACE TBS_INDEX
+    PCTFREE    10
+    INITRANS   2
+    MAXTRANS   255
+    STORAGE    (
+                INITIAL          64K
+                NEXT             1M
+                MINEXTENTS       1
+                MAXEXTENTS       UNLIMITED
+                PCTINCREASE      0
+               ));
+
+
+-------------------------------------------------------------------------------------------
+UPDATE XZXT.SYS_DBLOG SET STATUS=1 WHERE SID='S013';
+COMMIT;
