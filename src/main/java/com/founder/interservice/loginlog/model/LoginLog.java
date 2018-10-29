@@ -16,6 +16,7 @@ import java.util.Date;
 public class LoginLog {
     @Id
     private String xxzjbh;//信息主键编号
+    private String asjbh; //案事件编号
     private String cxrJh;//查询人警号
     private String cxrSfzh;//查询人身份证号
     private String cxrXm;//查询人姓名

@@ -6,6 +6,7 @@
         INSERT INTO TB_ST_LOGINLOG
           (
           XXZJBH,
+          ASJBH,
           CXR_SFZH,
           CXR_XM,
           CXR_JH,
@@ -15,6 +16,7 @@
         VALUES
           (
           #{xxzjbh},
+          #{asjbh},
           #{cxrSfzh },
           #{cxrXm },
           #{cxrJh },

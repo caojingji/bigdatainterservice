@@ -159,8 +159,9 @@ public class AbutmentController {
      * @param response
      */
     @RequestMapping(value = "/toSpJsp",method = {RequestMethod.GET,RequestMethod.POST})
-    public void toSpJsp(String asjbh, String sfzh,String bsh,String bshlxdm,String bshlxmc, HttpServletResponse response){
+    public void toSpJsp(String asjbh, String sfzh,String bsh,String bshlxdm,String cxrXm,String cxrJh,String cxrLxdh,HttpServletResponse response){
         try{
+            String bshlxmc = null;
             LinkedHashMap<String, Object> params = new LinkedHashMap<>();
             params.put("sysname", "HCZZ-SQSP"); //参数
             JSONObject jsonObject = new JSONObject();
@@ -174,14 +175,19 @@ public class AbutmentController {
             if(bshlxdm != null){
                 switch (bshlxdm){
                     case "001":
+                        bshlxmc = "手机号码";
                         filter.setPhone(bsh); break;
                     case "002":
+                        bshlxmc = "QQ号码";
                         filter.setQq(bsh); break;
                     case "003":
+                        bshlxmc = "微信ID";
                         filter.setWechat(bsh); break;
                     case "004":
+                        bshlxmc = "身份证号";
                         filter.setIdcard(bsh); break;
                     case "005":
+                        bshlxmc = "车牌号码";
                         filter.setCar(bsh); break;
                 }
                 boolean bol = iphoneTrackService.queryObjectRelationLocal(filter);
@@ -203,6 +209,9 @@ public class AbutmentController {
                 spLog.setXxzjbh(KeyUtil.getUniqueKey("SPL"));
                 spLog.setAsjbh(asjbh);
                 spLog.setCqrSfzh(sfzh);
+                spLog.setCqrXm(cxrXm);
+                spLog.setCqrJh(cxrJh);
+                spLog.setCqrLxdh(cxrLxdh);
                 spLog.setSpbsh(bsh);
                 spLog.setBshlxdm(bshlxdm);
                 spLog.setBshlxmc(bshlxmc);
