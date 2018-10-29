@@ -219,4 +219,35 @@ public class AbutmentController {
             return resultObject;
         }
     }
+
+    /**
+     *
+     * @param sfzh 调用者身份证号
+     * @param phone 接受电话号码
+     * @return
+     */
+    @RequestMapping(value = "/sendMessage",method = {RequestMethod.GET,RequestMethod.POST})
+    @ResponseBody
+    public ResultVO sendMessage(String sfzh,String phone){
+        ResultVO resultVO = null;
+        try {
+            //生成短信验证码
+            String verifyCode = String
+                    .valueOf(new Random().nextInt(899999) + 100000);
+            String content = "您的验证码为："+ verifyCode+",该验证码有效时长为1分钟，请在一分钟内输入，且勿透漏给他人！【重庆刑专-智慧侦查脑图】";
+            LinkedHashMap<String, Object> params = new LinkedHashMap<>();
+            params.put("type", "SendMessage"); //参数
+            params.put("sfzh", sfzh);
+            params.put("SendMessage_phone", phone);
+            params.put("SendMessage_content", content);
+            params.put("SendMessage_sender", "重庆刑专-智慧侦查脑图");
+            String url = UnifiedServiceUtil.sendRequest(bizCode,getCjDataServiceId,params);
+            System.out.println("url=============" + url);
+            resultVO = ResultVOUtil.success(url);
+        }catch (InterServiceException e){
+            e.printStackTrace();
+            resultVO = ResultVOUtil.error(e.getCode(),e.getMessage());
+        }
+        return resultVO;
+    }
 }
