@@ -5,7 +5,7 @@
 
     <groupId>com.founder</groupId>
     <artifactId>bigdatainterservice</artifactId>
-    <version>0.0.1-SNAPSHOT</version>
+    <version>1.cq.1.0-SNAPSHOT_${maven.build.timestamp}</version>
     <packaging>war</packaging>
 
     <name>bigdatainterservice</name>
@@ -157,6 +157,7 @@
     </dependencies>
 
     <build>
+        <finalName>cqnt</finalName>
         <plugins>
             <plugin>
                 <groupId>org.springframework.boot</groupId>
@@ -191,6 +192,20 @@
             <resource>
                 <directory>src/main/webapp</directory>
                 <filtering>false</filtering>
+            </resource>
+            <resource>
+                <directory>${project.basedir}/src/main/resources</directory>
+                <filtering>true</filtering>
+                <excludes>
+                    <exclude>static/**</exclude>
+                </excludes>
+            </resource>
+            <resource>
+                <directory>${project.basedir}/src/main/resources</directory>
+                <filtering>false</filtering>
+                <includes>
+                    <include>static/**</include>
+                </includes>
             </resource>
         </resources>
     </build>
