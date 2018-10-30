@@ -21,6 +21,13 @@ public class LoginLog {
     private String cxrSfzh;//查询人身份证号
     private String cxrXm;//查询人姓名
     private String cxrLxdh;//查询人联系电话
+
+    private int begin;
+    private int end;
+
+    private String cxrKssj;
+    private String cxrJssj;
+
     @Column(insertable = false)
     private Date cxrDlsj;//登陆时间
 

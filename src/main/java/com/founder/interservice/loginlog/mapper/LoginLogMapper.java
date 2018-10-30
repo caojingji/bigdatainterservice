@@ -3,6 +3,9 @@ package com.founder.interservice.loginlog.mapper;
 import com.founder.interservice.loginlog.model.LoginLog;
 import org.springframework.stereotype.Repository;
 
+import java.util.List;
+import java.util.Map;
+
 /**
  * @ClassName： LoginLogMapper
  * @Auther： 徐世洪
@@ -23,4 +26,18 @@ public interface LoginLogMapper {
      * 使用xxzjbh查询xxzjbh
      */
     public String selectLoginLogUser(String xxzjbh);
+
+    /**
+     * 按条件搜索登录信息
+     * @param loginLog
+     * @return
+     */
+    public List<LoginLog> selectLoginLog(LoginLog loginLog);
+
+    /**
+     * 统计总数
+     * @param loginLog
+     * @return
+     */
+    public int getLoginLogCount(LoginLog loginLog);
 }

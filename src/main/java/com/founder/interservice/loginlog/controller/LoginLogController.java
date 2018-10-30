@@ -2,11 +2,19 @@ package com.founder.interservice.loginlog.controller;
 
 import com.founder.interservice.loginlog.model.LoginLog;
 import com.founder.interservice.loginlog.service.LoginLogService;
+import com.founder.interservice.util.EasyUIPage;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
  * 记录登录用户信息
@@ -33,4 +41,57 @@ public class LoginLogController {
         return result;
     }
 
+    /**
+     * 查询登录日志
+     */
+    @RequestMapping(value = "/selectLoginLog", method = {RequestMethod.GET,RequestMethod.POST})
+    @ResponseBody
+    public Map<String,Object>  selectLoginLog(LoginLog loginLog,
+                                   @RequestParam(value = "page",defaultValue = "0") int page,
+                                   @RequestParam(value = "rows",defaultValue = "0") int rows){
+        Map<String,Object> objectMap = new HashMap<>();
+        List<LoginLog> loginLogVOS = null;
+        try{
+            EasyUIPage easyUIPage = new EasyUIPage();
+            easyUIPage.setPage(page);
+            easyUIPage.setPagePara(rows);
+            int begin = easyUIPage.getBegin();
+            int end = easyUIPage.getEnd();
+
+//            loginLog.setCxrKssj(loginLog.getCxrKssj());
+//            loginLog.setCxrJssj(loginLog.getCxrJssj());
+            loginLog.setBegin(begin);
+            loginLog.setEnd(end);
+
+            if(loginLog.getCxrDlsj() != null || loginLog.getCxrXm() != null || loginLog.getCxrJh() != null || loginLog.getCxrDlsj() != null || loginLog.getCxrLxdh() != null || loginLog.getAsjbh() !=null){
+
+                Map<String,Object> resultMap = loginLogService.selectLoginLog(loginLog);
+                int total = (int)resultMap.get("total");
+                List<LoginLog> loginLogs = (List<LoginLog>)resultMap.get("loginLogs");
+                if(loginLogs != null && !loginLogs.isEmpty()){
+                    loginLogVOS = new ArrayList<>();
+                    for (LoginLog loginlog: loginLogs) {
+                        LoginLog loginLogVO = new LoginLog();
+                        BeanUtils.copyProperties(loginlog,loginLogVO);
+                        loginLogVOS.add(loginLogVO);
+                    }
+                }
+                objectMap.put("rows", loginLogVOS);
+                objectMap.put("total", total);
+            }else{
+                objectMap.put("total", 0);
+                objectMap.put("rows", new ArrayList<>());
+            }
+
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+
+        return objectMap;
+    }
+
+    @RequestMapping(value = "/selectLoginLogPage",method = {RequestMethod.GET,RequestMethod.POST})
+    public String getSelectLoginLogPage(){
+        return "LoginLog/selectloginlog";
+    }
 }

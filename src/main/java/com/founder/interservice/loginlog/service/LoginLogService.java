@@ -2,6 +2,8 @@ package com.founder.interservice.loginlog.service;
 
 import com.founder.interservice.loginlog.model.LoginLog;
 
+import java.util.Map;
+
 /**
  * @ClassName： LoginLogService
  * @Auther： 徐世洪
@@ -17,4 +19,6 @@ public interface LoginLogService {
      * @return String
      */
     public String saveLoginLog(LoginLog loginLog);
+
+    public Map<String,Object> selectLoginLog(LoginLog loginLog);
 }
