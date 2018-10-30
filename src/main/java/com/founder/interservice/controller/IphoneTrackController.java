@@ -37,8 +37,7 @@ public class IphoneTrackController {
 
     @RequestMapping("/getObjectRelationAll")
     @ResponseBody
-    public ResultObj getObjectRelationAll(String asjbh,String cxrXm,
-                                          String cxrSfzh,String cxrJh,String cxrLxdh,String type,String objValue){
+    public ResultObj getObjectRelationAll(String asjbh,String cxrXm,String cxrSfzh,String cxrJh,String cxrLxdh,String type,String objValue){
         ResultObj resultObj = null;
         try{
             resultObj = iphoneTrackService.getObjectRelationAll(objValue,type);

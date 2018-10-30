@@ -14,7 +14,7 @@
           CXR_DLSJ
           )
         VALUES
-          ( 
+          (
           #{xxzjbh},
           #{asjbh},
           #{cxrSfzh },
