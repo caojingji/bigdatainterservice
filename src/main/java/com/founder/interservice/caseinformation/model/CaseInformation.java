@@ -1,14 +1,10 @@
 package com.founder.interservice.caseinformation.model;
 
 import lombok.Data;
-import org.hibernate.annotations.DynamicUpdate;
 
-import javax.persistence.Entity;
 import javax.persistence.Table;
 import java.util.Date;
 
-@Entity
-@DynamicUpdate
 @Data
 @Table(name = "gxzxt.tb_st_asj")
 public class CaseInformation {

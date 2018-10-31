@@ -13,7 +13,7 @@
 <body>
 <div id="nipic_search">
 	<div id="header">
-		<h5 class="h_title2"></h5>
+		<h5 class="h_title3"></h5>
 	</div>
 	<!--内容-->
 	<div id="content_box0" class="content_box">
@@ -24,16 +24,16 @@
 				<tr>
 					<td class="td_r" style="width:10%;">案事件编号：</td>
 					<td style="width:20%;"><input name="asjbh" id="asjbh"/></td>
-					<td class="td_r" style="width:10%;"> 查询人姓名：</td>
+					<td class="td_r" style="width:10%;"> 登陆人姓名：</td>
 					<td style="width:20%;"><input name="cxrXm" id="cxrXm"/></td>
-					<td class="td_r" style="width:15%;"> 查询人身份证号：</td>
+					<td class="td_r" style="width:15%;"> 登陆人身份证号：</td>
 					<td style="width:20%;"><input name="cxrSfzh" id="cxrSfzh"/></td>
 
 				</tr>
 				<tr>
-					<td class="td_r" style="width:10%;"> 查询警号：</td>
+					<td class="td_r" style="width:10%;"> 登陆人警号：</td>
 					<td style="width:20%;"><input name="cxrJh" id="cxrJh"/></td>
-					<td class="td_r" style="width:14%;"> 查询人联系电话：</td>
+					<td class="td_r" style="width:14%;"> 登陆人联系电话：</td>
 					<td style="width:20%;"><input name="cxrLxdh" id="cxrLxdh"/></td>
 					<td class="td_r">开始时间：</td>
 					<td>
@@ -96,11 +96,11 @@
         };
         var table_title = [
             {title:"案事件编号",field:"asjbh",align:'center',width:'15%'},
-            {title:"查询人姓名",field:"cxrXm",align:'center',width:'15%'},
-            {title:"查询人身份证号",field:"cxrSfzh",align:'center',width:'30%'},
-            {title:"查询警号",field:"cxrJh",align:'center',width:'10%'},
-            {title:"查询人联系电话",field:"cxrLxdh",align:'center',width:'15%'},
-            {title:"登录时间",field:"cxrDlsj",align:'center',width:'15%'},
+            {title:"登陆人姓名",field:"cxrXm",align:'center',width:'15%'},
+            {title:"登陆人身份证号",field:"cxrSfzh",align:'center',width:'30%'},
+            {title:"登陆人警号",field:"cxrJh",align:'center',width:'10%'},
+            {title:"登陆人联系电话",field:"cxrLxdh",align:'center',width:'15%'},
+            {title:"登陆时间",field:"cxrDlsj",align:'center',width:'15%'},
         ];
         $("#recordLogTable").datagrid({
             url: "/selectLoginLog",
@@ -111,7 +111,7 @@
             singleSelect: true,
             pagination: true,
             nowrap: false, //设置是否换行  false换行 true表示不换行
-            pageSize: 10,
+            pageSize: 20,
             pageList: [10, 20, 50, 100, 150, 200],
             showFooter: true,
             pageNumber:1,

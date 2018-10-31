@@ -12,7 +12,6 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import java.util.List;
 
 @Controller
-@ResponseBody
 public class CaseInformationContorller {
 
     @Autowired
@@ -24,6 +23,7 @@ public class CaseInformationContorller {
      * @return
      */
     @RequestMapping(value = "/selectCaseInformation", method = {RequestMethod.GET,RequestMethod.POST})
+    @ResponseBody
     public List<CaseInformation> selectCaseInformationList(@RequestParam(value = "sfzh") String sfzh){
 
         List<CaseInformation> caseInformationList = caseInformationService.selectCaseInformationList(sfzh);

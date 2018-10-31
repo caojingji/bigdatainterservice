@@ -13,7 +13,7 @@
 <body>
 <div id="nipic_search">
 	<div id="header">		
-		<h5 class="h_title2"></h5>
+		<h5 class="h_title4"></h5>
 	</div>	
 	<!--内容-->
 	<div id="content_box0" class="content_box">
@@ -110,8 +110,8 @@ function queryQueryLog(){
         singleSelect: true,
         pagination: true,
         nowrap: false, //设置是否换行  false换行 true表示不换行
-        pageSize: 10,
-        pageList: [10, 20, 50, 100, 150, 200]D,
+        pageSize: 20,
+        pageList: [10, 20, 50, 100, 150, 200],
         showFooter: true,
         pageNumber:1,
         loadFilter: function(data){
