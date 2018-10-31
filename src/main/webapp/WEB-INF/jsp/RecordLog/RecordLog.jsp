@@ -111,7 +111,7 @@ function queryQueryLog(){
         pagination: true,
         nowrap: false, //设置是否换行  false换行 true表示不换行
         pageSize: 10,
-        pageList: [10, 20, 50, 100, 150, 200],
+        pageList: [10, 20, 50, 100, 150, 200]D,
         showFooter: true,
         pageNumber:1,
         loadFilter: function(data){
