@@ -39,11 +39,18 @@ var jq22 = {
             data:param,
             url:"/getTaskResults",
             beforeSend:beforeSendFn(type,true),
-            success:function(data) {
+            success:function(result) {
+                console.log("result ========== " + JSON.stringify(result));
+                var data = result.taskResultVOS;
+                var totalcount = result.totalCount;
+                console.log(data.length);
+                console.log(totalcount);
                 if("01" == type){
+                    $("#rytotalcount").html(totalcount);
                     $("#content_box0 div.more").show();
                     $("#content_box0 ul.list").hide();
                 }else if("02" == type){
+                    $("#jdctotalcount").html(totalcount);
                     $("#content_box1 div.more").show();
                     $("#content_box1 ul.list").hide();
                 }
@@ -132,11 +139,17 @@ var jq22 = {
             data:param,
             url:"/getTaskResults",
             beforeSend:beforeSendFn(type,false),
-            success:function(data) {
+            success:function(result) {
+                var data = result.taskResultVOS;
+                var totalcount = result.totalCount;
+                console.log(data.length);
+                console.log(totalcount);
                 if("01" == type){
+                    $("#rytotalcount").html(totalcount);
                     $("#content_box0 div.more").show();
                     $("#content_box0 ul.list").hide();
                 }else if("02" == type){
+                    $("#jdctotalcount").html(totalcount);
                     $("#content_box1 div.more").show();
                     $("#content_box1 ul.list").hide();
                 }

@@ -37,14 +37,14 @@
 		<div class="result" style="padding-bottom:30px;">
 		</div>
         <ul class="list" style="display: none;"><i class="fa fa-refresh fa-spin fa-fw"></i>数据加载中，请稍后...</ul>
-        <div class="more" style="display: none;"><a href="javascript:void(0);" onClick="jq22.loadMore('${taskId}','01');">加载更多</a></div>
+        <div class="more" style="display: none;">共<span id = "rytotalcount"></span>，点击<a href="javascript:void(0);" onClick="jq22.loadMore('${taskId}','01');">加载更多</a></div>
 	</div>
 	<div id="content_box1" class="content_box" style="position:relative;">
 		<!--车辆结果 table-->
         <div class="result" style="padding-bottom:30px;">
         </div>
         <ul class="list" style="display: none;"><i class="fa fa-refresh fa-spin fa-fw"></i>数据加载中，请稍后...</ul>
-        <div class="more" style="display: none;"><a href="javascript:void(0);" onClick="jq22.loadMore('${taskId}','02');">加载更多</a></div>
+        <div class="more" style="display: none;">共<span id = "jdctotalcount"></span>，点击<a href="javascript:void(0);" onClick="jq22.loadMore('${taskId}','02');">加载更多</a></div>
 	</div>
 </div>
 <script type="text/javascript" src="/js/jquery-1.11.3.js"></script>

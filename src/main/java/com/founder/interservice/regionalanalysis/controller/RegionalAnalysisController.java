@@ -20,6 +20,7 @@ import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Controller;
 import org.springframework.stereotype.Service;
 import org.springframework.ui.Model;
@@ -194,50 +195,40 @@ public class RegionalAnalysisController {
 
     @RequestMapping(value = "/getTaskResults",method = {RequestMethod.GET,RequestMethod.POST})
     @ResponseBody
-    public List<RegionalTaskResultVO> getTaskResults( Integer page, Integer size,RegionalTaskResult param){
+    public JSONObject getTaskResults( Integer page, Integer size,RegionalTaskResult param){
+        JSONObject resultObj = new JSONObject();
         List<RegionalTaskResultVO> taskResultVOS = new ArrayList<>();
+        long totalCount = 0;
         try {
             Page<RegionalTaskResult> resultPage = regionalAnalysisService.findRegionalTaskResult(page,size,param);
             List<RegionalTaskResult> taskResults = resultPage.getContent();
+            totalCount = regionalAnalysisService.getTaskResultsCount(param);
             if(taskResults != null && !taskResults.isEmpty()){
                 for(int i = 0; i <= taskResults.size() - 1; i++){
-                    final int j = i;
-                    new Thread(){
-                        public void run(){
-                            RegionalTaskResultVO taskResultVO = new RegionalTaskResultVO();
-                            try{
-                                BeanUtils.copyProperties(taskResults.get(j),taskResultVO);
-                                if("01".equals(param.getObjectType())){
-                                    String imsi = taskResults.get(j).getObjectValue();
-                                    taskResultVO = getRyxxData(imsi,taskResultVO,"ryxx");
-                                }else if("02".equals(param.getObjectType())){
-                                    String cphm = taskResults.get(j).getObjectValue();
-                                    taskResultVO = getJdcData(cphm,taskResultVO);
-                                }
-                            }catch(Exception ex){
-                                ex.printStackTrace();
-                            }
-                            taskResultVOS.add(taskResultVO);
-                        }
-                    }.start();
-                }
-                while (1==1){
-                    try {
-                        if (taskResultVOS.size()==taskResults.size()){
-                            break;
-                        }
-                    }catch (Exception e){
-                        break;
+                    RegionalTaskResultVO taskResultVO = new RegionalTaskResultVO();
+                    BeanUtils.copyProperties(taskResults.get(i),taskResultVO);
+                    if("01".equals(param.getObjectType())){
+                        String imsi = taskResults.get(i).getObjectValue();
+                        taskResultVO.setImsi(imsi);
+                        taskResultVO.setObjectTypeName(null);
+                        taskResultVO.setObjectValue(null);
+                        taskResultVO = getRyxxData(imsi,taskResultVO,"ryxx");
+                    }else if("02".equals(param.getObjectType())){
+                        String cphm = taskResults.get(i).getObjectValue();
+                        taskResultVO = getJdcData(cphm,taskResultVO);
                     }
+                    taskResultVOS.add(taskResultVO);
                 }
             }
         } catch (Exception e) {
             e.printStackTrace();
         }
-        return taskResultVOS;
+        resultObj.put("taskResultVOS", taskResultVOS);
+        resultObj.put("totalCount",totalCount);
+        return resultObj;
     }
-
-    private RegionalTaskResultVO getJdcData(String cphm,RegionalTaskResultVO taskResultVO) throws Exception{
+    @Async("getAsyncExecutor")
+    public RegionalTaskResultVO getJdcData(String cphm,RegionalTaskResultVO taskResultVO) throws Exception{
         /*1 通过车牌号调取车辆所有人信息*/
         if(!StringUtil.ckeckEmpty(cphm)){
             //1、 通过车牌号码调取对应的拥有人信息
@@ -291,8 +282,8 @@ public class RegionalAnalysisController {
         return taskResultVO;
     }
 
-
-    private RegionalTaskResultVO getRyxxData(String imsi,RegionalTaskResultVO taskResultVO,String type) throws Exception{
+    @Async("getAsyncExecutor")
+    public RegionalTaskResultVO getRyxxData(String imsi,RegionalTaskResultVO taskResultVO,String type) throws Exception{
         if("sjhm".equals(type)){
             if(!StringUtil.ckeckEmpty(imsi)){
                 //1、 通过IMSI号调取对应的电话号码
@@ -319,6 +310,7 @@ public class RegionalAnalysisController {
                 }
             }
         }else{
+            System.out.println(Thread.currentThread());
             if(!StringUtil.ckeckEmpty(imsi)){
                 //1、 通过IMSI号调取对应的电话号码
                 JSONObject jsonObject = iphoneTrackService.getObjectRelation(imsi);

@@ -25,6 +25,7 @@ public interface RegionalAnalysisService {
     public void saveRegionalTaskList(List<RegionalTask> regionalTasks) throws Exception;
     public RegionalTask findByTaskId(String taskId)throws InterServiceException;
     public List<RegionalTaskResult> getTaskResults(RegionalTaskResult param) throws Exception;
+    public long getTaskResultsCount(RegionalTaskResult param) throws Exception;
     /**
     *
     * @Description: 使用jpa分页查询任务结果

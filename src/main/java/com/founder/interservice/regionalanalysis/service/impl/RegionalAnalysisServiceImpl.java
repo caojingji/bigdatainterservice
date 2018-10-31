@@ -107,6 +107,31 @@ public class RegionalAnalysisServiceImpl implements RegionalAnalysisService {
     }
 
     @Override
+    public long getTaskResultsCount(RegionalTaskResult param) throws Exception{
+        Example<RegionalTaskResult> example = Example.of(param);
+        long totaCount = taskResultRepository.count(new Specification<RegionalTaskResult>() {
+            @Override
+            public Predicate toPredicate(Root<RegionalTaskResult> root, CriteriaQuery<?> criteriaQuery, CriteriaBuilder criteriaBuilder) {
+                List<Predicate> list = new ArrayList<>();
+                if (!StringUtil.ckeckEmpty(param.getTaskId())) {
+                    list.add(criteriaBuilder.equal(root.get("taskId").as(String.class),param.getTaskId()));
+                }
+                if(!StringUtil.ckeckEmpty(param.getObjectType())){
+                    if("01".equals(param.getObjectType())){
+                        list.add(criteriaBuilder.equal(root.get("objectType").as(String.class),"4314"));
+                    }else if("02".equals(param.getObjectType())){
+                        Expression<String> exp = root.<String>get("objectType");
+                        list.add(exp.in(Arrays.asList("6424","6422","6423","7888"))); //汽车蓝色号码、汽车黄色号码、汽车白色号码，摩托车黄色号码
+                    }
+                }
+                Predicate[] p = new Predicate[list.size()];
+                return criteriaBuilder.and(list.toArray(p));
+            }
+        });
+        return totaCount;
+    }
+
+    @Override
     public List<RegionalTaskResult> getTaskResults(RegionalTaskResult param) throws Exception{
         Example<RegionalTaskResult> example = Example.of(param);
         return taskResultRepository.findAll(example);

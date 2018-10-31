@@ -21,6 +21,7 @@ public class RegionalTaskResultVO {
     private String taskId;
     private String objectTypeName;
     private String objectValue;
+    private String imsi;
     private Date djsj;
     private String zjlxCode; //证件类型code
     private String zjlx; //证件类型
