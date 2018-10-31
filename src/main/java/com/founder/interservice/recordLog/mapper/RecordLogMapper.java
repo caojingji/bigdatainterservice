@@ -1,7 +1,11 @@
 package com.founder.interservice.recordLog.mapper;
 
 import com.founder.interservice.recordLog.model.Querylog;
+import com.founder.interservice.recordLog.queryModel.QuerylogFilter;
 import org.springframework.stereotype.Repository;
+
+import java.util.List;
+import java.util.Map;
 
 /**
  * @ClassName： RegionalTaskMapper
@@ -19,4 +23,14 @@ public interface RecordLogMapper {
      * @return
      */
     public void saveQueryLog(Querylog querylog) throws Exception;
+
+
+    /**
+     * 条件查询
+     */
+    //（总条数）
+    public Integer queryQueryLogCount(QuerylogFilter filter) throws Exception;
+    //（分页list）
+    public List<Querylog> queryQueryLogByPage(QuerylogFilter filter) throws Exception;
+
 }

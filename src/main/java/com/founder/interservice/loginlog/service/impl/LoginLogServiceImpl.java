@@ -6,6 +6,9 @@ import com.founder.interservice.loginlog.service.LoginLogService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import java.util.UUID;
 
 @Service
@@ -28,5 +31,17 @@ public class LoginLogServiceImpl implements LoginLogService {
         }else{
             return "记录失败！";
         }
+    }
+
+    @Override
+    public Map<String,Object> selectLoginLog(LoginLog loginLog){
+        List<LoginLog> loginLogs = loginLogMapper.selectLoginLog(loginLog);
+        int total = loginLogMapper.getLoginLogCount(loginLog);
+
+        Map<String, Object> resultMap = new HashMap<>();
+        resultMap.put("total", total);
+        resultMap.put("loginLogs", loginLogs);
+
+        return resultMap;
     }
 }

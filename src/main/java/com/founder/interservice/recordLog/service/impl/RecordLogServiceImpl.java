@@ -1,12 +1,15 @@
 package com.founder.interservice.recordLog.service.impl;
 
-import com.founder.interservice.exception.InterServiceException;
 import com.founder.interservice.recordLog.mapper.RecordLogMapper;
 import com.founder.interservice.recordLog.model.Querylog;
+import com.founder.interservice.recordLog.queryModel.QuerylogFilter;
 import com.founder.interservice.recordLog.service.RecordLogService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import java.util.UUID;
 
 /**
@@ -27,5 +30,15 @@ public class RecordLogServiceImpl implements RecordLogService {
         uuid = uuid.substring(0,uuid.length()-2);
         querylog.setXxzjbh(uuid);
         recordLogMapper.saveQueryLog(querylog);
+    }
+
+    @Override
+    public Map<String,Object> queryQueryLogList(QuerylogFilter filter) throws Exception {
+        List<Querylog> queryLogList = recordLogMapper.queryQueryLogByPage(filter);
+        Integer total = recordLogMapper.queryQueryLogCount(filter);
+        Map<String,Object> resuletMap = new HashMap<String, Object>();
+        resuletMap.put("total",total);
+        resuletMap.put("queryLogList",queryLogList);
+        return resuletMap;
     }
 }
