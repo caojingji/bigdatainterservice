@@ -58,7 +58,7 @@ public class IphoneTrackServiceImpl implements IphoneTrackService {
                 }
             }
             return jsonObject;
-        }catch (Exception e){
+        }catch (InterServiceException e){
             throw new InterServiceException(ResultEnum.REQUEST_URL_ERROR);
         }
     }
