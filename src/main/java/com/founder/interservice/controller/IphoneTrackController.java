@@ -5,6 +5,7 @@ import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.founder.interservice.VO.ResultVO;
 import com.founder.interservice.enums.ResultEnum;
+import com.founder.interservice.exception.InterServiceException;
 import com.founder.interservice.model.ResultObj;
 import com.founder.interservice.querymodel.RelationLocalFilter;
 import com.founder.interservice.recordLog.model.Querylog;
@@ -34,6 +35,20 @@ public class IphoneTrackController {
     //查询日志记录
     @Autowired
     private RecordLogService recordLogService;
+
+    @RequestMapping("/getObjectAllRelation")
+    @ResponseBody
+    public ResultVO getObjectRelationAll(String objValue){
+        ResultVO resultObj = null;
+        try{
+            JSONObject jsonObject = iphoneTrackService.getObjectRelationAll(objValue);
+            resultObj = ResultVOUtil.success(jsonObject);
+        }catch (InterServiceException e){
+            e.printStackTrace();
+            resultObj = ResultVOUtil.error(e.getCode(),e.getMessage());
+        }
+        return resultObj;
+    }
 
     @RequestMapping("/getObjectRelationAll")
     @ResponseBody
@@ -73,6 +88,8 @@ public class IphoneTrackController {
         }
         return resultObj;
     }
+
+
 
     /**
      * 通过手机号调取手机轨迹
