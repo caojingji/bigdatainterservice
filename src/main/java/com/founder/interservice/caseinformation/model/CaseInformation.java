@@ -1,18 +1,19 @@
 package com.founder.interservice.caseinformation.model;
 
-import org.hibernate.annotations.DynamicUpdate;
+import lombok.Data;
 
-import javax.persistence.Entity;
+import javax.persistence.Table;
+import java.util.Date;
 
-@Entity
-@DynamicUpdate
+@Data
+@Table(name = "gxzxt.tb_st_asj")
 public class CaseInformation {
 
     private String asjbh;//按事件编号
 
     private String ajmc;//案件名称
 
-    private String asjfssjAsjfskssj;//犯案时间
+    private Date asjfssjAsjfskssj;//犯案时间
 
     private String asjfsddDzmc;//犯案地点
 

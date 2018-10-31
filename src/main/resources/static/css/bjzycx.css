@@ -67,6 +67,22 @@ li {
     margin-left: 24px;
     background: url(../images/jzgjzs.png);
 }
+.h_title3 {
+    float: left;
+    width:400px;
+    display: inline-block;
+    height: 80px;
+    margin-left: 24px;
+    background: url(../images/cxrz.png);
+}
+.h_title4 {
+    float: left;
+    width:400px;
+    display: inline-block;
+    height: 80px;
+    margin-left: 24px;
+    background: url(../images/jzgjzs2.png);
+}
 .color1{color:#ec704c;}
 .datebox-h{width:228px;height:24px;line-height: 24px;}
 /************menu*************/
