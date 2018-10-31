@@ -1,6 +1,9 @@
 package com.founder.interservice.qgzyfw.action;
 
-import java.io.*;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.StringWriter;
 import java.lang.reflect.Field;
 import java.net.URL;
 import java.text.DateFormat;
@@ -23,7 +26,6 @@ import org.dom4j.DocumentHelper;
 import org.dom4j.Element;
 import org.dom4j.io.OutputFormat;
 import org.dom4j.io.XMLWriter;
-import org.springframework.util.ResourceUtils;
 
 
 /**
@@ -101,10 +103,14 @@ public class CallDygabxxfw{
 	public Map getGabZyInfoByJyaq(String zylx,Object[] os){//zylx:查询资源类型,os:参数
 		URL urlbase = getClass().getProtectionDomain().getCodeSource().getLocation();
 		String pathbase =urlbase.toString();
+		/*web-Inf 路径地址*/
+//		String webinfPath=pathbase.substring(0,pathbase.indexOf("WEB-INF")+7);
+		//String path2="/classes/gabZyservice.properties";
+		String path2 = System.getProperty("user.dir") + "/src/main/resources/gabZyservice.properties";
+
 		Properties propertiesUtil = new Properties();
 		try {
-			File file = ResourceUtils.getFile("classpath:gabZyservice.properties");
-			InputStream in = new FileInputStream(file);//linux系统路径前必须“/”打头
+			InputStream in = new FileInputStream(path2.replace("file:", ""));//linux系统路径前必须“/”打头
 			propertiesUtil.load(in);
 		} catch (IOException e) {
 			e.printStackTrace();
