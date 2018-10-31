@@ -1,5 +1,7 @@
 package com.founder.interservice.caseinformation.service;
 
+import com.founder.interservice.caseinformation.model.CaseInformation;
+
 import java.util.List;
 
 public interface CaseInformationService {
@@ -9,5 +11,5 @@ public interface CaseInformationService {
      * @param sfzh
      * @return
      */
-    public List<Object> selectCaseInformationList(String sfzh);
+    public List<CaseInformation> selectCaseInformationList(String sfzh);
 }

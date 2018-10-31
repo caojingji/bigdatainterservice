@@ -1,5 +1,6 @@
 package com.founder.interservice.caseinformation.mapper;
 
+import com.founder.interservice.caseinformation.model.CaseInformation;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -12,5 +13,5 @@ public interface CaseInformationMapper {
      * @param sfzh
      * @return
      */
-    public List<Object> selectCaseInformationList(String sfzh);
+    public List<CaseInformation> selectCaseInformationList(String sfzh);
 }

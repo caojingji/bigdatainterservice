@@ -1,6 +1,7 @@
 package com.founder.interservice.caseinformation.service.impl;
 
 import com.founder.interservice.caseinformation.mapper.CaseInformationMapper;
+import com.founder.interservice.caseinformation.model.CaseInformation;
 import com.founder.interservice.caseinformation.service.CaseInformationService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -14,8 +15,8 @@ public class CaseInformationServiceImpl implements CaseInformationService {
     CaseInformationMapper caseInformationMapper;
 
     @Override
-    public List<Object> selectCaseInformationList(String sfzh){
-        List<Object> caseInformation = caseInformationMapper.selectCaseInformationList(sfzh);
+    public List<CaseInformation> selectCaseInformationList(String sfzh){
+        List<CaseInformation> caseInformation = caseInformationMapper.selectCaseInformationList(sfzh);
 
 
         return caseInformation;
