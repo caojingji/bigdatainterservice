@@ -22,7 +22,7 @@ public class MinistrySuspectInfoController {
 
         //通过身份证号调取案事件编号list（asjbhList）
         CallDygabxxfw call = new CallDygabxxfw();
-        String str = "[ {\"ZHFZXYR_CYZJ_ZJHM\": \""+sfzh+"\" }]";
+        String str = "['{\"ZHFZXYR_CYZJ_ZJHM\": \""+sfzh+"\" }']";
         Object[] os = JSONArray.fromObject(str).toArray();
         Map<String,Object> mapQg = new HashMap<String, Object>();
         mapQg = call.getGabZyInfoByJyaq("fzxyr",os);
@@ -31,7 +31,7 @@ public class MinistrySuspectInfoController {
         //通过案事件编号调取案事件信息resultList
         for (Map<String,Object> asjbh:asjbhList) {
             CallDygabxxfw c = new CallDygabxxfw();
-            String s = "{ \t\"ASJBH\": \""+asjbh+"\" }";
+            String s = "['{\"ASJBH\": \""+asjbh+"\" }']";
             Object[] objects = JSONArray.fromObject(str).toArray();
             Map<String,Object> m = new HashMap<String, Object>();
             m = (Map<String,Object>)((Map<String, Object>) call.getGabZyInfoByJyaq("asj",objects).get("dataResult")).get(0);
