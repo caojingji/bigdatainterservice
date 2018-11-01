@@ -58,27 +58,23 @@ public class LoginLogController {
             int begin = easyUIPage.getBegin();
             int end = easyUIPage.getEnd();
 
-//            loginLog.setCxrKssj(loginLog.getCxrKssj());
-//            loginLog.setCxrJssj(loginLog.getCxrJssj());
+            loginLog.setCxrJssj(loginLog.getCxrJssj());
             loginLog.setBegin(begin);
             loginLog.setEnd(end);
-
-            if(loginLog.getCxrDlsj() != null || loginLog.getCxrXm() != null || loginLog.getCxrJh() != null || loginLog.getCxrDlsj() != null || loginLog.getCxrLxdh() != null || loginLog.getAsjbh() !=null){
-
-                Map<String,Object> resultMap = loginLogService.selectLoginLog(loginLog);
-                int total = (int)resultMap.get("total");
-                List<LoginLog> loginLogs = (List<LoginLog>)resultMap.get("loginLogs");
-                if(loginLogs != null && !loginLogs.isEmpty()){
-                    loginLogVOS = new ArrayList<>();
-                    for (LoginLog loginlog: loginLogs) {
-                        LoginLog loginLogVO = new LoginLog();
-                        BeanUtils.copyProperties(loginlog,loginLogVO);
-                        loginLogVOS.add(loginLogVO);
-                    }
+            
+            Map<String,Object> resultMap = loginLogService.selectLoginLog(loginLog);
+            int total = (int)resultMap.get("total");
+            List<LoginLog> loginLogs = (List<LoginLog>)resultMap.get("loginLogs");
+            if(loginLogs != null && !loginLogs.isEmpty()){
+                loginLogVOS = new ArrayList<>();
+                for (LoginLog loginlog: loginLogs) {
+                    LoginLog loginLogVO = new LoginLog();
+                    BeanUtils.copyProperties(loginlog,loginLogVO);
+                    loginLogVOS.add(loginLogVO);
                 }
                 objectMap.put("rows", loginLogVOS);
                 objectMap.put("total", total);
-            }else{
+            } else{
                 objectMap.put("total", 0);
                 objectMap.put("rows", new ArrayList<>());
             }
