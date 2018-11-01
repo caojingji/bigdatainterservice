@@ -11,9 +11,24 @@
         djsj)
         values
         (#{xxzjbh},
-        #{idcard},
-        #{phone},
-        #{car},
+        <if test="idcard != null and idcard != ''">
+            #{idcard},
+        </if>
+        <if test="idcard == null or idcard == ''">
+            '' ,
+        </if>
+        <if test="phone != null and phone != ''">
+            #{phone},
+        </if>
+        <if test="phone == null or phone == ''">
+            '' ,
+        </if>
+        <if test="car != null and car != ''">
+            #{car},
+        </if>
+        <if test="car == null or car == ''">
+            '' ,
+        </if>
         sysdate)
     </insert>
 
@@ -25,11 +40,26 @@
         ,wechat
         ,djsj)
         values
-        (#{xxzjbh}
-        ,#{phone}
-        ,#{qq}
-        ,#{wechat}
-        ,sysdate)
+        (#{xxzjbh},
+        <if test="phone != null and phone != ''">
+            #{phone},
+        </if>
+        <if test="phone == null or phone == ''">
+            '' ,
+        </if>
+        <if test="qq != null and qq != ''">
+            #{qq},
+        </if>
+        <if test="qq == null or qq == ''">
+            '' ,
+        </if>
+        <if test="wechat != null and wechat != ''">
+            #{wechat},
+        </if>
+        <if test="wechat == null or wechat == ''">
+            '' ,
+        </if>
+        sysdate)
     </insert>
 
 

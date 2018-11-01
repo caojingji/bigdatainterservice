@@ -54,14 +54,54 @@
           DJSJ)
         VALUES
           (#{xxzjbh },
-          #{cxrSfzh },
-          #{cxrXm },
-          #{cxrJh },
-          #{cxrLxdh },
-          #{cxbsh },
-          #{bshlxdm },
-          #{bshlxmc },
-          #{asjbh },
+        <if test="cxrSfzh != null and cxrSfzh != ''">
+            #{cxrSfzh},
+        </if>
+        <if test="cxrSfzh == null or cxrSfzh == ''">
+            '' ,
+        </if>
+        <if test="cxrXm != null and cxrXm != ''">
+            #{cxrXm},
+        </if>
+        <if test="cxrXm == null or cxrXm == ''">
+            '' ,
+        </if>
+        <if test="cxrJh != null and cxrJh != ''">
+            #{cxrJh},
+        </if>
+        <if test="cxrJh == null or cxrJh == ''">
+            '' ,
+        </if>
+        <if test="cxrLxdh != null and cxrLxdh != ''">
+            #{cxrLxdh},
+        </if>
+        <if test="cxrLxdh == null or cxrLxdh == ''">
+            '' ,
+        </if>
+        <if test="cxbsh != null and cxbsh != ''">
+            #{cxbsh},
+        </if>
+        <if test="cxbsh == null or cxbsh == ''">
+            '' ,
+        </if>
+        <if test="bshlxdm != null and bshlxdm != ''">
+            #{bshlxdm},
+        </if>
+        <if test="bshlxdm == null or bshlxdm == ''">
+            '' ,
+        </if>
+        <if test="bshlxmc != null and bshlxmc != ''">
+            #{bshlxmc},
+        </if>
+        <if test="bshlxmc == null or bshlxmc == ''">
+            '' ,
+        </if>
+        <if test="asjbh != null and asjbh != ''">
+            #{asjbh},
+        </if>
+        <if test="asjbh == null or asjbh == ''">
+            '' ,
+        </if>
           SYSDATE)
     </insert>
 
