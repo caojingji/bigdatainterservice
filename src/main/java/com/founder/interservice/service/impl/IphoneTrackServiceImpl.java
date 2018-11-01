@@ -469,22 +469,25 @@ public class IphoneTrackServiceImpl implements IphoneTrackService {
             if(!StringUtil.ckeckEmpty(filter.getIdcard())||!StringUtil.ckeckEmpty(filter.getPhone())||!StringUtil.ckeckEmpty(filter.getCar())){
                 if(StringUtil.ckeckEmpty(filter.getQq())&&StringUtil.ckeckEmpty(filter.getWechat())){
                     //保证参数只有idcard,phone,car
-                    List<String> idcards = objectRelationMapper.queryIdRelationLocal(filter);
-                    if (idcards!=null){
+                    List<String> idcards = new ArrayList<String>();
+                    idcards = objectRelationMapper.queryIdRelationLocal(filter);
+                    if (idcards!=null&&idcards.size()!=0){
                         idcard = idcards.get(0);
                     }
                 }
             }else if(!StringUtil.ckeckEmpty(filter.getQq())||!StringUtil.ckeckEmpty(filter.getWechat())){
                 if(StringUtil.ckeckEmpty(filter.getIdcard())&&StringUtil.ckeckEmpty(filter.getPhone())&&StringUtil.ckeckEmpty(filter.getCar())){
                     //保证参数只有QQ微信
-                    List<String> phones = objectRelationMapper.queryPhoneRelationLocal(filter);
-                    if (phones!=null){
+                    List<String> phones = new ArrayList<String>();
+                    phones = objectRelationMapper.queryPhoneRelationLocal(filter);
+                    if (phones!=null&&phones.size()!=0){
                         phone = phones.get(0);
                     }
                     RelationLocalFilter filterNew = new RelationLocalFilter();
                     filterNew.setPhone(phone);
-                    List<String> idcards = objectRelationMapper.queryIdRelationLocal(filter);
-                    if (idcards!=null){
+                    List<String> idcards = new ArrayList<String>();
+                    idcards = objectRelationMapper.queryIdRelationLocal(filter);
+                    if (idcards!=null&&idcards.size()!=0){
                         idcard = idcards.get(0);
                     }
                 }
