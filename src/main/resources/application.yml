@@ -58,3 +58,4 @@ logging:
     com.founder.interservice.mapper : trace
     com.founder.interservice.regionalanalysis.mapper: trace
     com.founder.interservice.tracktraveltogether.mapper: trace
+    com.founder.interservice.recordLog.mapper: trace
