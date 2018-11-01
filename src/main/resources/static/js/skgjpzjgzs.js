@@ -68,6 +68,7 @@ var jq22 = {
                             var zjhm = data[i].zjhm==null?"":data[i].zjhm;
                             var csrq = data[i].csrq==null?"":data[i].csrq;
                             var sjhm = data[i].sjhm==null?"":data[i].sjhm;
+                            var imsi = data[i].imsi==null?"":data[i].imsi;
                             var xzzDzmc = data[i].xzzDzmc==null?"":data[i].xzzDzmc;
                             $("#content_box0 div[class='result']").append("<div class='float-div'>" +
                                 "<div class='xx-box'>" +
@@ -77,6 +78,7 @@ var jq22 = {
                                 "<div class='xx-line'><i class='fa fa-id-card orange' title='身份证号'></i><span>" + zjhm + "</span></div>" +
                                 "<div class='xx-line'><i class='fa fa-user yellow' title='出生日期'></i><span>" + csrq + "</span></div>" +
                                 "<div class='xx-line'><i class='fa fa-phone' title='电话号码'></i><span>" + sjhm + "</span></div>" +
+                                "<div class='xx-line'><i class='fa fa-phone' title='IMSI'></i><span>" + imsi + "</span></div>"+
                                 "<div class='xx-line'><i class='fa fa-map-marker green' title='现住址'></i><span>" + xzzDzmc + "</span></div>" +
                                 "<div class='xx-line over'><span class='label'>前科人员</span><span class='label'>高危人员</span><span class='label'>刑侦关注人员</span></div>" +
                                 "</div>" +
@@ -167,6 +169,7 @@ var jq22 = {
                             var zjhm = data[i].zjhm==null?"":data[i].zjhm;
                             var csrq = data[i].csrq==null?"":data[i].csrq;
                             var sjhm = data[i].sjhm==null?"":data[i].sjhm;
+                            var imsi = data[i].imsi==null?"":data[i].imsi;
                             var xzzDzmc = data[i].xzzDzmc==null?"":data[i].xzzDzmc;
                             $("#content_box0 div[class='result']").append("<div class='float-div'>" +
                                 "<div class='xx-box'>" +
@@ -176,6 +179,7 @@ var jq22 = {
                                 "<div class='xx-line'><i class='fa fa-id-card orange' title='身份证号'></i><span>" + zjhm + "</span></div>" +
                                 "<div class='xx-line'><i class='fa fa-user yellow' title='出生日期'></i><span>" + csrq + "</span></div>" +
                                 "<div class='xx-line'><i class='fa fa-phone' title='电话号码'></i><span>" + sjhm + "</span></div>" +
+                                "<div class='xx-line'><i class='fa fa-phone' title='IMSI'></i><span>" + imsi + "</span></div>"+
                                 "<div class='xx-line'><i class='fa fa-map-marker green' title='现住址'></i><span>" + xzzDzmc + "</span></div>" +
                                 "<div class='xx-line over'><span class='label'>前科人员</span><span class='label'>高危人员</span><span class='label'>刑侦关注人员</span></div>" +
                                 "</div>" +
