@@ -13,7 +13,7 @@
 <body>
 <div id="nipic_search">
 	<div id="header">		
-		<h5 class="h_title4"></h5>
+		<h5 class="h_title3"></h5>
 	</div>	
 	<!--内容-->
 	<div id="content_box0" class="content_box">
@@ -24,16 +24,22 @@
 				<tr>
 					<td class="td_r" style="width:10%;">案事件编号：</td>
 					<td style="width:20%;"><input name="asjbh" id="asjbh"/></td>
+
 					<td class="td_r" style="width:10%;"> 查询人姓名：</td>
-					<td style="width:20%;"><input name="cxrXm" id="cxrXm"/></td>
+					<td style="width:15%;"><input name="cxrXm" id="cxrXm"/></td>
+
 					<td class="td_r" style="width:10%;"> 查询人身份证号：</td>
-					<td style="width:20%;"><input name="cxrSfzh" id="cxrSfzh"/></td>
-					<td class="td_r" style="width:10%;"> 查询警号：</td>
-					<td style="width:20%;"><input name="cxrJh" id="cxrJh"/></td>
+					<td style="width:15%;"><input name="cxrSfzh" id="cxrSfzh"/></td>
 				</tr>
 				<tr>
+					<td class="td_r" style="width:10%;"> 查询警号：</td>
+					<td style="width:15%;"><input name="cxrJh" id="cxrJh"/></td>
+
 					<td class="td_r" style="width:10%;"> 查询人联系电话：</td>
 					<td style="width:20%;"><input name="cxrLxdh" id="cxrLxdh"/></td>
+				</tr>
+
+				<tr>
 					<td class="td_r">开始时间：</td>
 					<td>
 						<p class="datebox-h"><input id = "kssj" type="text" class="easyui-datebox" style="height:24px;"></p>
