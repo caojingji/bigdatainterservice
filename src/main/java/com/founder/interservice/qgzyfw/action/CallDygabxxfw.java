@@ -1,11 +1,7 @@
 package com.founder.interservice.qgzyfw.action;
 
-import java.io.FileInputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.StringWriter;
+import java.io.*;
 import java.lang.reflect.Field;
-import java.net.URL;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -13,7 +9,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Properties;
 
 import com.founder.interservice.qgzyfw.domain.*;
 import net.sf.json.JSONArray;
@@ -26,6 +21,9 @@ import org.dom4j.DocumentHelper;
 import org.dom4j.Element;
 import org.dom4j.io.OutputFormat;
 import org.dom4j.io.XMLWriter;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.boot.context.properties.ConfigurationProperties;
 
 
 /**
@@ -37,109 +35,35 @@ import org.dom4j.io.XMLWriter;
  *<P>Carate：2018-07-29 下午12:10:22</P>
  *<P>Version：1.0</P>
  */
-@SuppressWarnings("serial")
+
 public class CallDygabxxfw{
-	public static Map DataMap;
-
-	//进入部级资源查询界面
-	public String queryZyInfo(){
-		return "success";
-	}
-	//根据条件调取部级资源-主方法
-	public String getGabZyInfo(){
-		URL urlbase = getClass().getProtectionDomain().getCodeSource().getLocation();
-		String pathbase =urlbase.toString();
-		/*web-Inf 路径地址*/
-		String webinfPath=pathbase.substring(0,pathbase.indexOf("WEB-INF")+7);
-		String path2=webinfPath+"/classes/gabZyservice.properties";
-
-		Properties propertiesUtil = new Properties();
-		try {
-			InputStream in = new FileInputStream(path2.replace("file:", ""));//linux系统路径前必须“/”打头
-			propertiesUtil.load(in);
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-		String ip = propertiesUtil.getProperty("ip");//联动调度节点
-		String requestId = propertiesUtil.getProperty("senderId");//联动请求方id
-		String responseId = "";//联动服务方id
-//		String zylx = this.getParam("zylx");//查询资源类型
-//		String jsonStr = this.getParam("jsonStr");//查询资源所需的条件
-		String zylx = "";
-		String jsonStr = "";
-		Object[] os = JSONArray.fromObject("").toArray();
-		String bizParamXml = "";//发送查询所需的xml字符串
-		if("asj".equals(zylx)){//全国刑侦案事件基本信息查询服务
-			TbStAsj tbst = new TbStAsj();
-			responseId = propertiesUtil.getProperty("receiverAsjId");
-			bizParamXml = getParamXml(tbst,"GAB-BJXZ_XZASJCX",os);
-		}else if("fzxyr".equals(zylx)){//全国刑侦案事件犯罪嫌疑人信息查询服务
-			TbStFzxyr fzxyr = new TbStFzxyr();
-			responseId = propertiesUtil.getProperty("receiverFzxyrId");
-			bizParamXml = getParamXml(fzxyr,"GAB-BJXZ_XZASJFZXYRCX",os);
-		}else if("xzgzry".equals(zylx)){//全国刑侦高危人员信息查询服务(即刑侦关注人员)
-			TbStXzgzry xzgzry = new TbStXzgzry();
-			responseId = propertiesUtil.getProperty("receiverXzgzryId");
-			bizParamXml = getParamXml(xzgzry,"GAB-BJXZ_XZGWRYCX",os);
-		}else if("ztryxx".equals(zylx)){//全国在逃人员信息查询服务
-			TbStZtryxx ztryxx = new TbStZtryxx();
-			responseId = propertiesUtil.getProperty("receiverZtryxxId");
-			bizParamXml = getParamXml(ztryxx,"GAB-BJXZ_ZTRYCX",os);
-		}else if("cxztryxx".equals(zylx)){//全国撤销在逃人员信息查询服务
-			TbStCxztryxx cxztryxx = new TbStCxztryxx();
-			responseId = propertiesUtil.getProperty("receiverCxztryxxId");
-			bizParamXml = getParamXml(cxztryxx,"GAB-BJXZ_CXZTRYCX",os);
-		}
-		String resultStr = getResoursesData(ip,requestId,responseId,bizParamXml);
-		if(resultStr != null){
-			resultStr = resultStr.substring(resultStr.indexOf("<Data>")+6,resultStr.indexOf("</Data>"));
-			DataMap = returnXmlMap(xmlStr2Document(resultStr),zylx);
-		}
-		return "success";
-	}
-
+	public Map DataMap;
 
 	//根据条件调取部级资源-主方法
-	public Map getGabZyInfoByJyaq(String zylx,Object[] os){//zylx:查询资源类型,os:参数
-		URL urlbase = getClass().getProtectionDomain().getCodeSource().getLocation();
-		String pathbase =urlbase.toString();
-		/*web-Inf 路径地址*/
-//		String webinfPath=pathbase.substring(0,pathbase.indexOf("WEB-INF")+7);
-		//String path2="/classes/gabZyservice.properties";
-		String path2 = System.getProperty("user.dir") + "/src/main/resources/gabZyservice.properties";
-
-		Properties propertiesUtil = new Properties();
-		try {
-			InputStream in = new FileInputStream(path2.replace("file:", ""));//linux系统路径前必须“/”打头
-			propertiesUtil.load(in);
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-		String ip = propertiesUtil.getProperty("ip");//联动调度节点
-		String requestId = propertiesUtil.getProperty("senderId");//联动请求方id
+	public Map getGabZyInfoByJyaq(String zylx,Object[] os,GabConfig gabConfig){//zylx:查询资源类型,os:参数
 		String responseId = "";//联动服务方id
 		String bizParamXml = "";//发送查询所需的xml字符串
 		if("asj".equals(zylx)){
 			TbStAsj tbst = new TbStAsj();
-			responseId = propertiesUtil.getProperty("receiverAsjId");
+			responseId = gabConfig.getReceiverAsjId();
 			bizParamXml = getParamXml(tbst,"GAB-BJXZ_XZASJCX",os);
 		}else if("fzxyr".equals(zylx)){
 			TbStFzxyr fzxyr = new TbStFzxyr();
-			responseId = propertiesUtil.getProperty("receiverFzxyrId");
+			responseId = gabConfig.getReceiverFzxyrId();
 			bizParamXml = getParamXml(fzxyr,"GAB-BJXZ_XZASJFZXYRCX",os);
 		}else if("xzgzry".equals(zylx)){
 			TbStXzgzry xzgzry = new TbStXzgzry();
-			responseId = propertiesUtil.getProperty("receiverXzgzryId");
+			responseId = gabConfig.getReceiverXzgzryId();
 			bizParamXml = getParamXml(xzgzry,"GAB-BJXZ_XZGWRYCX",os);
 		}
-		String resultStr = getResoursesData(ip,requestId,responseId,bizParamXml);
+		String resultStr = getResoursesData(gabConfig.getIp(),gabConfig.getSenderId(),responseId,bizParamXml);
 		if(resultStr != null){
 			resultStr = resultStr.substring(resultStr.indexOf("<Data>")+6,resultStr.indexOf("</Data>"));
 			DataMap = returnXmlMap(xmlStr2Document(resultStr),zylx);
 		}
-    	/*String resultStr = "<?xml version=\"1.0\" encoding=\"UTF-8\"?><RESULT><AMOUNT>12</AMOUNT><DATA><DATATYPE ID=\"BJXZ_XZASJCX\"><COLUMNS><COLUMN>ASJBH</COLUMN><COLUMN>ZCJDDM</COLUMN><COLUMN>AJLBDM</COLUMN><COLUMN>AJMC</COLUMN><COLUMN>ASJFSSJ_ASJFSKSSJ</COLUMN><COLUMN>LARQ</COLUMN><COLUMN>LADW_GAJGMC</COLUMN><COLUMN>JYAQ</COLUMN><COLUMN>SLDW_GAJGMC</COLUMN><COLUMN>SFSQ_PDBZ</COLUMN></COLUMNS><ROWS><ROW><ITEM>A12345601</ITEM><ITEM>0500</ITEM><ITEM>05000</ITEM><ITEM>张三被诈骗案</ITEM><ITEM>20170101</ITEM><ITEM>简要案情简要案情简要案情简要案情</ITEM><ITEM>陕西省公安厅</ITEM><ITEM>20170101</ITEM><ITEM>简要案情</ITEM><ITEM>简要案情</ITEM></ROW><ROW><ITEM>A12345665756867</ITEM><ITEM>0500</ITEM><ITEM>05000</ITEM><ITEM>李四被盗窃案</ITEM><ITEM>20170101</ITEM><ITEM>20170101</ITEM><ITEM>陕西省公安厅</ITEM><ITEM>20170101</ITEM><ITEM>陕西省公安厅</ITEM><ITEM>陕西省公安厅</ITEM></ROW><ROW><ITEM>A12345601</ITEM><ITEM>0500</ITEM><ITEM>05000</ITEM><ITEM>张三被诈骗案</ITEM><ITEM>20170101</ITEM><ITEM>简要案情简要案情简要案情简要案情</ITEM><ITEM>陕西省公安厅</ITEM><ITEM>20170101</ITEM><ITEM>简要案情</ITEM><ITEM>简要案情</ITEM></ROW><ROW><ITEM>A1234566575686704</ITEM><ITEM>0500</ITEM><ITEM>05000</ITEM><ITEM>李四被盗窃案</ITEM><ITEM>20170101</ITEM><ITEM>20170101</ITEM><ITEM>陕西省公安厅</ITEM><ITEM>20170101</ITEM><ITEM>陕西省公安厅</ITEM><ITEM>陕西省公安厅</ITEM></ROW><ROW><ITEM>A1234560102</ITEM><ITEM>0500</ITEM><ITEM>05000</ITEM><ITEM>张三被诈骗案</ITEM><ITEM>20170101</ITEM><ITEM>简要案情简要案情简要案情简要案情</ITEM><ITEM>陕西省公安厅</ITEM><ITEM>20170101</ITEM><ITEM>简要案情</ITEM><ITEM>简要案情</ITEM></ROW><ROW><ITEM>A1234566575686703</ITEM><ITEM>0500</ITEM><ITEM>05000</ITEM><ITEM>李四被盗窃案</ITEM><ITEM>20170101</ITEM><ITEM>20170101</ITEM><ITEM>陕西省公安厅</ITEM><ITEM>20170101</ITEM><ITEM>陕西省公安厅</ITEM><ITEM>陕西省公安厅</ITEM></ROW><ROW><ITEM>A1234560105</ITEM><ITEM>0500</ITEM><ITEM>05000</ITEM><ITEM>张三被诈骗案</ITEM><ITEM>20170101</ITEM><ITEM>简要案情简要案情简要案情简要案情</ITEM><ITEM>陕西省公安厅</ITEM><ITEM>20170101</ITEM><ITEM>简要案情</ITEM><ITEM>简要案情</ITEM></ROW><ROW><ITEM>A1234566575686706</ITEM><ITEM>0500</ITEM><ITEM>05000</ITEM><ITEM>李四被盗窃案</ITEM><ITEM>20170101</ITEM><ITEM>20170101</ITEM><ITEM>陕西省公安厅</ITEM><ITEM>20170101</ITEM><ITEM>陕西省公安厅</ITEM><ITEM>陕西省公安厅</ITEM></ROW><ROW><ITEM>A1234560107</ITEM><ITEM>0500</ITEM><ITEM>05000</ITEM><ITEM>张三被诈骗案</ITEM><ITEM>20170101</ITEM><ITEM>简要案情简要案情简要案情简要案情</ITEM><ITEM>陕西省公安厅</ITEM><ITEM>20170101</ITEM><ITEM>简要案情</ITEM><ITEM>简要案情</ITEM></ROW><ROW><ITEM>A1234566575686708</ITEM><ITEM>0500</ITEM><ITEM>05000</ITEM><ITEM>李四被盗窃案</ITEM><ITEM>20170101</ITEM><ITEM>20170101</ITEM><ITEM>陕西省公安厅</ITEM><ITEM>20170101</ITEM><ITEM>陕西省公安厅</ITEM><ITEM>陕西省公安厅</ITEM></ROW><ROW><ITEM>A12345601</ITEM><ITEM>0500</ITEM><ITEM>05000</ITEM><ITEM>张三被诈骗案</ITEM><ITEM>20170101</ITEM><ITEM>简要案情简要案情简要案情简要案情</ITEM><ITEM>陕西省公安厅</ITEM><ITEM>20170101</ITEM><ITEM>简要案情</ITEM><ITEM>简要案情</ITEM></ROW><ROW><ITEM>A12345665756867</ITEM><ITEM>0500</ITEM><ITEM>05000</ITEM><ITEM>李四被盗窃案</ITEM><ITEM>20170101</ITEM><ITEM>20170101</ITEM><ITEM>陕西省公安厅</ITEM><ITEM>20170101</ITEM><ITEM>陕西省公安厅</ITEM><ITEM>陕西省公安厅</ITEM></ROW></ROWS></DATATYPE></DATA></RESULT>";
+    	//String resultStr = "<?xml version=\"1.0\" encoding=\"UTF-8\"?><RESULT><AMOUNT>12</AMOUNT><DATA><DATATYPE ID=\"BJXZ_XZASJCX\"><COLUMNS><COLUMN>ASJBH</COLUMN><COLUMN>ZCJDDM</COLUMN><COLUMN>AJLBDM</COLUMN><COLUMN>AJMC</COLUMN><COLUMN>ASJFSSJ_ASJFSKSSJ</COLUMN><COLUMN>LARQ</COLUMN><COLUMN>LADW_GAJGMC</COLUMN><COLUMN>JYAQ</COLUMN><COLUMN>SLDW_GAJGMC</COLUMN><COLUMN>SFSQ_PDBZ</COLUMN></COLUMNS><ROWS><ROW><ITEM>A12345601</ITEM><ITEM>0500</ITEM><ITEM>05000</ITEM><ITEM>张三被诈骗案</ITEM><ITEM>20170101</ITEM><ITEM>简要案情简要案情简要案情简要案情</ITEM><ITEM>陕西省公安厅</ITEM><ITEM>20170101</ITEM><ITEM>简要案情</ITEM><ITEM>简要案情</ITEM></ROW><ROW><ITEM>A12345665756867</ITEM><ITEM>0500</ITEM><ITEM>05000</ITEM><ITEM>李四被盗窃案</ITEM><ITEM>20170101</ITEM><ITEM>20170101</ITEM><ITEM>陕西省公安厅</ITEM><ITEM>20170101</ITEM><ITEM>陕西省公安厅</ITEM><ITEM>陕西省公安厅</ITEM></ROW><ROW><ITEM>A12345601</ITEM><ITEM>0500</ITEM><ITEM>05000</ITEM><ITEM>张三被诈骗案</ITEM><ITEM>20170101</ITEM><ITEM>简要案情简要案情简要案情简要案情</ITEM><ITEM>陕西省公安厅</ITEM><ITEM>20170101</ITEM><ITEM>简要案情</ITEM><ITEM>简要案情</ITEM></ROW><ROW><ITEM>A1234566575686704</ITEM><ITEM>0500</ITEM><ITEM>05000</ITEM><ITEM>李四被盗窃案</ITEM><ITEM>20170101</ITEM><ITEM>20170101</ITEM><ITEM>陕西省公安厅</ITEM><ITEM>20170101</ITEM><ITEM>陕西省公安厅</ITEM><ITEM>陕西省公安厅</ITEM></ROW><ROW><ITEM>A1234560102</ITEM><ITEM>0500</ITEM><ITEM>05000</ITEM><ITEM>张三被诈骗案</ITEM><ITEM>20170101</ITEM><ITEM>简要案情简要案情简要案情简要案情</ITEM><ITEM>陕西省公安厅</ITEM><ITEM>20170101</ITEM><ITEM>简要案情</ITEM><ITEM>简要案情</ITEM></ROW><ROW><ITEM>A1234566575686703</ITEM><ITEM>0500</ITEM><ITEM>05000</ITEM><ITEM>李四被盗窃案</ITEM><ITEM>20170101</ITEM><ITEM>20170101</ITEM><ITEM>陕西省公安厅</ITEM><ITEM>20170101</ITEM><ITEM>陕西省公安厅</ITEM><ITEM>陕西省公安厅</ITEM></ROW><ROW><ITEM>A1234560105</ITEM><ITEM>0500</ITEM><ITEM>05000</ITEM><ITEM>张三被诈骗案</ITEM><ITEM>20170101</ITEM><ITEM>简要案情简要案情简要案情简要案情</ITEM><ITEM>陕西省公安厅</ITEM><ITEM>20170101</ITEM><ITEM>简要案情</ITEM><ITEM>简要案情</ITEM></ROW><ROW><ITEM>A1234566575686706</ITEM><ITEM>0500</ITEM><ITEM>05000</ITEM><ITEM>李四被盗窃案</ITEM><ITEM>20170101</ITEM><ITEM>20170101</ITEM><ITEM>陕西省公安厅</ITEM><ITEM>20170101</ITEM><ITEM>陕西省公安厅</ITEM><ITEM>陕西省公安厅</ITEM></ROW><ROW><ITEM>A1234560107</ITEM><ITEM>0500</ITEM><ITEM>05000</ITEM><ITEM>张三被诈骗案</ITEM><ITEM>20170101</ITEM><ITEM>简要案情简要案情简要案情简要案情</ITEM><ITEM>陕西省公安厅</ITEM><ITEM>20170101</ITEM><ITEM>简要案情</ITEM><ITEM>简要案情</ITEM></ROW><ROW><ITEM>A1234566575686708</ITEM><ITEM>0500</ITEM><ITEM>05000</ITEM><ITEM>李四被盗窃案</ITEM><ITEM>20170101</ITEM><ITEM>20170101</ITEM><ITEM>陕西省公安厅</ITEM><ITEM>20170101</ITEM><ITEM>陕西省公安厅</ITEM><ITEM>陕西省公安厅</ITEM></ROW><ROW><ITEM>A12345601</ITEM><ITEM>0500</ITEM><ITEM>05000</ITEM><ITEM>张三被诈骗案</ITEM><ITEM>20170101</ITEM><ITEM>简要案情简要案情简要案情简要案情</ITEM><ITEM>陕西省公安厅</ITEM><ITEM>20170101</ITEM><ITEM>简要案情</ITEM><ITEM>简要案情</ITEM></ROW><ROW><ITEM>A12345665756867</ITEM><ITEM>0500</ITEM><ITEM>05000</ITEM><ITEM>李四被盗窃案</ITEM><ITEM>20170101</ITEM><ITEM>20170101</ITEM><ITEM>陕西省公安厅</ITEM><ITEM>20170101</ITEM><ITEM>陕西省公安厅</ITEM><ITEM>陕西省公安厅</ITEM></ROW></ROWS></DATATYPE></DATA></RESULT>";
     	DataMap = returnXmlMap(xmlStr2Document(resultStr),zylx);
-    	System.out.println("DataMap==="+DataMap);*/
+    	System.out.println("DataMap==="+DataMap);
 		return DataMap;
 	}
 	/**
@@ -195,7 +119,7 @@ public class CallDygabxxfw{
 			//以下是为了拿到属性名对应的属性值
 			for(int i=0;i<os.length;i++){
 				String o = os[i].toString();
-				JSONObject jsonobj = JSONObject.fromObject(o.substring(1,o.length()-1));
+				JSONObject jsonobj = JSONObject.fromObject(o);
 				if("class java.util.Date".equals(stype) || "class java.lang.Number".equals(stype)){
 					Object objt1 = jsonobj.get(sname+"1");
 					Object objt2 = jsonobj.get(sname+"2");
@@ -371,21 +295,5 @@ public class CallDygabxxfw{
 	public boolean hasPermission() {
 		// TODO Auto-generated method stub
 		return false;
-	}
-	public static void main(String[] args){
-		String ip = "10.172.20.13:7001";
-		String requestId = "C00-10001940";
-		String responseId = "S10-10005788";
-
-		TbStAsj tbst = new TbStAsj();
-		String jsonStr = "[{'ASJBH':'A6628006500002018070011','XCKYBH':'K6628006500002018070011','LARQ1':'20180702','LARQ2':'20180712'}]";
-		Object[] os = JSONArray.fromObject(jsonStr).toArray();
-		//String bizParamXml = getParamXml(tbst,"GAB-BJXZ_BNYZZWRYCX",os);
-		//String resultStr = getResoursesData(ip,requestId,responseId,bizParamXml);
-		String resultstr = "<?xml version=\"1.0\" encoding=\"UTF-8\"?><RESULT><AMOUNT>1</AMOUNT><DATA><DATATYPE ID=\"BJXZ_ZTRYCX\"><COLUMNS><COLUMN>ZTRYBH</COLUMN><COLUMN>ZTRYLXDM</COLUMN><COLUMN>ASJBH</COLUMN><COLUMN>LARQ</COLUMN></COLUMNS><ROWS><ROW><ITEM>11111</ITEM><ITEM>01</ITEM><ITEM>A123456</ITEM><ITEM>20170101</ITEM></ROW></ROWS></DATATYPE></DATA></RESULT>";
-
-		Map list = returnXmlMap(xmlStr2Document(resultstr),"asj");
-		System.out.println(list);
-
 	}
 }

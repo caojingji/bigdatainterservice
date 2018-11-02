@@ -21,6 +21,21 @@ mybatis:
 #    host:
 #    port:
 
+gab_url:
+  ip: 10.172.20.13:9002
+  #请求方地址
+  senderId: C00-10001940
+  #asj-服务方地址
+  receiverAsjId: S10-10005788
+  #fzxyr-4.10全国刑侦案事件犯罪嫌疑人信息查询服务
+  receiverFzxyrId: S10-10005787
+  #xzgzry-全国刑侦高危人员信息查询服务
+  receiverXzgzryId: S10-10005784
+  #ztryxx-全国在逃人员信息查询服务
+  receiverZtryxxId: S10-10005794
+  #cxztryxx-全国撤销在逃人员信息查询服务
+  receiverCxztryxxId: S10-10005793
+
 # 系统变量
 xdhbigdata:
   xdhserviceParam:
@@ -58,3 +73,4 @@ logging:
     com.founder.interservice.mapper : trace
     com.founder.interservice.regionalanalysis.mapper: trace
     com.founder.interservice.tracktraveltogether.mapper: trace
+    com.founder.interservice.recordLog.mapper: trace
