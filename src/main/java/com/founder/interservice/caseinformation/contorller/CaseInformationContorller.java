@@ -2,6 +2,7 @@ package com.founder.interservice.caseinformation.contorller;
 
 import com.founder.interservice.caseinformation.model.CaseInformation;
 import com.founder.interservice.caseinformation.service.CaseInformationService;
+import com.founder.interservice.loginlog.model.LoginLog;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -38,4 +39,5 @@ public class CaseInformationContorller {
 
         return caseInformationList;
     }
+
 }

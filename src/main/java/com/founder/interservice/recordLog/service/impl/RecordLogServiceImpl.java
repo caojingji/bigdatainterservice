@@ -1,6 +1,6 @@
 package com.founder.interservice.recordLog.service.impl;
 
-import com.founder.interservice.recordLog.mapper.RecordLogMapper;
+import com.founder.interservice.mapper.xzxt.RecordLogMapper;
 import com.founder.interservice.recordLog.model.Querylog;
 import com.founder.interservice.recordLog.queryModel.QuerylogFilter;
 import com.founder.interservice.recordLog.service.RecordLogService;

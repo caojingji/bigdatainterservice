@@ -15,7 +15,7 @@ server:
 
 mybatis:
     type-aliases-package: com.founder.interservice.model
-    mapper-locations: classpath:mybatis/mapper/*.xml
+    #mapper-locations: classpath:mybatis/mapper/*.xml
     config-location: classpath:mybatis/mybatis-config.xml
 #  redis:
 #    host:
