@@ -106,10 +106,10 @@ public class ScheduledService {
                 if(results == null || results.isEmpty()){
                     taskResultRepository.save(taskResults);
                 }
-                regionalTaskRepository.updateStatusByTaskId(task.getTaskId());
+                regionalTaskRepository.updaxzxtatusByTaskId(task.getTaskId());
             }
         }else{
-            regionalTaskRepository.updateStatusByTaskId(task.getTaskId());
+            regionalTaskRepository.updaxzxtatusByTaskId(task.getTaskId());
         }
     }
 

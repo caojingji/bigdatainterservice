@@ -18,7 +18,7 @@ public interface RegionalTaskRepository extends JpaRepository<RegionalTask,Strin
     @Transactional//事物
     @Modifying(clearAutomatically = true) //自动清除实体里保存的数据
     @Query(value = "update TB_ST_REGIONALTASK ts set ts.progress = '1',ts.state= 'FINISHED' where ts.task_id = ?1 ", nativeQuery = true)
-    public int updateStatusByTaskId(String taskId);
+    public int updaxzxtatusByTaskId(String taskId);
 
     public RegionalTask findAllByTaskId(String taskId);
 }

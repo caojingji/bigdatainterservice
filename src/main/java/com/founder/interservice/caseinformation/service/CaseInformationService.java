@@ -1,6 +1,7 @@
 package com.founder.interservice.caseinformation.service;
 
 import com.founder.interservice.caseinformation.model.CaseInformation;
+import com.founder.interservice.loginlog.model.LoginLog;
 
 import java.util.List;
 

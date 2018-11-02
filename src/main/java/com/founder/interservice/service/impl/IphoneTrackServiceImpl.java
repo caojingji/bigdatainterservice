@@ -6,7 +6,6 @@ import com.alibaba.fastjson.JSONObject;
 import com.founder.interservice.VO.TrackVO;
 import com.founder.interservice.enums.ResultEnum;
 import com.founder.interservice.exception.InterServiceException;
-import com.founder.interservice.mapper.ObjectRelationMapper;
 import com.founder.interservice.model.*;
 import com.founder.interservice.querymodel.RelationLocalFilter;
 import com.founder.interservice.repository.RelationRepository;
@@ -21,6 +20,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Example;
 import org.springframework.stereotype.Service;
+import com.founder.interservice.mapper.xzxt.ObjectRelationMapper;
 
 import java.util.*;
 

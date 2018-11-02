@@ -1,7 +1,7 @@
 package com.founder.interservice.regionalanalysis.service.impl;
 
 import com.founder.interservice.exception.InterServiceException;
-import com.founder.interservice.regionalanalysis.mapper.RegionalTaskMapper;
+import com.founder.interservice.mapper.xzxt.RegionalTaskMapper;
 import com.founder.interservice.regionalanalysis.model.Regional;
 import com.founder.interservice.regionalanalysis.model.RegionalTask;
 import com.founder.interservice.regionalanalysis.model.RegionalTaskResult;

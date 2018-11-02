@@ -2,8 +2,7 @@ package com.founder.interservice.tracktraveltogether.service.impl;
 
 import com.founder.interservice.exception.InterServiceException;
 import com.founder.interservice.enums.ResultEnum;
-import com.founder.interservice.regionalanalysis.model.RegionalTaskResult;
-import com.founder.interservice.tracktraveltogether.mapper.TrackTogetherMapper;
+import com.founder.interservice.mapper.xzxt.TrackTogetherMapper;
 import com.founder.interservice.tracktraveltogether.model.TogetherTaskResult;
 import com.founder.interservice.tracktraveltogether.model.TrackTogetherTask;
 import com.founder.interservice.tracktraveltogether.repository.TogetherTaskResultRepository;

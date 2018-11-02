@@ -1,6 +1,6 @@
 package com.founder.interservice.loginlog.service.impl;
 
-import com.founder.interservice.loginlog.mapper.LoginLogMapper;
+import com.founder.interservice.mapper.xzxt.LoginLogMapper;
 import com.founder.interservice.loginlog.model.LoginLog;
 import com.founder.interservice.loginlog.service.LoginLogService;
 import org.springframework.beans.factory.annotation.Autowired;

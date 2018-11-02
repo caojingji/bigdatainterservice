@@ -1,6 +1,7 @@
 package com.founder.interservice.caseinformation.service.impl;
 
-import com.founder.interservice.caseinformation.mapper.CaseInformationMapper;
+import com.founder.interservice.loginlog.model.LoginLog;
+import com.founder.interservice.mapper.gxzxt.CaseInformationMapper;
 import com.founder.interservice.caseinformation.model.CaseInformation;
 import com.founder.interservice.caseinformation.service.CaseInformationService;
 import org.springframework.beans.factory.annotation.Autowired;
