@@ -1,0 +1,150 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.founder.interservice.mapper.xzxt.TrackMapper">
+
+
+    <sql id="queryTrack_where">
+      <if test="xxzjbh != null and xxzjbh != ''">
+          and t.xxzjbh = #{xxzjbh}
+      </if>
+      <if test="objecttype != null and objecttype != '' ">
+          and t.objecttype = #{objecttype}
+      </if>
+      <if test="objectvalue != null and objectvalue != ''">
+          <choose>
+              <when test="objectvalue.indexOf(',') > 0">
+                  and t.objectvalue in (${objectvalue})
+              </when>
+              <otherwise>
+                  and t.objectvalue = #{objectvalue}
+              </otherwise>
+          </choose>
+      </if>
+        <if test="kssj != null and kssj != ''">
+            and to_date(t.timestr,'yyyy-MM-dd HH24:mi:ss') <![CDATA[>=]]> to_date(#{kssj},'yyyy-MM-dd HH24:mi:ss')
+        </if>
+        <if test="jssj != null and jssj != ''">
+            and to_date(t.timestr,'yyyy-MM-dd HH24:mi:ss') <![CDATA[<]]> to_date(#{jssj},'yyyy-MM-dd HH24:mi:ss')
+        </if>
+    </sql>
+
+    <select id="getTracks" parameterType="com.founder.interservice.querymodel.TrackFilter" resultType="com.founder.interservice.model.Track">
+            select *
+                from (
+                  select
+                        t1.*,
+                        rownum as rn
+                    from (
+                        select
+                            t.xxzjbh,
+                            t.address,
+                            t.objecttype,
+                            t.objecttypename,
+                            t.objectvalue,
+                            t.j,
+                            t.w,
+                            t.timestr,
+                            t.timestamp
+                        from track t
+                        <where>
+                            <include refid="queryTrack_where"/>
+                        </where>
+                        order by t.timestamp desc
+                 )t1
+                <where>
+                    and rownum <![CDATA[ <= ]]> #{end }
+                </where>
+            ) t2
+            <where>
+                rn <![CDATA[ > ]]> #{begin }
+            </where>
+    </select>
+    <select id="getTracksTotalCount" parameterType="com.founder.interservice.querymodel.TrackFilter" resultType="java.lang.Integer">
+        select count(*)
+        from track t
+        <where>
+            <include refid="queryTrack_where"/>
+        </where>
+    </select>
+    <select id="queryTracksListNoPage" parameterType="com.founder.interservice.querymodel.TrackFilter" resultType="com.founder.interservice.model.Track">
+        select
+            t.xxzjbh,
+            t.address,
+            t.objecttype,
+            t.objecttypename,
+            t.objectvalue,
+            t.j,
+            t.w,
+            t.timestr
+          from track t
+            <where>
+                <include refid="queryTrack_where"/>
+            </where>
+    </select>
+    <!-- 根据多条件查询出现总次数在前五的记录数 -->
+    <select id = "queryTrackBefore5" parameterType="com.founder.interservice.querymodel.TrackFilter" resultType="com.founder.interservice.model.Track">
+        select * from (
+            select t.address as address,
+                count(*) as timestr,
+                t.j as j,
+                t.w as w
+                from track t
+                <where>
+                    <include refid="queryTrack_where"/>
+                </where>
+                group by t.address,t.j,t.w
+                order by count(*) desc
+        ) where rownum <![CDATA[ <= ]]> 5
+    </select>
+    <select id="queryTracksByRSD" parameterType="com.founder.interservice.querymodel.TrackFilter" resultType="com.founder.interservice.model.Track">
+        select * from (
+          select t2.address as address,
+                 t2.j,
+                 t2.w,
+              count(*) as timestr
+            from (
+                select * from (
+                    select t.*,
+                        case
+                            when to_char(to_date(t.timestr,'yyyy-MM-dd HH24:mi:ss'),'HH24:mi') between '07:00' and '12:00' then '上午'
+                            when to_char(to_date(t.timestr,'yyyy-MM-dd HH24:mi:ss'),'HH24:mi') between '13:00' and '17:00' then '下午'
+                            when to_char(to_date(t.timestr,'yyyy-MM-dd HH24:mi:ss'),'HH24:mi') between '16:00' and '23:00' then '傍晚'
+                            when to_char(to_date(t.timestr,'yyyy-MM-dd HH24:mi:ss'),'HH24:mi') between '23:00' and '24:00'
+                                or
+                                to_char(to_date(t.timestr,'yyyy-MM-dd HH24:mi:ss'),'HH24:mi') between '00:00' and '06:00' then '夜间'
+                        end as daystr
+                    from track t
+                    <where>
+                        <include refid="queryTrack_where"/>
+                    </where>
+                )  t1
+                where t1.daystr = #{base}
+            ) t2
+          group by t2.address,t2.j,t2.w
+          order by count(*) desc
+        )
+        where rownum <![CDATA[ <= ]]> 5
+    </select>
+
+    <select id="queryNewLocation" parameterType="com.founder.interservice.querymodel.TrackFilter" resultType="com.founder.interservice.model.Track">
+        select * from (
+                select
+                    t.xxzjbh,
+                    t.address,
+                    t.objecttype,
+                    t.objecttypename,
+                    t.objectvalue,
+                    t.j,
+                    t.w,
+                    t.timestr
+                from track t
+                <where>
+                    <include refid="queryTrack_where"/>
+                </where>
+                order by t.timestamp desc
+              )
+        where rownum <![CDATA[ <= ]]> 1
+    </select>
+
+
+</mapper>
