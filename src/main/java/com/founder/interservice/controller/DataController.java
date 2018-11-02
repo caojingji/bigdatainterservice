@@ -109,6 +109,7 @@ public class DataController {
                 }
             }
             if(imsis != null && !imsis.isEmpty()) {
+                System.out.println("imsis =================== " + imsis.toString());
                 String kssjstr = kssj.contains(" ") ? DateUtil.convertStringToDateTime(kssj).getTime() + "" : DateUtil.convertStringToDate(kssj).getTime() + "";
                 String jssjStr = jssj.contains(" ") ? DateUtil.convertStringToDateTime(jssj).getTime() + "" : DateUtil.convertStringToDate(jssj).getTime() + "";
                 for (String imsi : imsis) {

@@ -223,6 +223,7 @@ public class IphoneTrackServiceImpl implements IphoneTrackService {
                 jsonObejct = JSONObject.parseObject(result);
             }
         }
+        System.out.println("result ====================== " + result);
         if(jsonObejct != null){
             JSONArray jsonArray = jsonObejct.getJSONArray("results");
             if(jsonArray != null && jsonArray.size() > 0){
