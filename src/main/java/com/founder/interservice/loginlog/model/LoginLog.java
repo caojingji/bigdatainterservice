@@ -3,10 +3,7 @@ package com.founder.interservice.loginlog.model;
 import lombok.Data;
 import org.hibernate.annotations.DynamicUpdate;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.Table;
+import javax.persistence.*;
 import java.util.Date;
 
 @Entity
@@ -21,11 +18,15 @@ public class LoginLog {
     private String cxrSfzh;//查询人身份证号
     private String cxrXm;//查询人姓名
     private String cxrLxdh;//查询人联系电话
-
+    private String dldwdm; //登录单位代码
+    private String dldwmc; //登录单位名称
+    @Transient
     private int begin;
+    @Transient
     private int end;
-
+    @Transient
     private String cxrKssj;
+    @Transient
     private String cxrJssj;
 
     @Column(insertable = false)

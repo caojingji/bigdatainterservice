@@ -83,6 +83,14 @@ li {
     margin-left: 24px;
     background: url(../images/jzgjzs2.png);
 }
+.h_title5 {
+    float: left;
+    width:400px;
+    display: inline-block;
+    height: 80px;
+    margin-left: 24px;
+    background: url(../images/cqsprz.png);
+}
 .color1{color:#ec704c;}
 .datebox-h{width:228px;height:24px;line-height: 24px;}
 /************menu*************/

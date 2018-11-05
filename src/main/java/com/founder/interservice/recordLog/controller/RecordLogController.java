@@ -85,7 +85,6 @@ public class RecordLogController {
                 objectMap.put("total",0);
                 objectMap.put("rows",new ArrayList<>());
             }
-
         }catch (Exception e){
             e.printStackTrace();
         }
