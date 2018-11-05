@@ -88,14 +88,15 @@ public class DataController {
      */
     @RequestMapping(value = "/getAndSaveTrack")
     @ResponseBody
-    public ResultVO getAndSaveTrack(String asjbh,String objValue, String kssj, String jssj,String cxrXm,String cxrSfzh,String cxrJh,String cxrLxdh,String objType){
+    public ResultVO getAndSaveTrack(String asjbh,String objValue, String kssj, String jssj,String cxrXm,String cxrSfzh,String cxrJh,String cxrLxdh,String dldwdm,String dldwmc,String objType){
         ResultVO resultVO = null;
+        List<String> imsis = null;
         try{
-            List<String> imsis = new ArrayList<>();
             JSONObject jsonObject = iphoneTrackService.getObjectRelation(objValue);
             if(jsonObject != null){
                 JSONArray jsonArray = jsonObject.getJSONArray("results");
                 if(jsonArray != null && jsonArray.size() > 0){
+                    imsis = new ArrayList<String>();
                     for (int i = 0; i <= jsonArray.size() - 1;i++){
                         JSONObject resObj = jsonArray.getJSONObject(i);
                         String objectType = resObj.getString("objectToTypeName");
@@ -109,7 +110,6 @@ public class DataController {
                 }
             }
             if(imsis != null && !imsis.isEmpty()) {
-                System.out.println("imsis =================== " + imsis.toString());
                 String kssjstr = kssj.contains(" ") ? DateUtil.convertStringToDateTime(kssj).getTime() + "" : DateUtil.convertStringToDate(kssj).getTime() + "";
                 String jssjStr = jssj.contains(" ") ? DateUtil.convertStringToDateTime(jssj).getTime() + "" : DateUtil.convertStringToDate(jssj).getTime() + "";
                 for (String imsi : imsis) {
@@ -123,6 +123,8 @@ public class DataController {
             logParam.setCxrSfzh(cxrSfzh);
             logParam.setCxrJh(cxrJh);
             logParam.setCxrLxdh(cxrLxdh);
+            logParam.setDldwdm(dldwdm);
+            logParam.setDldwmc(dldwmc);
             logParam.setAsjbh(asjbh);
             logParam.setCxbsh(objValue);
             logParam.setBshlxdm(objType);

@@ -219,11 +219,11 @@ public class IphoneTrackServiceImpl implements IphoneTrackService {
         String result = HttpUtil.doGet(url);
         //String result = "{\"results\":[{\"address\":\"中国重庆北碚保亿紫园无线网络资源点\",\"base\":\"null\",\"j\":106.46750041645927,\"objectType\":4314,\"objectTypeName\":\"IMSI\",\"objectValue\":\"460001180780041\",\"source\":1046,\"sourceName\":\"4G认证\",\"source_md5\":\"FMrkzI8rgzeciALkGIwi6Q==\",\"timestamp\":1533276986000,\"w\":29.72508301582967},{\"address\":\" \",\"base\":\"null\",\"j\":106.46750041645927,\"objectType\":4314,\"objectTypeName\":\"IMSI\",\"objectValue\":\"460001180780041\",\"source\":1046,\"sourceName\":\"4G认证\",\"source_md5\":\"2dcoWfhPoRRw5GzanGHj0A==\",\"timestamp\":1533276936000,\"w\":29.72508301582967},{\"address\":\"中国重庆合川三汇兴旺街资源点\",\"base\":\"460003333db65682\",\"j\":106.5964763499098,\"objectType\":4314,\"objectTypeName\":\"IMSI\",\"objectValue\":\"460001180780041\",\"source\":1046,\"sourceName\":\"4G认证\",\"source_md5\":\"nj7A/fyzWq57tTBYdKIsjw==\",\"timestamp\":1533104872000,\"w\":30.0796412256528}],\"status\":\"ok\"}";
         if(!StringUtil.ckeckEmpty(result)){
-            if(result.startsWith("{") && result.endsWith("}")){
-                jsonObejct = JSONObject.parseObject(result);
+            while(!result.startsWith("{")){
+                result = HttpUtil.doGet(url);
             }
+            jsonObejct = JSONObject.parseObject(result);
         }
-        System.out.println("result ====================== " + result);
         if(jsonObejct != null){
             JSONArray jsonArray = jsonObejct.getJSONArray("results");
             if(jsonArray != null && jsonArray.size() > 0){
@@ -318,9 +318,10 @@ public class IphoneTrackServiceImpl implements IphoneTrackService {
         String result = HttpUtil.doGet(url);
         //String result = "{\"results\":[{\"ccv \":227,\"first_timestamp\":1531908084000,\"objectFromType\":4394,\"objectFromTypeName\":\"电话号码\",\"objectFromValue\":\"15129457465\",\"objectToType\":4314,\"objectToTypeName\":\"IMSI\",\"objectToValue\":\"460001180780041\",\"relativeType\":4402,\"relativeTypeName\":\"手机-IMSI\",\"source\":1094,\"sourceName\":\"4G-微信\",\"source_md5\":\"cfnQ37fBveUMP7kTZJqoDA==\",\"timestamp\":1533743041000},{\"count\":726,\"first_timestamp\":1531908024000,\"objectFromType\":4394,\"objectFromTypeName\":\"电话号码\",\"objectFromValue\":\"15129457465\",\"objectToType\":4314,\"objectToTypeName\":\"IMSI\",\"objectToValue\":\"460001180780041\",\"relativeType\":4402,\"relativeTypeName\":\"手机-IMSI\",\"source\":1046,\"sourceName\":\"4G认证\",\"source_md5\":\"lgnna+LmDFyEJ+BTVmtmQg==\",\"timestamp\":1533745282000}],\"status\":\"ok\"}";
         if(!StringUtil.ckeckEmpty(result)){
-            if(result.startsWith("{") && result.endsWith("}")){
-                jsonObejct = JSONObject.parseObject(result);
+            while(!result.startsWith("{")){
+                result = HttpUtil.doGet(url);
             }
+            jsonObejct = JSONObject.parseObject(result);
         }
         if(jsonObejct != null){
             JSONArray jsonArray = jsonObejct.getJSONArray("results");

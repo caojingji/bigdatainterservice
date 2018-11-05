@@ -201,7 +201,7 @@ public class TrackTogetherContoller {
                 //2 拿到imsi后 再去调用伴随接口
                 String taskId = trackTogetherService.sendTrackTogetherTask(trackParam); //发送任务 并且得到任务编号
                 //String taskId = "123123123";
-                if(!StringUtil.ckeckEmpty(taskId)){
+                if(!StringUtil.ckeckEmpty(taskId) && !"Rate limit".equals(taskId)){
                     trackParam.setTaskId(taskId);
                 }else{
                     throw new InterServiceException(ResultEnum.TASK_SEND_ERROR);

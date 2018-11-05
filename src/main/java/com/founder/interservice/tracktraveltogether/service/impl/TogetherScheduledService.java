@@ -2,10 +2,6 @@ package com.founder.interservice.tracktraveltogether.service.impl;
 
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
-import com.founder.interservice.regionalanalysis.model.RegionalTask;
-import com.founder.interservice.regionalanalysis.model.RegionalTaskResult;
-import com.founder.interservice.regionalanalysis.repository.RegionalTaskRepository;
-import com.founder.interservice.regionalanalysis.repository.RegionalTaskResultRepository;
 import com.founder.interservice.tracktraveltogether.model.TogetherTaskResult;
 import com.founder.interservice.tracktraveltogether.model.TrackTogetherTask;
 import com.founder.interservice.tracktraveltogether.repository.TogetherTaskResultRepository;
@@ -51,7 +47,7 @@ public class TogetherScheduledService {
      * @Author: cao peng
      * @date: 2018/8/22 0022-16:35
      */
-    @Scheduled(cron = "0 0/2 * * * ?") //每隔三分钟执行一次
+    @Scheduled(initialDelay = 10000,fixedRate = 180000) //项目启动后延迟10秒执行，每次执行完后三分钟后再次执行
     public void queryTaskResult(){
         System.out.println("=============伴随定时任务开始执行================");
         try{
