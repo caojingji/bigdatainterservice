@@ -1,9 +1,15 @@
 spring:
   datasource:
-    driver-class-name: oracle.jdbc.driver.OracleDriver
-    username: XZXT
-    password: XZXT
-    url: jdbc:oracle:thin:@77.1.24.50:1521:xzxt
+    xzxt:
+      driver-class-name: oracle.jdbc.driver.OracleDriver
+      username: XZXT
+      password: XZXT
+      url: jdbc:oracle:thin:@77.1.24.50:1521:xzxt
+    gxzxt:
+      driver-class-name: oracle.jdbc.driver.OracleDriver
+      username: GXZXT_WB
+      password: GXZXT_WB2018
+      url: jdbc:oracle:thin:@10.154.106.26:1521:XZDB
   #配置jpa 使其展示sql语句
   jpa:
     show-sql: false
