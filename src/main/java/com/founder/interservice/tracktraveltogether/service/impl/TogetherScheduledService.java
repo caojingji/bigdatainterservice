@@ -47,7 +47,7 @@ public class TogetherScheduledService {
      * @Author: cao peng
      * @date: 2018/8/22 0022-16:35
      */
-    @Scheduled(initialDelay = 10000,fixedRate = 180000) //项目启动后延迟10秒执行，每次执行完后三分钟后再次执行
+    @Scheduled(initialDelay = 10000,fixedDelay = 180000) //项目启动后延迟10秒执行，每次执行完后三分钟后再次执行
     public void queryTaskResult(){
         System.out.println("=============伴随定时任务开始执行================");
         try{
