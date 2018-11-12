@@ -81,14 +81,14 @@
     </root>
 
     <!--开发环境:打印控制台-->
-    <springProfile name="dev">
+    <!--<springProfile name="dev">
         <logger name="com.nmys.view" level="debug"/>
-    </springProfile>
+    </springProfile>-->
     <!--生产环境:输出到文件-->
-    <!--<springProfile name="prod">
+    <springProfile name="prod">
         <root level="info">
             <appender-ref ref="INFO_FILE" />
             <appender-ref ref="ERROR_FILE" />
         </root>
-    </springProfile>-->
+    </springProfile>
 </configuration>
