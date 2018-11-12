@@ -20,6 +20,6 @@ public interface IphoneTrackService {
     public JSONObject getObjectRelationAll(String obj)throws InterServiceException;
     public JSONObject getObjectRelatioNoSave(String obj) throws InterServiceException;
 
-    public void saveObjectRelationLocal(ResultObj resultObj);
+    public void saveObjectRelationLocal(ResultObj resultObj,String asjbh,String sfzh,String jh);
     public boolean queryObjectRelationLocal(RelationLocalFilter filter);
 }

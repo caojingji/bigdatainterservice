@@ -84,7 +84,7 @@ public class IphoneTrackController {
             resultObj = iphoneTrackService.getObjectRelationAll(objValue,type);
             if (resultObj!=null){
                 //查出数据保存入库
-                iphoneTrackService.saveObjectRelationLocal(resultObj);
+                iphoneTrackService.saveObjectRelationLocal(resultObj,asjbh,cxrSfzh,cxrJh);
             }
             //添加查询日志
             //添加查询日志记录功能

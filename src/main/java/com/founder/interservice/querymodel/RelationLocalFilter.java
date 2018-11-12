@@ -12,6 +12,9 @@ import java.util.Date;
 public class RelationLocalFilter {
 
     private String xxzjbh;
+    private String asjbh; //案事件编号
+    private String sfzh; //当前登录人身份证号
+    private String jh; //当前登录人警号
     private String idcard;  //身份证号码
     private String phone; //电话号
     private String car; //车牌号

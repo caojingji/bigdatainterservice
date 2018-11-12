@@ -163,6 +163,9 @@ public class AbutmentController {
             jsonObject.put("sqbt",sqbt);
             String level = null;
             RelationLocalFilter filter = new RelationLocalFilter();
+            filter.setAsjbh(asjbh);
+            filter.setSfzh(sfzh);
+            filter.setJh(cxrJh);
             if(bshlxdm != null){
                 switch (bshlxdm){
                     case "001":
@@ -238,7 +241,7 @@ public class AbutmentController {
             jsonObject.put("ajbh", asjbh);
             jsonObject.put("sfzh", sfzh);
             jsonObject.put("sqdx", bsh);
-            jsonObject.put("s1ly","智慧侦查脑图");
+            jsonObject.put("sqly","智慧侦查脑图");
             params.put("sysparam", jsonObject.toJSONString()); //参数
             String url = UnifiedServiceUtil.sendRequest(bizCode,cjServiceId,params);
             if(!StringUtil.ckeckEmpty(url)){
@@ -266,7 +269,7 @@ public class AbutmentController {
             //生成短信验证码
             String verifyCode = String
                     .valueOf(new Random().nextInt(899999) + 100000);
-            String content = "您的验证码为："+ verifyCode+",该验证码有效时长为1分钟，请在一分钟内输入，且勿透漏给他人！【重庆刑专-智慧侦查脑图】";
+            String content = "您的验证码为："+ verifyCode+",该验证码有效时长为2分钟，请在一分钟内输入，且勿透漏给他人！【重庆刑专-智慧侦查脑图】";
             LinkedHashMap<String, Object> params = new LinkedHashMap<>();
             params.put("type", "SendMessage"); //参数
             params.put("sfzh", sfzh);

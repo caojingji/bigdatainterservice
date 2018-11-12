@@ -1,5 +1,6 @@
 package com.founder.interservice.model;
 
+import com.alibaba.fastjson.JSONArray;
 import lombok.Data;
 
 import java.util.List;
@@ -18,4 +19,6 @@ public class ResultObj<T> {
     private String objValue;
     private List<T> cphms;
     private List<T> sjhms;
+    private JSONArray qqhms;
+    private JSONArray wxhms;
 }

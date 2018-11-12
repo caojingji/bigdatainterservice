@@ -16,6 +16,9 @@ import java.util.Date;
 public class PhoneQQWeChatRalation {
     @Id
     private String xxzjbh;//信息主键编号，主键
+    private String asjbh; //案事件编号
+    private String sfzh; //身份证号
+    private String jh;//警号
     private String phone;//电话号
     private String qq;//QQ号
     private String wechat;//微信号
