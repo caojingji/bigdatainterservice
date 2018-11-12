@@ -17,8 +17,6 @@ public class CaseInformationServiceImpl implements CaseInformationService {
     @Override
     public List<CaseInformation> selectCaseInformationList(String sfzh){
         List<CaseInformation> caseInformation = caseInformationMapper.selectCaseInformationList(sfzh);
-
-
         return caseInformation;
     }
 }
