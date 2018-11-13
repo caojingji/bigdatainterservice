@@ -79,8 +79,8 @@ public class IphoneTrackServiceImpl implements IphoneTrackService {
         List<String> sjhmTypes = Arrays.asList("20","4394","3996"); //手机号码类别
         String url = relationGetAll_url + "&objectValue="+obj;
         //String result = HttpUtil.doGet(url);
-        //String result = "{\"children\":[{\"children\":[],\"objType\":437,\"objTypeName\":\"号牌号码\",\"objValue\":\"渝AZN748\"},{\"children\":[],\"objType\":4394,\"objTypeName\":\"电话号码\",\"objValue\":\"02379226951\"},{\"children\":[{\"children\":[{\"children\":[],\"objType\":4315,\"objTypeName\":\"IMEI\",\"objValue\":\"866091037961143\"},{\"children\":[],\"objType\":4315,\"objTypeName\":\"IMEI\",\"objValue\":\"861106038308428\"},{\"children\":[],\"objType\":4615,\"objTypeName\":\"微信ID\",\"objValue\":\"612087581\"}],\"objType\":4314,\"objTypeName\":\"IMSI\",\"objValue\":\"460110496721423\"}],\"objType\":3996,\"objTypeName\":\"手机号码\",\"objValue\":\"13308271988\"},{\"children\":[],\"objType\":4394,\"objTypeName\":\"电话号码\",\"objValue\":\"18008365980\"},{\"children\":[{\"children\":[{\"children\":[],\"objType\":4315,\"objTypeName\":\"IMEI\",\"objValue\":\"866091037961143\"},{\"children\":[],\"objType\":4315,\"objTypeName\":\"IMEI\",\"objValue\":\"861106038308428\"},{\"children\":[],\"objType\":4615,\"objTypeName\":\"微信ID\",\"objValue\":\"612087581\"}],\"objType\":4314,\"objTypeName\":\"IMSI\",\"objValue\":\"460110496721423\"}],\"objType\":4394,\"objTypeName\":\"电话号码\",\"objValue\":\"13308271988\"},{\"children\":[{\"children\":[{\"children\":[],\"objType\":4315,\"objTypeName\":\"IMEI\",\"objValue\":\"866091037961143\"},{\"children\":[],\"objType\":4315,\"objTypeName\":\"IMEI\",\"objValue\":\"861106038308428\"},{\"children\":[],\"objType\":4615,\"objTypeName\":\"微信ID\",\"objValue\":\"612087581\"}],\"objType\":4314,\"objTypeName\":\"IMSI\",\"objValue\":\"460110496721423\"}],\"objType\":20,\"objTypeName\":\"联系方式\",\"objValue\":\"13308271988\"},{\"children\":[],\"objType\":6424,\"objTypeName\":\"汽车蓝色号牌\",\"objValue\":\"渝AZN748\"},{\"children\":[],\"objType\":4394,\"objTypeName\":\"电话号码\",\"objValue\":\"02367625393\"},{\"children\":[{\"children\":[{\"children\":[],\"objType\":4315,\"objTypeName\":\"IMEI\",\"objValue\":\"866091038053692\"}],\"objType\":4314,\"objTypeName\":\"IMSI\",\"objValue\":\"460005331386186\"}],\"objType\":4394,\"objTypeName\":\"电话号码\",\"objValue\":\"13638201377\"}],\"objType\":1,\"objTypeName\":\"身份证号码\",\"objValue\":\"513523196904108017\"}";
-        String result = "{\"children\":[{\"children\":[{\"children\":[],\"objType\":4315,\"objTypeName\":\"IMEI\",\"objValue\":\"866091037961143\"},{\"children\":[],\"objType\":4315,\"objTypeName\":\"IMEI\",\"objValue\":\"861106038308428\"},{\"children\":[],\"objType\":4615,\"objTypeName\":\"微信ID\",\"objValue\":\"612087581\"}],\"objType\":4314,\"objTypeName\":\"IMSI\",\"objValue\":\"460110496721423\"}],\"objType\":3996,\"objTypeName\":\"手机号码\",\"objValue\":\"13308271988\"}";
+        String result = "{\"children\":[{\"children\":[],\"objType\":437,\"objTypeName\":\"号牌号码\",\"objValue\":\"渝AZN748\"},{\"children\":[],\"objType\":4394,\"objTypeName\":\"电话号码\",\"objValue\":\"02379226951\"},{\"children\":[{\"children\":[{\"children\":[],\"objType\":4315,\"objTypeName\":\"IMEI\",\"objValue\":\"866091037961143\"},{\"children\":[],\"objType\":4315,\"objTypeName\":\"IMEI\",\"objValue\":\"861106038308428\"},{\"children\":[],\"objType\":4615,\"objTypeName\":\"微信ID\",\"objValue\":\"612087581\"}],\"objType\":4314,\"objTypeName\":\"IMSI\",\"objValue\":\"460110496721423\"}],\"objType\":3996,\"objTypeName\":\"手机号码\",\"objValue\":\"13308271988\"},{\"children\":[],\"objType\":4394,\"objTypeName\":\"电话号码\",\"objValue\":\"18008365980\"},{\"children\":[{\"children\":[{\"children\":[],\"objType\":4315,\"objTypeName\":\"IMEI\",\"objValue\":\"866091037961143\"},{\"children\":[],\"objType\":4315,\"objTypeName\":\"IMEI\",\"objValue\":\"861106038308428\"},{\"children\":[],\"objType\":4615,\"objTypeName\":\"微信ID\",\"objValue\":\"612087581\"}],\"objType\":4314,\"objTypeName\":\"IMSI\",\"objValue\":\"460110496721423\"}],\"objType\":4394,\"objTypeName\":\"电话号码\",\"objValue\":\"13308271988\"},{\"children\":[{\"children\":[{\"children\":[],\"objType\":4315,\"objTypeName\":\"IMEI\",\"objValue\":\"866091037961143\"},{\"children\":[],\"objType\":4315,\"objTypeName\":\"IMEI\",\"objValue\":\"861106038308428\"},{\"children\":[],\"objType\":4615,\"objTypeName\":\"微信ID\",\"objValue\":\"612087581\"}],\"objType\":4314,\"objTypeName\":\"IMSI\",\"objValue\":\"460110496721423\"}],\"objType\":20,\"objTypeName\":\"联系方式\",\"objValue\":\"13308271988\"},{\"children\":[],\"objType\":6424,\"objTypeName\":\"汽车蓝色号牌\",\"objValue\":\"渝AZN748\"},{\"children\":[],\"objType\":4394,\"objTypeName\":\"电话号码\",\"objValue\":\"02367625393\"},{\"children\":[{\"children\":[{\"children\":[],\"objType\":4315,\"objTypeName\":\"IMEI\",\"objValue\":\"866091038053692\"}],\"objType\":4314,\"objTypeName\":\"IMSI\",\"objValue\":\"460005331386186\"}],\"objType\":4394,\"objTypeName\":\"电话号码\",\"objValue\":\"13638201377\"}],\"objType\":1,\"objTypeName\":\"身份证号码\",\"objValue\":\"513523196904108017\"}";
+        //String result = "{\"children\":[{\"children\":[{\"children\":[],\"objType\":4315,\"objTypeName\":\"IMEI\",\"objValue\":\"866091037961143\"},{\"children\":[],\"objType\":4315,\"objTypeName\":\"IMEI\",\"objValue\":\"861106038308428\"},{\"children\":[],\"objType\":4615,\"objTypeName\":\"微信ID\",\"objValue\":\"612087581\"}],\"objType\":4314,\"objTypeName\":\"IMSI\",\"objValue\":\"460110496721423\"}],\"objType\":3996,\"objTypeName\":\"手机号码\",\"objValue\":\"13308271988\"}";
         if(!StringUtil.ckeckEmpty(result)){
             if(result.startsWith("{") && result.endsWith("}")){
                 jsonObejct = JSONObject.parseObject(result);
@@ -424,7 +424,12 @@ public class IphoneTrackServiceImpl implements IphoneTrackService {
                     idRelation.setCar(car);
                     idRelation.setPhone("");
                     try {
-                        objectRelationMapper.saveIdRelation(idRelation);//--保存身份证号和车牌号--
+                        //根据查询人身份证号和警号，被查询人身份证号和车牌号查询是否已经入库
+                        List<IdcardPhoneCarRalation> idRelations = new ArrayList<IdcardPhoneCarRalation>();
+                        idRelations = objectRelationMapper.queryCardPhoneCarRelationLocal(idRelation);
+                        if(idRelations.size() < 1){
+                            objectRelationMapper.saveIdRelation(idRelation);//--保存身份证号和车牌号--
+                        }
                     }catch (Exception e){
                         e.printStackTrace();
                     }
@@ -445,7 +450,12 @@ public class IphoneTrackServiceImpl implements IphoneTrackService {
                     idRelation.setPhone(phone);
                     idRelation.setCar("");
                     try {
-                        objectRelationMapper.saveIdRelation(idRelation);//--保存身份证号和电话号码--
+                        //根据查询人身份证号和警号，被查询人身份证号和电话号码查询是否已经入库
+                        List<IdcardPhoneCarRalation> idRelations = new ArrayList<IdcardPhoneCarRalation>();
+                        idRelations = objectRelationMapper.queryCardPhoneCarRelationLocal(idRelation);
+                        if(idRelations.size() < 1) {
+                            objectRelationMapper.saveIdRelation(idRelation);//--保存身份证号和电话号码--
+                        }
                         this.savePhoneRelation(sjhm,asjbh,sfzh,jh);//--保存电话号码和QQ微信--
                     }catch (Exception e){
                         e.printStackTrace();
@@ -483,7 +493,12 @@ public class IphoneTrackServiceImpl implements IphoneTrackService {
                 phoneRelation.setQq(qq);
                 phoneRelation.setWechat("");
                 try {
-                    objectRelationMapper.savePhoenRelation(phoneRelation);//--保存手机号与QQ关系--
+                    //根据查询人身份证号和警号，被查询人手机号码/QQ查询是否已经入库
+                    List<PhoneQQWeChatRalation> phoneRelations = new ArrayList<PhoneQQWeChatRalation>();
+                    phoneRelations = objectRelationMapper.queryPhoneQqWechatRelationLocal(phoneRelation);
+                    if(phoneRelations.size() < 1) {
+                        objectRelationMapper.savePhoenRelation(phoneRelation);//--保存手机号与QQ关系--
+                    }
                 }catch (Exception e){
                     e.printStackTrace();
                 }
@@ -503,7 +518,13 @@ public class IphoneTrackServiceImpl implements IphoneTrackService {
                 phoneRelation.setWechat(wechat);
                 phoneRelation.setQq("");
                 try {
-                    objectRelationMapper.savePhoenRelation(phoneRelation);//--保存手机号与微信关系--
+                    //根据查询人身份证号和警号，被查询人手机号码/微信查询是否已经入库
+                    List<PhoneQQWeChatRalation> phoneRelations = new ArrayList<PhoneQQWeChatRalation>();
+                    phoneRelations = objectRelationMapper.queryPhoneQqWechatRelationLocal(phoneRelation);
+                    if(phoneRelations.size() < 1) {
+                        objectRelationMapper.savePhoenRelation(phoneRelation);//--保存手机号与微信关系--
+                    }
+
                 }catch (Exception e){
                     e.printStackTrace();
                 }

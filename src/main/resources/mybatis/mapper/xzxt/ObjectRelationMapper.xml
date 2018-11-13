@@ -53,6 +53,54 @@
         sysdate)
     </insert>
 
+    <select id="queryCardPhoneCarRelationLocal" parameterType="com.founder.interservice.model.IdcardPhoneCarRalation" resultType="com.founder.interservice.model.IdcardPhoneCarRalation">
+        select * from tb_st_idcardphonecar
+        <where>
+            <if test="asjbh != null and asjbh != ''">
+                and asjbh = #{asjbh}
+            </if>
+            <if test="sfzh != null and sfzh != ''">
+                and sfzh = #{sfzh}
+            </if>
+            <if test="jh != null and jh != ''">
+                and jh = #{jh}
+            </if>
+            <if test="idcard != null and idcard != ''">
+                and idcard = #{idcard}
+            </if>
+            <if test="phone != null and phone != ''">
+                and phone = #{phone}
+            </if>
+            <if test="car != null and car != ''">
+                and car = #{car}
+            </if>
+        </where>
+    </select>
+
+    <select id="queryPhoneQqWechatRelationLocal" parameterType="com.founder.interservice.model.PhoneQQWeChatRalation" resultType="com.founder.interservice.model.PhoneQQWeChatRalation">
+        select * from tb_st_phoneqqwechat
+        <where>
+            <if test="asjbh != null and asjbh != ''">
+                and asjbh = #{asjbh}
+            </if>
+            <if test="sfzh != null and sfzh != ''">
+                and sfzh = #{sfzh}
+            </if>
+            <if test="jh != null and jh != ''">
+                and jh = #{jh}
+            </if>
+            <if test="phone != null and phone != ''">
+                and phone = #{phone}
+            </if>
+            <if test="qq != null and qq != ''">
+                and qq = #{qq}
+            </if>
+            <if test="wechat != null and wechat != ''">
+                and wechat = #{wechat}
+            </if>
+        </where>
+    </select>
+
     <insert id="savePhoenRelation" parameterType="com.founder.interservice.model.PhoneQQWeChatRalation">
         insert into xzxt.tb_st_phoneqqwechat
         (   xxzjbh,
