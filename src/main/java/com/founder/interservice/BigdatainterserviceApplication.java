@@ -13,7 +13,6 @@ import org.springframework.transaction.annotation.EnableTransactionManagement;
 @EnableScheduling //开启定时任务
 @MapperScan({"com.founder.interservice.mapper","com.founder.interservice.*.mapper"})
 public class BigdatainterserviceApplication{
-
     public static void main(String[] args) {
         SpringApplication.run(BigdatainterserviceApplication.class, args);
     }
