@@ -90,4 +90,20 @@ public class LoginLogController {
     public String getSelectLoginLogPage(){
         return "LoginLog/loginlog";
     }
+    @RequestMapping(value = "/toTjlog",method = {RequestMethod.GET,RequestMethod.POST})
+    public String getToTjlog(){
+        return "logTj/logtj";
+    }
+    @RequestMapping(value = "/toLoginLog",method = {RequestMethod.GET,RequestMethod.POST})
+    public String getToLoginLog(){
+        return "LoginLog/loginlog";
+    }
+    @RequestMapping(value = "/toRecordLog",method = {RequestMethod.GET,RequestMethod.POST})
+    public String getToRecordLog(){
+        return "RecordLog/RecordLog";
+    }
+    @RequestMapping(value = "/toSplog",method = {RequestMethod.GET,RequestMethod.POST})
+    public String getToSplog(){
+        return "splog/spLog";
+    }
 }

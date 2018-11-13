@@ -1,0 +1,4 @@
+.Wdate{border:#ddd 1px solid;padding:4px 0 4px 5px;line-height:17px;_height: 26px;width:90%;background:url(datePicker.gif) no-repeat right !important;}
+.WdateTS{border:#ddd 1px solid;padding:4px 0 4px 5px;line-height:17px;_height: 26px;width:90%;background:url(datePicker.gif) no-repeat right;}
+.WdateTS2{border:#ddd 1px solid;padding:4px 0 4px 5px;line-height:17px;_height: 26px;background:url(datePicker.gif) no-repeat right;}
+.WdateFmtErr{font-weight:bold;color:red;}

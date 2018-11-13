@@ -5,7 +5,7 @@
 <html>
 <head>
 	<meta charset="UTF-8">
-	<title>查询记录展示</title>
+	<title>登录日志展示</title>
 	<link rel="stylesheet" type="text/css" href="/css/easyui-new.css">
 	<link rel="stylesheet" type="text/css" href="/css/font-awesome.min.css">
 	<link rel="stylesheet" type="text/css" href="/css/bjzycx.css">
@@ -13,7 +13,7 @@
 <body>
 <div id="nipic_search">
 	<div id="header">
-		<h5 class="h_title3"></h5>
+		<h5 class="h_title6"></h5>
 	</div>
 	<!--内容-->
 	<div id="content_box0" class="content_box">
@@ -22,21 +22,21 @@
 			<h6 class="cx_t">查询条件</h6>
 			<table style="width:100%;border-collapse: collapse;background-color: rgba(255,255,255,0.75);text-align:left;" class="cx_table_tj">
 				<tr>
-					<td class="td_r" style="width:10%;">案事件编号：</td>
+					<td class="td_r" style="width:10%;"> 案事件编号：</td>
 					<td style="width:20%;"><input name="asjbh" id="asjbh"/></td>
-					<td class="td_r" style="width:10%;"> 登陆人姓名：</td>
+					<td class="td_r" style="width:10%;"> 登录人姓名：</td>
 					<td style="width:20%;"><input name="cxrXm" id="cxrXm"/></td>
-					<td class="td_r" style="width:15%;"> 登陆人身份证号：</td>
+					<td class="td_r" style="width:15%;"> 登录人身份证号：</td>
 					<td style="width:20%;"><input name="cxrSfzh" id="cxrSfzh"/></td>
 
 				</tr>
 				<tr>
-					<td class="td_r" style="width:10%;"> 登陆人警号：</td>
+					<td class="td_r" style="width:10%;"> 登录人警号：</td>
 					<td style="width:20%;"><input name="cxrJh" id="cxrJh"/></td>
-					<td class="td_r" style="width:14%;"> 登陆人联系电话：</td>
+					<td class="td_r" style="width:14%;"> 登录人联系电话：</td>
 					<td style="width:20%;"><input name="cxrLxdh" id="cxrLxdh"/></td>
 
-					<td class="td_r" style="width:14%;"> 登陆人单位：</td>
+					<td class="td_r" style="width:14%;"> 登录人单位：</td>
 					<td style="width:20%;"><input name="dldwmc" id="dldwmc"/></td>
 				</tr>
 
@@ -61,7 +61,7 @@
 			</table>
 		</div>
 		<!--结果 table-->
-		<div class="result" style="padding-bottom:30px;">
+		<div class="result" style="padding-bottom:30px;width:100%;overflow:hidden;">
 			<table class="easyui-datagrid" id="recordLogTable" style="border-top:1px dashed #ccc;" width="100%">
 				<tbody>
 				<pre id = "resultView" style = "width:100%;border-collapse: collapse;background-color: rgba(255,255,255,0.75);text-align:left;">
@@ -78,6 +78,7 @@
 <script>
     $(function(){
         queryQueryLog();
+
     });
 
     function clear(){
@@ -104,12 +105,12 @@
         };
         var table_title = [
             {title:"案事件编号",field:"asjbh",align:'center',width:'15%'},
-            {title:"登陆人姓名",field:"cxrXm",align:'center',width:'15%'},
-            {title:"登陆人身份证号",field:"cxrSfzh",align:'center',width:'15%'},
-            {title:"登陆人警号",field:"cxrJh",align:'center',width:'10%'},
-            {title:"登陆人联系电话",field:"cxrLxdh",align:'center',width:'15%'},
-            {title:"登陆人单位",field:"dldwmc",align:'center',width:'15%'},
-            {title:"登陆时间",field:"cxrDlsj",align:'center',width:'15%'},
+            {title:"登录人姓名",field:"cxrXm",align:'center',width:'15%'},
+            {title:"登录人身份证号",field:"cxrSfzh",align:'center',width:'15%'},
+            {title:"登录人警号",field:"cxrJh",align:'center',width:'10%'},
+            {title:"登录人联系电话",field:"cxrLxdh",align:'center',width:'15%'},
+            {title:"登录人单位",field:"dldwmc",align:'center',width:'15%'},
+            {title:"登录时间",field:"cxrDlsj",align:'center',width:'15%'},
         ];
         $("#recordLogTable").datagrid({
             url: "/selectLoginLog",

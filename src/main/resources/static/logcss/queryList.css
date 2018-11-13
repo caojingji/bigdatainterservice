@@ -1,0 +1,264 @@
+@charset "UTF-8";
+/*************************/
+/**
+ * 获取颜色map方法
+ * @param $key 颜色的key值
+ */
+/**
+ * 获取字体map方法
+ * @param $key 颜色的key值
+ */
+/**
+ * 获取字体大小map方法
+ * @param $key 颜色的key值
+ */
+/**
+ * 获取行高map方法
+ * @param $key 颜色的key值
+ */
+/**
+ * 获取圆角map方法
+ * @param $key 颜色的key值
+ */
+/**
+ * 获取z-index map方法
+ * @param $key 颜色的key值
+ */
+/**!
+ * @author christ
+ * 本配置基于sass框架compass,在运用时请注意是否安装sass,compass
+ */
+/*按钮移入渐变*/
+/*disabled btn*/
+/*selected button*/
+/* line 5, ../sass/sass/mixins/_scroll.scss */
+::-webkit-scrollbar {
+    background-color: #fff;
+    width: 5px;
+    height: 10px;
+}
+
+/* line 11, ../sass/sass/mixins/_scroll.scss */
+::-webkit-scrollbar-track {
+    background-color: #fff;
+}
+
+/* line 15, ../sass/sass/mixins/_scroll.scss */
+::-webkit-scrollbar-thumb {
+    background-color: rgba(128, 128, 128, 0.65);
+}
+
+/* line 3, ../sass/sass/_queryList.scss */
+.main .query {
+    margin: 0 15px;
+}
+/* line 6, ../sass/sass/_queryList.scss */
+.main .query-top-btn {
+    margin-top: 15px;
+}
+/* line 8, ../sass/sass/_queryList.scss */
+.main .query-top-btn .help {
+    float: right;
+    line-height: 30px;
+    cursor: pointer;
+    color: #0e6595;
+}
+/* line 15, ../sass/sass/_queryList.scss */
+.main .query-panel {
+    margin-bottom: 5px;
+}
+/* line 16, ../sass/sass/_queryList.scss */
+.main .query-panel .panel-title {
+    height: 25px;
+    line-height: 25px;
+}
+/* line 19, ../sass/sass/_queryList.scss */
+.main .query-panel .panel-title .add-btn {
+    padding-left: 10px;
+    font-family: "Microsoft Yahei", "微软雅黑";
+    color: #5a5a5a;
+    font-weight: bold;
+}
+/* line 24, ../sass/sass/_queryList.scss */
+.main .query-panel .panel-title .add-btn input {
+    margin-right: 5px;
+    border: none;
+    border-radius: 3px;
+    -webkit-border-radius: 3px;
+    -moz-border-radius: 3px;
+    -o-border-radius: 3px;
+    -ms-border-radius: 3px;
+    font-weight: bold;
+    color: #5a5a5a;
+    padding: 5px 10px;
+    outline: none;
+}
+/* line 37, ../sass/sass/_queryList.scss */
+.main .query-panel .panel-title .add-btn .add-other {
+    background-color: #0e6595;
+    color: #fff;
+    cursor: pointer;
+}
+/* line 44, ../sass/sass/_queryList.scss */
+.main .query-panel .query-item {
+    *zoom: 1;
+    margin-bottom: 10px;
+}
+/* line 18, ../sass/sass/mixins/_clearfix.scss */
+.main .query-panel .query-item:before, .main .query-panel .query-item:after {
+    content: " ";
+    display: table;
+}
+/* line 23, ../sass/sass/mixins/_clearfix.scss */
+.main .query-panel .query-item:after {
+    clear: both;
+    overflow: hidden;
+}
+/* line 47, ../sass/sass/_queryList.scss */
+.main .query-panel .query-item .item {
+    *zoom: 1;
+    display: none;
+    float: left;
+    width: 33.333%;
+    margin-top: 10px;
+    font-size: 12px;
+}
+/* line 18, ../sass/sass/mixins/_clearfix.scss */
+.main .query-panel .query-item .item:before, .main .query-panel .query-item .item:after {
+    content: " ";
+    display: table;
+}
+/* line 23, ../sass/sass/mixins/_clearfix.scss */
+.main .query-panel .query-item .item:after {
+    clear: both;
+    overflow: hidden;
+}
+/* line 54, ../sass/sass/_queryList.scss */
+.main .query-panel .query-item .item .pro {
+    min-width: 80px;
+    text-align: right;
+    display: inline-block;
+    margin-right: 5px;
+}
+/* line 60, ../sass/sass/_queryList.scss */
+.main .query-panel .query-item .item .val {
+    width: 240px;
+    height: 20px;
+    line-height: 20px;
+}
+/* line 67, ../sass/sass/_queryList.scss */
+.main .query-panel .query-btn {
+    text-align: center;
+    margin-bottom: 10px;
+}
+/* line 70, ../sass/sass/_queryList.scss */
+.main .query-panel .query-btn a {
+    margin: 0 10px;
+}
+/* line 77, ../sass/sass/_queryList.scss */
+.main .query-result .table-setting {
+    text-align: right;
+    margin-bottom: 5px;
+}
+
+/*更多条件查询面板样式*/
+/* line 86, ../sass/sass/_queryList.scss */
+#other_condition_panel .query-condition {
+    *zoom: 1;
+    margin: 10px 0 0 15px;
+}
+/* line 18, ../sass/sass/mixins/_clearfix.scss */
+#other_condition_panel .query-condition:before, #other_condition_panel .query-condition:after {
+    content: " ";
+    display: table;
+}
+/* line 23, ../sass/sass/mixins/_clearfix.scss */
+#other_condition_panel .query-condition:after {
+    clear: both;
+    overflow: hidden;
+}
+/* line 89, ../sass/sass/_queryList.scss */
+#other_condition_panel .query-condition .item {
+    font-size: 12px;
+    float: left;
+    min-width: 140px;
+    margin-bottom: 5px;
+}
+
+/*表头配置面板样式*/
+/* line 99, ../sass/sass/_queryList.scss */
+#set_table_panel .table-header-drag {
+    width: 100%;
+    height: auto;
+    margin-bottom: 20px;
+}
+/* line 103, ../sass/sass/_queryList.scss */
+#set_table_panel .table-header-drag .selected-header {
+    padding: 10px;
+}
+/* line 105, ../sass/sass/_queryList.scss */
+#set_table_panel .table-header-drag .selected-header > div {
+    padding-bottom: 5px;
+    border-bottom: 1px dashed #ccc;
+}
+/* line 110, ../sass/sass/_queryList.scss */
+#set_table_panel .table-header-drag .selected-header ul div {
+    background-color: #ed4848;
+}
+/* line 115, ../sass/sass/_queryList.scss */
+#set_table_panel .table-header-drag .waiting-header {
+    padding: 10px;
+}
+/* line 117, ../sass/sass/_queryList.scss */
+#set_table_panel .table-header-drag .waiting-header > div {
+    padding-bottom: 5px;
+    border-bottom: 1px dashed #ccc;
+}
+/* line 122, ../sass/sass/_queryList.scss */
+#set_table_panel .table-header-drag ul {
+    *zoom: 1;
+    width: 100%;
+    list-style-type: none;
+    margin: 5px 0;
+    padding: 0;
+}
+/* line 18, ../sass/sass/mixins/_clearfix.scss */
+#set_table_panel .table-header-drag ul:before, #set_table_panel .table-header-drag ul:after {
+    content: " ";
+    display: table;
+}
+/* line 23, ../sass/sass/mixins/_clearfix.scss */
+#set_table_panel .table-header-drag ul:after {
+    clear: both;
+    overflow: hidden;
+}
+/* line 128, ../sass/sass/_queryList.scss */
+#set_table_panel .table-header-drag ul li {
+    float: left;
+    margin: 2px;
+    cursor: pointer;
+}
+/* line 132, ../sass/sass/_queryList.scss */
+#set_table_panel .table-header-drag ul li div {
+    text-align: center;
+    padding: 0 20px;
+    background-color: #39980f;
+    color: #fff;
+    height: 30px;
+    line-height: 30px;
+    border-radius: 3px;
+    -webkit-border-radius: 3px;
+    -moz-border-radius: 3px;
+    -o-border-radius: 3px;
+    -ms-border-radius: 3px;
+}
+/* line 147, ../sass/sass/_queryList.scss */
+#set_table_panel .table-header-drag .tips {
+    width: auto;
+    margin: 10px auto;
+    padding: 0 10px;
+    color: #999;
+    font-size: 12px;
+    height: 30px;
+    line-height: 30px;
+}
