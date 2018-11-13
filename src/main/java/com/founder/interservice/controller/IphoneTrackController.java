@@ -24,7 +24,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import java.util.*;
 
 /**
- * 手机轨迹controller
+ * 手机 轨迹controller
  */
 @Controller
 @CrossOrigin
