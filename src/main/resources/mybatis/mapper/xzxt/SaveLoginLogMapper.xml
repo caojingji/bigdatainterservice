@@ -2,6 +2,36 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
     <mapper namespace="com.founder.interservice.mapper.xzxt.LoginLogMapper">
 
+    <sql id = "loginLog_where_sql">
+        <if test="cxrSfzh != null and cxrSfzh != ''">
+            and t.CXR_SFZH like CONCAT(CONCAT('%',#{cxrSfzh}),'%')
+        </if>
+        <if test="cxrXm != null and cxrXm != '' ">
+            and t.CXR_XM like CONCAT(CONCAT('%',#{cxrXm}),'%')
+        </if>
+        <if test="cxrJh != null and cxrJh != ''">
+            and t.CXR_JH like CONCAT(CONCAT('%',#{cxrJh}),'%')
+        </if>
+        <if test="cxrLxdh != null and cxrLxdh != ''">
+            and t.CXR_LXDH like CONCAT(CONCAT('%',#{cxrLxdh}),'%')
+        </if>
+        <if test="dldwdm != null and dldwdm != ''">
+            and t.DLDWDM like CONCAT(CONCAT('%',#{dldwdm}),'%')
+        </if>
+        <if test="dldwmc != null and dldwmc != ''">
+            and t.DLDWMC like CONCAT(CONCAT('%',#{dldwmc}),'%')
+        </if>
+        <if test="asjbh != null and asjbh != ''">
+            and t.ASJBH like CONCAT(CONCAT('%',#{asjbh}),'%')
+        </if>
+        <if test="cxrKssj != null and cxrKssj != ''">
+            and t.CXR_DLSJ <![CDATA[>=]]> to_date(#{cxrKssj},'yyyy-MM-dd')
+        </if>
+        <if test="cxrJssj != null and cxrJssj != ''">
+            and t.CXR_DLSJ <![CDATA[<=]]> to_date(#{cxrJssj},'yyyy-MM-dd')
+        </if>
+    </sql>
+
     <insert id="saveLoginLog" parameterType="com.founder.interservice.loginlog.model.LoginLog">
         INSERT INTO TB_ST_LOGINLOG
           (
@@ -52,33 +82,7 @@
                     t.CXR_DLSJ as cxrDlsj
                     FROM TB_ST_LOGINLOG t
                     <where>
-                        <if test="cxrSfzh != null and cxrSfzh != ''">
-                            and t.CXR_SFZH like CONCAT(CONCAT('%',#{cxrSfzh}),'%')
-                        </if>
-                        <if test="cxrXm != null and cxrXm != '' ">
-                            and t.CXR_XM like CONCAT(CONCAT('%',#{cxrXm}),'%')
-                        </if>
-                        <if test="cxrJh != null and cxrJh != ''">
-                            and t.CXR_JH like CONCAT(CONCAT('%',#{cxrJh}),'%')
-                        </if>
-                        <if test="cxrLxdh != null and cxrLxdh != ''">
-                            and t.CXR_LXDH like CONCAT(CONCAT('%',#{cxrLxdh}),'%')
-                        </if>
-                        <if test="dldwdm != null and dldwdm != ''">
-                            and t.DLDWDM like CONCAT(CONCAT('%',#{dldwdm}),'%')
-                        </if>
-                        <if test="dldwmc != null and dldwmc != ''">
-                            and t.DLDWMC like CONCAT(CONCAT('%',#{dldwmc}),'%')
-                        </if>
-                        <if test="asjbh != null and asjbh != ''">
-                            and t.ASJBH like CONCAT(CONCAT('%',#{asjbh}),'%')
-                        </if>
-                        <if test="cxrKssj != null and cxrKssj != ''">
-                            and t.CXR_DLSJ <![CDATA[>=]]> to_date(#{cxrKssj},'yyyy-MM-dd')
-                        </if>
-                        <if test="cxrJssj != null and cxrJssj != ''">
-                            and t.CXR_DLSJ <![CDATA[<]]> to_date(#{cxrJssj},'yyyy-MM-dd')
-                        </if>
+                      <include refid="loginLog_where_sql" />
                     </where>
                     order by CXR_DLSJ desc
             )t1
@@ -87,40 +91,14 @@
             </where>
             ) t2
             <where>
-                rn <![CDATA[ > ]]> #{begin }
+                rn <![CDATA[ >= ]]> #{begin }
             </where>
     </select>
 
     <select id="getLoginLogCount" parameterType="com.founder.interservice.loginlog.model.LoginLog" resultType="java.lang.Integer">
         SELECT COUNT(*) FROM TB_ST_LOGINLOG t
         <where>
-        <if test="cxrSfzh != null and cxrSfzh != ''">
-            and t.CXR_SFZH like CONCAT(CONCAT('%',#{cxrSfzh}),'%')
-        </if>
-        <if test="cxrXm != null and cxrXm != '' ">
-            and t.CXR_XM like CONCAT(CONCAT('%',#{cxrXm}),'%')
-        </if>
-        <if test="cxrJh != null and cxrJh != ''">
-            and t.CXR_JH like CONCAT(CONCAT('%',#{cxrJh}),'%')
-        </if>
-        <if test="cxrLxdh != null and cxrLxdh != ''">
-            and t.CXR_LXDH like CONCAT(CONCAT('%',#{cxrLxdh}),'%')
-        </if>
-        <if test="dldwdm != null and dldwdm != ''">
-            and t.DLDWDM like CONCAT(CONCAT('%',#{dldwdm}),'%')
-        </if>
-        <if test="dldwmc != null and dldwmc != ''">
-            and t.DLDWMC like CONCAT(CONCAT('%',#{dldwmc}),'%')
-        </if>
-        <if test="asjbh != null and asjbh != ''">
-            and t.ASJBH like CONCAT(CONCAT('%',#{asjbh}),'%')
-        </if>
-        <if test="cxrKssj != null and cxrKssj != ''">
-            and t.CXR_DLSJ <![CDATA[>=]]> to_date(#{cxrKssj},'yyyy-MM-dd')
-        </if>
-        <if test="cxrJssj != null and cxrJssj != ''">
-            and t.CXR_DLSJ <![CDATA[<]]> to_date(#{cxrJssj},'yyyy-MM-dd')
-        </if>
+            <include refid="loginLog_where_sql" />
         </where>
     </select>
 </mapper>

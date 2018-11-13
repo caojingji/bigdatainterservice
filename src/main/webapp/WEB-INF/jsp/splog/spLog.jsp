@@ -5,7 +5,7 @@
 <html>
 <head>
 	<meta charset="UTF-8">
-	<title>查询记录展示</title>
+	<title>呈请审批日志展示</title>
 	<link rel="stylesheet" type="text/css" href="/css/easyui-new.css">
 	<link rel="stylesheet" type="text/css" href="/css/font-awesome.min.css">
     <link rel="stylesheet" type="text/css" href="/css/bjzycx.css">
@@ -13,7 +13,7 @@
 <body>
 <div id="nipic_search">
 	<div id="header">		
-		<h5 class="h_title3"></h5>
+		<h5 class="h_title5"></h5>
 	</div>	
 	<!--内容-->
 	<div id="content_box0" class="content_box">
@@ -22,11 +22,11 @@
 			<h6 class="cx_t">查询条件</h6>
 			<table style="width:100%;border-collapse: collapse;background-color: rgba(255,255,255,0.75);text-align:left;" class="cx_table_tj">
 				<tr>
-					<td class="td_r" style="width:10%;">案事件编号：</td>
+					<td class="td_r" style="width:10%;"> 案事件编号：</td>
 					<td style="width:20%;"><input name="asjbh" id="asjbh"/></td>
 
 					<td class="td_r" style="width:10%;"> 标识号：</td>
-					<td style="width:15%;"><input name="cxbsh" id="cxbsh"/></td>
+					<td style="width:15%;"><input name="spbsh" id="spbsh"/></td>
 
 					<td class="td_r" style="width:10%;"> 标识号类别：</td>
 					<td style="width:15%;">
@@ -40,30 +40,31 @@
 					</td>
 				</tr>
 				<tr>
-					<td class="td_r" style="width:10%;"> 查询人姓名：</td>
+					<td class="td_r" style="width:10%;"> 姓名：</td>
 					<td style="width:15%;"><input name="cxrXm" id="cxrXm"/></td>
 
-					<td class="td_r" style="width:10%;"> 查询人身份证号：</td>
+					<td class="td_r" style="width:10%;"> 身份证号：</td>
 					<td style="width:15%;"><input name="cxrSfzh" id="cxrSfzh"/></td>
-					<td class="td_r" style="width:10%;"> 查询警号：</td>
+
+					<td class="td_r" style="width:10%;"> 警号：</td>
 					<td style="width:15%;"><input name="cxrJh" id="cxrJh"/></td>
 				</tr>
 				<tr>
-					<td class="td_r" style="width:10%;"> 查询人联系电话：</td>
+					<td class="td_r" style="width:10%;"> 联系电话：</td>
 					<td style="width:20%;"><input name="cxrLxdh" id="cxrLxdh"/></td>
 
 					<td class="td_r" style="width:10%;"> 单位名称：</td>
-					<td style="width:20%;"><input name="dldwmc" id="dldwmc"/></td>
+					<td style="width:15%;"><input name="dldwmc" id="dldwmc"/></td>
 				</tr>
-
+				
 				<tr>
 					<td class="td_r">开始时间：</td>
 					<td>
-						<p class="datebox-h"><input id = "kssj" type="text" class="easyui-datebox" style="height:24px;"></p>
+						<p class="datebox-h"><input id = "startTime" type="text" class="easyui-datebox" style="height:24px;"></p>
 					</td>
 					<td class="td_r">结束时间：</td>
 					<td>
-						<p class="datebox-h"><input id = "jssj" type="text" class="easyui-datebox" style="height:24px;"></p>
+						<p class="datebox-h"><input id = "endTime" type="text" class="easyui-datebox" style="height:24px;"></p>
 					</td>
 				</tr>
 				<tr>
@@ -96,43 +97,44 @@ $(function(){
 
 function clear(){
     $("#asjbh").val('');
-    $("#cxbsh").val('');
-    $("#bshlxdm option:first").prop("selected","selected");
+    $("#spbsh").val('');
+    $("#bshlxdm").select(0);
     $("#cxrXm").val('');
     $("#cxrSfzh").val('');
     $("#cxrJh").val('');
     $("#cxrLxdh").val('');
     $("#dldwmc").val('');
-    $("#kssj").datebox("setValue","");
-    $("#jssj").combo("setText","");
+    $("#startTime").datebox("setValue","");
+    $("#endTime").combo("setText","");
 }
 
 function queryQueryLog(){
     var  param= {
         "asjbh":$("#asjbh").val().trim(),
-		"cxbsh":$("#cxbsh").val().trim(),
-		"bshlxdm":$("#bshlxdm").val(),
-        "cxrXm":$("#cxrXm").val().trim(),
-        "cxrSfzh":$("#cxrSfzh").val().trim(),
-        "cxrJh":$("#cxrJh").val().trim(),
-        "cxrLxdh":$("#cxrLxdh").val().trim(),
+		"spbsh":$("#spbsh").val().trim(),
+		"bshlxdm":$("#bshlxdm").val().trim(),
+        "cqrXm":$("#cxrXm").val().trim(),
+        "cqrSfzh":$("#cxrSfzh").val().trim(),
+        "cqrJh":$("#cxrJh").val().trim(),
+        "cqrLxdh":$("#cxrLxdh").val().trim(),
 		"dldwmc":$("#dldwmc").val().trim(),
-        "kssj":$("#kssj").datebox("getValue"),
-        "jssj":$("#jssj").datebox("getValue")
+        "startTime":$("#startTime").datebox("getValue")==""?null:$("#startTime").datebox("getValue"),
+        "endTime":$("#endTime").datebox("getValue")==""?null:$("#endTime").datebox("getValue")
     };
     var table_title = [
-        {title:"案事件编号",field:"asjbh",align:'center',width:'15%'},
-        {title:"查询标识号",field:"cxbsh",align:'center',width:'8%'},
+        {title:"申请标题",field:"spTitle",align:'center',width:'15%'},
+        {title:"案事件编号",field:"asjbh",align:'center',width:'12%'},
+        {title:"查询标识号",field:"spbsh",align:'center',width:'10%'},
         {title:"标识号类型名称",field:"bshlxmc",align:'center',width:'8%'},
-        {title:"查询人姓名",field:"cxrXm",align:'center',width:'8%'},
-        {title:"查询人身份证号",field:"cxrSfzh",align:'center',width:'15%'},
-        {title:"查询警号",field:"cxrJh",align:'center',width:'10%'},
-        {title:"查询人联系电话",field:"cxrLxdh",align:'center',width:'12%'},
-        {title:"查询人单位",field:"dldwmc",align:'center',width:'12%'},
-        {title:"登记时间",field:"djsj",align:'center',width:'12%'}
+        {title:"呈请人姓名",field:"cqrXm",align:'center',width:'8%'},
+        {title:"呈请人身份证号",field:"cqrSfzh",align:'center',width:'12%'},
+        {title:"呈请人警号",field:"cqrJh",align:'center',width:'8%'},
+        {title:"呈请人联系电话",field:"cqrLxdh",align:'center',width:'7%'},
+        {title:"呈请人单位",field:"dldwmc",align:'center',width:'12%'},
+        {title:"登记时间",field:"djsj",align:'center',width:'7%'}
     ];
     $("#recordLogTable").datagrid({
-        url: "/queryQueryLogList",
+        url: "/querySpLogsPage",
         columns : [table_title],
         queryParams:param,
         striped: true,
@@ -143,12 +145,11 @@ function queryQueryLog(){
         pageSize: 20,
         pageList: [10, 20, 50, 100, 150, 200],
         showFooter: true,
-        pageNumber:1,
+        pageNumber:0,
         loadFilter: function(data){
             return data;
         }
     });
-
 }
 
 </script>

@@ -23,7 +23,8 @@ public class QuerylogFilter {
     private String bshlxdm;//标识号类型代码
     private String bshlxmc;//标识号类型名称
     private String asjbh;//案事件编号
-
+    private String dldwdm;
+    private String dldwmc;
     private String kssj;
     private String jssj;
     private int begin;

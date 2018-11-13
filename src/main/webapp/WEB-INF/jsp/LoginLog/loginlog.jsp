@@ -35,12 +35,18 @@
 					<td style="width:20%;"><input name="cxrJh" id="cxrJh"/></td>
 					<td class="td_r" style="width:14%;"> 登陆人联系电话：</td>
 					<td style="width:20%;"><input name="cxrLxdh" id="cxrLxdh"/></td>
-					<td class="td_r">开始时间：</td>
-					<td>
-						<p class="datebox-h"><input id = "cxrKssj" type="text" class="easyui-datebox" style="height:24px;"></p>
-					</td>
-					</tr>
+
+					<td class="td_r" style="width:14%;"> 登陆人单位：</td>
+					<td style="width:20%;"><input name="dldwmc" id="dldwmc"/></td>
+				</tr>
+
 				<tr>
+
+					<td class="td_r">开始时间：</td>
+						<td>
+							<p class="datebox-h"><input id = "cxrKssj" type="text" class="easyui-datebox" style="height:24px;"></p>
+						</td>
+
 					<td class="td_r">结束时间：</td>
 					<td>
 						<p class="datebox-h"><input id = "cxrJssj" type="text" class="easyui-datebox" style="height:24px;"></p>
@@ -80,6 +86,7 @@
         $("#cxrSfzh").val('');
         $("#cxrJh").val('');
         $("#cxrLxdh").val('');
+        $("#dldwmc").val('');
         $("#cxrKssj").datebox("setValue","");
         $("#cxrJssj").combo("setText","");
     }
@@ -91,15 +98,17 @@
             "cxrSfzh":$("#cxrSfzh").val().trim(),
             "cxrJh":$("#cxrJh").val().trim(),
             "cxrLxdh":$("#cxrLxdh").val().trim(),
+			"dldwmc":$("#dldwmc").val().trim(),
             "cxrKssj":$("#cxrKssj").datebox("getValue"),
             "cxrJssj":$("#cxrJssj").datebox("getValue")
         };
         var table_title = [
             {title:"案事件编号",field:"asjbh",align:'center',width:'15%'},
             {title:"登陆人姓名",field:"cxrXm",align:'center',width:'15%'},
-            {title:"登陆人身份证号",field:"cxrSfzh",align:'center',width:'30%'},
+            {title:"登陆人身份证号",field:"cxrSfzh",align:'center',width:'15%'},
             {title:"登陆人警号",field:"cxrJh",align:'center',width:'10%'},
             {title:"登陆人联系电话",field:"cxrLxdh",align:'center',width:'15%'},
+            {title:"登陆人单位",field:"dldwmc",align:'center',width:'15%'},
             {title:"登陆时间",field:"cxrDlsj",align:'center',width:'15%'},
         ];
         $("#recordLogTable").datagrid({
@@ -116,7 +125,6 @@
             showFooter: true,
             pageNumber:1,
             loadFilter: function(data){
-                console.log(JSON.stringify(data));
                 return data;
             }
         });

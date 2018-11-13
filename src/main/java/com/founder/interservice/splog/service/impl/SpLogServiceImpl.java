@@ -58,7 +58,7 @@ public class SpLogServiceImpl implements SpLogService {
 
     private Predicate getPredicate(Predicate predicate,Root<SpLog> root,CriteriaBuilder cb,SpLog spLog){
         if (!StringUtil.ckeckEmpty(spLog.getAsjbh())) {
-            predicate.getExpressions().add(cb.like(root.get("asjbh"), "%%"));
+            predicate.getExpressions().add(cb.like(root.get("asjbh"), "%"+spLog.getAsjbh()+"%"));
         }
         if(!StringUtil.ckeckEmpty(spLog.getSpTitle())){
             predicate.getExpressions().add(cb.like(root.get("spTitle"), "%"+spLog.getSpTitle()+"%"));
@@ -85,13 +85,13 @@ public class SpLogServiceImpl implements SpLogService {
             predicate.getExpressions().add(cb.equal(root.get("spzt"), spLog.getSpzt()));
         }
         if(!StringUtil.ckeckEmpty(spLog.getBshlxmc())){
-            predicate.getExpressions().add(cb.equal(root.get("bshlxmc"), spLog.getBshlxmc()));
+            predicate.getExpressions().add(cb.equal(root.get("bshlxdm"), spLog.getBshlxmc()));
         }
         if(null != spLog.getStartTime()){
-            predicate.getExpressions().add(cb.greaterThanOrEqualTo(root.get("startTime").as(Date.class), spLog.getStartTime()));
+            predicate.getExpressions().add(cb.greaterThanOrEqualTo(root.get("djsj").as(Date.class), spLog.getStartTime()));
         }
         if(null != spLog.getEndTime()){
-            predicate.getExpressions().add(cb.greaterThanOrEqualTo(root.get("endTime").as(Date.class), spLog.getEndTime()));
+            predicate.getExpressions().add(cb.lessThanOrEqualTo(root.get("djsj").as(Date.class), spLog.getEndTime()));
         }
         return predicate;
     }

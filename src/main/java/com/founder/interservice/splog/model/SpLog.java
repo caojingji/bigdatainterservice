@@ -2,6 +2,7 @@ package com.founder.interservice.splog.model;
 
 import lombok.Data;
 import org.hibernate.annotations.DynamicUpdate;
+import org.springframework.format.annotation.DateTimeFormat;
 
 import javax.persistence.*;
 import java.util.Date;
@@ -34,6 +35,10 @@ public class SpLog {
     private int page;
     @Transient
     private int size;
+    @Transient
+    @DateTimeFormat(pattern = "yyyy-MM-dd")
     private Date startTime;
+    @Transient
+    @DateTimeFormat(pattern = "yyyy-MM-dd")
     private Date endTime;
 }

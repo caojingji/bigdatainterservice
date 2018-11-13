@@ -4,13 +4,34 @@
 
     <insert id="saveIdRelation" parameterType="com.founder.interservice.model.IdcardPhoneCarRalation">
         insert into xzxt.tb_st_idcardphonecar
-        (xxzjbh,
-        idcard,
-        phone,
-        car,
-        djsj)
+        (   xxzjbh,
+            asjbh,
+            sfzh,
+            jh,
+            idcard,
+            phone,
+            car,
+            djsj)
         values
         (#{xxzjbh},
+        <if test="asjbh != null and asjbh != ''">
+            #{asjbh},
+        </if>
+        <if test="asjbh == null or asjbh == ''">
+            '' ,
+        </if>
+        <if test="sfzh != null and sfzh != ''">
+            #{sfzh},
+        </if>
+        <if test="sfzh == null or sfzh == ''">
+            '' ,
+        </if>
+        <if test="jh != null and jh != ''">
+            #{jh},
+        </if>
+        <if test="jh == null or jh == ''">
+            '' ,
+        </if>
         <if test="idcard != null and idcard != ''">
             #{idcard},
         </if>
@@ -34,13 +55,34 @@
 
     <insert id="savePhoenRelation" parameterType="com.founder.interservice.model.PhoneQQWeChatRalation">
         insert into xzxt.tb_st_phoneqqwechat
-        (xxzjbh
-        ,phone
-        ,qq
-        ,wechat
-        ,djsj)
+        (   xxzjbh,
+            asjbh,
+            sfzh,
+            jh,
+            phone,
+            qq,
+            wechat,
+            djsj)
         values
         (#{xxzjbh},
+        <if test="asjbh != null and asjbh != ''">
+            #{asjbh},
+        </if>
+        <if test="asjbh == null or asjbh == ''">
+            '' ,
+        </if>
+        <if test="sfzh != null and sfzh != ''">
+            #{sfzh},
+        </if>
+        <if test="sfzh == null or sfzh == ''">
+            '' ,
+        </if>
+        <if test="jh != null and jh != ''">
+            #{jh},
+        </if>
+        <if test="jh == null or jh == ''">
+            '' ,
+        </if>
         <if test="phone != null and phone != ''">
             #{phone},
         </if>
@@ -69,6 +111,15 @@
             <if test="phone != null and phone != ''">
                 and t.phone = #{phone}
             </if>
+            <if test="asjbh != null and asjbh != ''">
+                and t.asjbh = #{asjbh}
+            </if>
+            <if test="sfzh != null and sfzh != ''">
+                and t.sfzh = #{sfzh}
+            </if>
+            <if test="jh != null and jh != ''">
+                and t.jh = #{jh}
+            </if>
             <if test="qq != null and qq != ''">
                 and t.qq = #{qq}
             </if>
@@ -82,6 +133,15 @@
         <where>
             <if test="idcard != null and idcard != ''">
                 and t.idcard = #{idcard}
+            </if>
+            <if test="asjbh != null and asjbh != ''">
+                and t.asjbh = #{asjbh}
+            </if>
+            <if test="sfzh != null and sfzh != ''">
+                and t.sfzh = #{sfzh}
+            </if>
+            <if test="jh != null and jh != ''">
+                and t.jh = #{jh}
             </if>
             <if test="phone != null and phone != ''">
                 and t.phone = #{phone}

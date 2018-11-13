@@ -88,6 +88,6 @@ public class LoginLogController {
 
     @RequestMapping(value = "/selectLoginLogPage",method = {RequestMethod.GET,RequestMethod.POST})
     public String getSelectLoginLogPage(){
-        return "LoginLog/selectloginlog";
+        return "LoginLog/loginlog";
     }
 }
