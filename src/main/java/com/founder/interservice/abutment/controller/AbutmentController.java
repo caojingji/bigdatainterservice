@@ -150,7 +150,7 @@ public class AbutmentController {
      * @param response
      */
     @RequestMapping(value = "/toSpJsp",method = {RequestMethod.GET,RequestMethod.POST})
-    public void toSpJsp(String asjbh, String sfzh,String bsh,String bshlxdm,String cxrXm,String cxrJh,String cxrLxdh,HttpServletResponse response){
+    public void toSpJsp(String asjbh, String sfzh,String bsh,String bshlxdm,String cxrXm,String cxrJh,String cxrLxdh,String dldwdm,String dldwmc,HttpServletResponse response){
         try{
             String bshlxmc = null;
             LinkedHashMap<String, Object> params = new LinkedHashMap<>();
@@ -203,6 +203,8 @@ public class AbutmentController {
                 spLog.setCqrXm(cxrXm);
                 spLog.setCqrJh(cxrJh);
                 spLog.setCqrLxdh(cxrLxdh);
+                spLog.setDldwdm(dldwdm);
+                spLog.setDldwmc(dldwmc);
                 spLog.setSpbsh(bsh);
                 spLog.setBshlxdm(bshlxdm);
                 spLog.setBshlxmc(bshlxmc);

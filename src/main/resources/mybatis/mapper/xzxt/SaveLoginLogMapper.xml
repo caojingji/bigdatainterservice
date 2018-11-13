@@ -11,6 +11,8 @@
           CXR_XM,
           CXR_JH,
           CXR_LXDH,
+          DLDWDM,
+          DLDWMC,
           CXR_DLSJ
           )
         VALUES
@@ -21,6 +23,8 @@
           #{cxrXm },
           #{cxrJh },
           #{cxrLxdh },
+          #{dldwdm},
+          #{dldwmc},
           SYSDATE)
     </insert>
 
@@ -43,6 +47,8 @@
                     t.CXR_XM as cxrXm,
                     t.CXR_JH as cxrJh,
                     t.CXR_LXDH as cxrLxdh,
+                    t.dldwdm,
+                    t.dldwmc,
                     t.CXR_DLSJ as cxrDlsj
                     FROM TB_ST_LOGINLOG t
                     <where>
@@ -58,6 +64,12 @@
                         <if test="cxrLxdh != null and cxrLxdh != ''">
                             and t.CXR_LXDH like CONCAT(CONCAT('%',#{cxrLxdh}),'%')
                         </if>
+                        <if test="dldwdm != null and dldwdm != ''">
+                            and t.DLDWDM like CONCAT(CONCAT('%',#{dldwdm}),'%')
+                        </if>
+                        <if test="dldwmc != null and dldwmc != ''">
+                            and t.DLDWMC like CONCAT(CONCAT('%',#{dldwmc}),'%')
+                        </if>
                         <if test="asjbh != null and asjbh != ''">
                             and t.ASJBH like CONCAT(CONCAT('%',#{asjbh}),'%')
                         </if>
@@ -68,6 +80,7 @@
                             and t.CXR_DLSJ <![CDATA[<]]> to_date(#{cxrJssj},'yyyy-MM-dd')
                         </if>
                     </where>
+                    order by CXR_DLSJ desc
             )t1
             <where>
                 and rownum <![CDATA[ <= ]]> #{end }
@@ -92,6 +105,12 @@
         </if>
         <if test="cxrLxdh != null and cxrLxdh != ''">
             and t.CXR_LXDH like CONCAT(CONCAT('%',#{cxrLxdh}),'%')
+        </if>
+        <if test="dldwdm != null and dldwdm != ''">
+            and t.DLDWDM like CONCAT(CONCAT('%',#{dldwdm}),'%')
+        </if>
+        <if test="dldwmc != null and dldwmc != ''">
+            and t.DLDWMC like CONCAT(CONCAT('%',#{dldwmc}),'%')
         </if>
         <if test="asjbh != null and asjbh != ''">
             and t.ASJBH like CONCAT(CONCAT('%',#{asjbh}),'%')

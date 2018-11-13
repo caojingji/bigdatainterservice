@@ -88,7 +88,7 @@ public class DataController {
      */
     @RequestMapping(value = "/getAndSaveTrack")
     @ResponseBody
-    public ResultVO getAndSaveTrack(String asjbh,String objValue, String kssj, String jssj,String cxrXm,String cxrSfzh,String cxrJh,String cxrLxdh,String objType){
+    public ResultVO getAndSaveTrack(String asjbh,String objValue, String kssj, String jssj,String cxrXm,String cxrSfzh,String cxrJh,String cxrLxdh,String dldwdm,String dldwmc,String objType){
         ResultVO resultVO = null;
         try{
             List<String> imsis = new ArrayList<>();
@@ -123,6 +123,8 @@ public class DataController {
             logParam.setCxrSfzh(cxrSfzh);
             logParam.setCxrJh(cxrJh);
             logParam.setCxrLxdh(cxrLxdh);
+            logParam.setDldwdm(dldwdm);
+            logParam.setDldwmc(dldwmc);
             logParam.setAsjbh(asjbh);
             logParam.setCxbsh(objValue);
             logParam.setBshlxdm(objType);

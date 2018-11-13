@@ -21,6 +21,8 @@ public class Querylog {
     private String cxrXm;//查询人姓名
     private String cxrJh;//查询警号
     private String cxrLxdh;//查询人联系电话
+    private String dldwdm;//登录单位代码
+    private String dldwmc;//登录单位名称
     private String cxbsh;//查询标识号
     private String bshlxdm;//标识号类型代码
     private String bshlxmc;//标识号类型名称

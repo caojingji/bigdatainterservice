@@ -2,10 +2,6 @@ package com.founder.interservice.tracktraveltogether.service.impl;
 
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
-import com.founder.interservice.regionalanalysis.model.RegionalTask;
-import com.founder.interservice.regionalanalysis.model.RegionalTaskResult;
-import com.founder.interservice.regionalanalysis.repository.RegionalTaskRepository;
-import com.founder.interservice.regionalanalysis.repository.RegionalTaskResultRepository;
 import com.founder.interservice.tracktraveltogether.model.TogetherTaskResult;
 import com.founder.interservice.tracktraveltogether.model.TrackTogetherTask;
 import com.founder.interservice.tracktraveltogether.repository.TogetherTaskResultRepository;

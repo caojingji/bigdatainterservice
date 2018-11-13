@@ -37,13 +37,6 @@ public class DataSourceXzxtConfig {
         bean.setMapperLocations(new PathMatchingResourcePatternResolver().getResources("classpath:mybatis/mapper/xzxt/*.xml"));
         return bean.getObject();
     }
-
-    @Bean(name = "xzxtTransactionManager")
-    @Primary
-    public DataSourceTransactionManager xzxtTransactionManager(@Qualifier("xzxtDataSource") DataSource dataSource) {
-        return new DataSourceTransactionManager(dataSource);
-    }
-
     @Bean(name = "xzxtSqlSessionTemplate")
     @Primary
     public SqlSessionTemplate xzxtSqlSessionTemplate(@Qualifier("xzxtSqlSessionFactory") SqlSessionFactory sqlSessionFactory) throws Exception {

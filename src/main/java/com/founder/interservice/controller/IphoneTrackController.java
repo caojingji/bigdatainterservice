@@ -38,21 +38,47 @@ public class IphoneTrackController {
 
     @RequestMapping("/getObjectAllRelation")
     @ResponseBody
-    public ResultVO getObjectRelationAll(String objValue,String objType){
+    public ResultVO getObjectAllRelation(String asjbh,String cxrXm,String cxrSfzh,String cxrJh,String cxrLxdh,String objValue,String type){
         ResultVO resultObj = null;
         try{
             JSONObject jsonObject = iphoneTrackService.getObjectRelationAll(objValue);
+            //添加查询日志
+            //添加查询日志记录功能
+            Querylog logParam = new Querylog();
+            logParam.setCxrXm(cxrXm);
+            logParam.setCxrSfzh(cxrSfzh);
+            logParam.setCxrJh(cxrJh);
+            logParam.setCxrLxdh(cxrLxdh);
+            logParam.setAsjbh(asjbh);
+            logParam.setCxbsh(objValue);
+            logParam.setBshlxdm(type);
+            if(!StringUtil.ckeckEmpty(type)){
+                switch (type){
+                    case "001":logParam.setBshlxmc("手机号码");break;
+                    case "002":logParam.setBshlxmc("QQ号码");break;
+                    case "003":logParam.setBshlxmc("微信ID");break;
+                    case "004":logParam.setBshlxmc("身份证号");break;
+                    case "005":logParam.setBshlxmc("车牌号码");break;
+                    default:logParam.setBshlxmc("");break;
+                }
+            }else{
+                logParam.setBshlxmc("");
+            }
+            recordLogService.saveQueryLog(logParam);
             resultObj = ResultVOUtil.success(jsonObject);
         }catch (InterServiceException e){
             e.printStackTrace();
             resultObj = ResultVOUtil.error(e.getCode(),e.getMessage());
+        } catch (Exception e) {
+            e.printStackTrace();
+            resultObj = ResultVOUtil.error(55,"发生了未知错误！");
         }
         return resultObj;
     }
 
     @RequestMapping("/getObjectRelationAll")
     @ResponseBody
-    public ResultObj getObjectRelationAll(String asjbh,String cxrXm,String cxrSfzh,String cxrJh,String cxrLxdh,String type,String objValue){
+    public ResultObj getObjectRelationAll(String asjbh,String cxrXm,String cxrSfzh,String cxrJh,String cxrLxdh,String dldwdm,String dldwmc,String type,String objValue){
         ResultObj resultObj = null;
         try{
             resultObj = iphoneTrackService.getObjectRelationAll(objValue,type);
@@ -67,6 +93,8 @@ public class IphoneTrackController {
             logParam.setCxrSfzh(cxrSfzh);
             logParam.setCxrJh(cxrJh);
             logParam.setCxrLxdh(cxrLxdh);
+            logParam.setDldwdm(dldwdm);
+            logParam.setDldwmc(dldwmc);
             logParam.setAsjbh(asjbh);
             logParam.setCxbsh(objValue);
             logParam.setBshlxdm(type);

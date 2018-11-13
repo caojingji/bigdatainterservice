@@ -21,7 +21,8 @@ public class LoginLog {
     private String cxrSfzh;//查询人身份证号
     private String cxrXm;//查询人姓名
     private String cxrLxdh;//查询人联系电话
-
+    private String dldwdm; //登录单位代码
+    private String dldwmc; //登录单位名称
     private int begin;
     private int end;
 

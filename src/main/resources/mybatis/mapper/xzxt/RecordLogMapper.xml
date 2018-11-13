@@ -15,6 +15,12 @@
       <if test="cxrLxdh != null and cxrLxdh != ''">
         and t.CXR_LXDH like CONCAT(CONCAT('%',#{cxrLxdh}),'%')
       </if>
+      <if test="dldwdm != null and dldwdm != ''">
+        and t.DLDWDM like CONCAT(CONCAT('%',#{dldwdm}),'%')
+      </if>
+      <if test="dldwmc != null and dldwmc != ''">
+        and t.DLDWMC like CONCAT(CONCAT('%',#{dldwmc}),'%')
+      </if>
       <if test="cxbsh != null and cxbsh != ''">
         and t.CXBSH like CONCAT(CONCAT('%',#{cxbsh}),'%')
       </if>
@@ -35,11 +41,6 @@
       </if>
     </sql>
 
-
-
-
-
-
     <insert id="saveQueryLog" parameterType="com.founder.interservice.recordLog.model.Querylog">
         INSERT INTO TB_ST_QUERYLOG
           (XXZJBH,
@@ -47,6 +48,8 @@
           CXR_XM,
           CXR_JH,
           CXR_LXDH,
+          DLDWDM,
+          DLDWMC,
           CXBSH,
           BSHLXDM,
           BSHLXMC,
@@ -76,6 +79,18 @@
             #{cxrLxdh},
         </if>
         <if test="cxrLxdh == null or cxrLxdh == ''">
+            '' ,
+        </if>
+        <if test="dldwdm != null and dldwdm != ''">
+            #{dldwdm},
+        </if>
+        <if test="dldwdm == null or dldwdm == ''">
+            '' ,
+        </if>
+        <if test="dldwmc != null and dldwmc != ''">
+            #{dldwmc},
+        </if>
+        <if test="dldwmc == null or dldwmc == ''">
             '' ,
         </if>
         <if test="cxbsh != null and cxbsh != ''">
@@ -125,6 +140,8 @@
                   t.CXR_XM as cxrXm,
                   t.CXR_JH as cxrJh,
                   t.CXR_LXDH as cxrLxdh,
+                  t.DLDWDM,
+                  t.DLDWMC,
                   t.CXBSH,
                   t.BSHLXDM,
                   t.BSHLXMC,
