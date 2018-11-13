@@ -1,0 +1,262 @@
+html,body{
+    height: 100%;
+    margin: 0;
+    padding: 0;
+}
+body{
+    background: url(../img/body_bg.jpg) center fixed;
+}
+a{
+    color: #fff;
+    text-decoration: none;
+}
+.w{
+    background-color: #fff;
+}
+.head{
+    height: 50px;
+    background-color: #264574;
+}
+.aj_message{
+    float: left;
+    color: #7cceff;
+    margin: 26px 20px 5px;
+    font-size: 14px;
+    font-weight: bold;
+}
+.aj_code{
+    margin-right: 20px;
+}
+a:hover{    
+    color: #fff;
+    text-decoration: none;
+    cursor: pointer;
+}
+a:visited {    
+    color: #fff;   
+    text-decoration: none;   
+} 
+.btn_a{
+    padding: 5px 12px;
+    color: #fff;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    margin-right: 10px;
+}
+.btn_a:hover{
+    color: #fff;
+}
+.btn_zd{
+    float: right;
+    margin: 15px 20px 0 0;
+    background-color: #3692C6;
+    border-color: #217cb1;
+}
+.btn_zd:hover{
+    background-color: #217cb1;
+} 
+.xzzxyw_bg legend{
+    height: 36px;
+    line-height: 36px;
+    padding-left: 10px;
+    font-size: 14px;
+    background-color: #f1f1f1;
+    border: 1px solid #ccc;
+    border-bottom: 1px dashed #ccc;
+    color: #f60;
+    font-weight: bold;
+}
+.xzzxyw_bg .detail_table{
+    border: 1px solid #ccc;
+    border-top: none;
+    border-bottom: none;
+    width: 100%;
+    font-size: 14px;
+}
+.detail_table tr.empty_tr{
+    border: none;
+}
+.detail_table td.empty{
+    height: 20px;
+}
+.detail_table td{
+    color: #666;
+    margin-top: -1px;
+    height: 34px;
+    line-height: 34px;
+}
+.detail_table td.ar{
+    color: #0066CC;
+}
+.stat_table tr{
+    border-bottom: 1px dashed #e8e8e8;
+}
+.xzzxyw_bg .stat_table .textbox{
+    display: inline-block;
+    height: 28px;
+    line-height: 28px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    width: 80%;
+}
+.tag{
+    padding: 3px 8px;
+    margin-left:10px; 
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    background-color: #ec971f;
+    color: #fff;
+    cursor: pointer;  
+}
+.selected{
+    border-color: #217cb1;
+    background: url(../img/selected.png) right bottom no-repeat;
+}
+
+.tab{
+    width: 1190px;
+    margin: 10px auto;
+}
+.tab_t ol li{
+    float: left;
+    padding: 5px 12px;
+    background-color: #eee;
+    border: 1px solid #ccc;
+    cursor: pointer;
+    margin-left: -1px;
+}
+.tab_t ol li:hover{
+    background-color: #d9d9d9;
+}
+.tab_t ol li.current{
+    background-color: #3692C6;
+    color: #fff;
+}
+.tab_t ol li:first-child{
+    border-radius: 8px 0 0 8px;
+}
+.tab_t ol li:last-child{
+    border-radius: 0 8px 8px 0;
+}
+.st-span{
+    border-radius: 10px;
+    padding: 3px 5px;
+    background-color: #f60;
+    color: #fff;
+}
+.st-a{
+    border-radius: 10px;
+    padding: 3px 7px;
+    background-color: #56AADC;
+    color: #fff;
+    border:1px solid #ccc;
+}
+.tab_b{
+    margin: 5px 0 5px 2px;
+}
+.tab_b li{
+    display: none;
+}
+.arrow_span{
+    float: right;
+    margin:10px 35px;
+    width: 15px;
+    height: 15px;
+    background:url(../img/accordion_arrows.png) no-repeat;
+}
+.arrow_span_show{
+    background:url(../img/accordion_arrows.png) -16px 0 no-repeat;
+}
+.flws:first-child{
+    margin-left: 50px;
+}
+.flws{
+    float: left;
+    width: 100px;
+    margin: 10px 15px;
+    text-align: center;
+}
+.flws a{
+    text-decoration: none;
+    color: #666;
+}
+.flws a:hover{
+    color: #666;
+}
+.flws img{
+    width: 100%;
+}
+.btn_search{
+    background-color: #3692C6;
+    border-color: #217cb1;
+}
+.btn_search:hover{
+    background-color: #217cb1;
+}
+.btn_warning{
+    background-color: #ec971f;
+    border-color: #d58512;
+}
+.btn_warning:hover{
+    background-color: #d58512;
+}
+.btn_empty{
+    background-color: #d23535;
+    border-color: #b81e1e;
+}
+.btn_empty:hover{
+    background-color: #b81e1e;
+}
+
+.sp_table tr{
+    border: 1px dashed #f2f2f2;
+}
+
+.sp_table .textbox{
+    display: inline-block;
+    height: 28px;
+    line-height: 28px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    width: 80%;
+}
+.sp_table input{
+    font-size: 14px;
+    height: 26px;
+    line-height: 26px;
+    margin-top: -4px;
+    width: 100%;
+    padding: 0 2px;
+}
+.sp_table input[readonly=readonly]{
+    background-color: #e5e5e5;
+}
+.sp_table textarea{
+    font-size: 14px;
+    resize:vertical;
+    line-height: 28px;
+}
+#goTop{
+    position: fixed;
+    top:50%;
+    right: 10px;
+    margin-top: -30px;
+    cursor: pointer;
+}
+#goTop img{
+    width: 60px;
+}
+.radil_td{
+    clolr:#2180df;
+    font-size: 12px;
+}
+input.radio_inp{
+    width: 15px;
+    margin-left: 3px;
+}
+.yj_table_td{
+    font-size: 14px;
+}
+.yj_table_td td{
+    height: 34px;
+}

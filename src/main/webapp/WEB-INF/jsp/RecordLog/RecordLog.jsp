@@ -5,7 +5,7 @@
 <html>
 <head>
 	<meta charset="UTF-8">
-	<title>查询记录展示</title>
+	<title>查询日志展示</title>
 	<link rel="stylesheet" type="text/css" href="/css/easyui-new.css">
 	<link rel="stylesheet" type="text/css" href="/css/font-awesome.min.css">
     <link rel="stylesheet" type="text/css" href="/css/bjzycx.css">
@@ -75,7 +75,7 @@
 			</table>
 		</div>
 		<!--结果 table-->
-		<div class="result" style="padding-bottom:30px;">
+		<div class="result" style="padding-bottom:30px;width:100%;overflow:hidden;">
 			<table class="easyui-datagrid" id="recordLogTable" style="border-top:1px dashed #ccc;" width="100%">
                 <tbody>
 					<pre id = "resultView" style = "width:100%;border-collapse: collapse;background-color: rgba(255,255,255,0.75);text-align:left;">
