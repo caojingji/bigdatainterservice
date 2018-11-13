@@ -2,6 +2,9 @@ package com.founder.interservice.abutment.controller;
 
         import com.alibaba.fastjson.JSONArray;
         import com.alibaba.fastjson.JSONObject;
+        import com.dragonsoft.node.adapter.comm.RbspCall;
+        import com.dragonsoft.node.adapter.comm.RbspConsts;
+        import com.dragonsoft.node.adapter.comm.RbspService;
         import com.founder.interservice.VO.ResultVO;
         import com.founder.interservice.enums.ResultEnum;
         import com.founder.interservice.exception.InterServiceException;
@@ -42,6 +45,40 @@ public class AbutmentController {
     private SpLogService spLogService;
     @Autowired
     private IphoneTrackService iphoneTrackService;
+
+    /**
+     * 调取四川机主信息
+     * @return
+     */
+    @RequestMapping(value = "/getJwzhJzxx")
+    @ResponseBody
+    public String getJwzhJzxx(String sfzh,String yddh){
+        RbspService rbspService = new RbspService("C51-00000017","S10-10005902");
+        rbspService.setVersion("02");
+        rbspService.setTimeOut("100");
+        rbspService.setUserCardId("510902198504188878");
+        rbspService.setUserDept("510996440000");
+        rbspService.setUserName("何沙");
+        RbspCall call = rbspService.createCall();
+        call.setUrl("http://10.64.1.116:8585/node");
+        call.setMethod(RbspConsts.METHOD_PAGEQUERY);
+        Map<String,Object> params = new HashMap<String,Object>();
+        params.put("DataObjectCode", "A607_510000");
+        params.put("InfoCodeMode", "0");
+        if(!StringUtil.ckeckEmpty(sfzh)){
+            params.put("Condition", "ZJHM = '"+ sfzh +"'");
+        }
+        if(!StringUtil.ckeckEmpty(yddh)){
+            params.put("Condition", "YDDH = '"+ yddh +"'");
+        }
+        params.put("RequiredItems", new String[]{"XM","ZJHM","YDDH","RWSJ"});
+        params.put("PageNum",1);
+        params.put("RowsPerPage", 4);
+        params.put("SortItems", new String[]{});
+        String result = call.invoke(params);
+        System.out.println(result);
+        return result;
+    }
     /**
      *
      * @Description: 获取新德惠采集的数据
