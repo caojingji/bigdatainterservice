@@ -85,6 +85,7 @@ public class AbutmentController {
             params.put("RowsPerPage", 4);
             params.put("SortItems", new String[]{});
             String result = call.invoke(params);
+            //String result ="<?xml version=\"1.0\" encoding=\"UTF-8\"?><RBSPMessage><Version/><ServiceID>S10-10005902</ServiceID><TimeStamp/><Validity/><Security><Signature Algorithm=\"\"/><CheckCode Algorithm=\"\"/><Encrypt/></Security><Method><Name>PageQuery</Name><Items><Item><Value Type=\"arrayOfArrayOf_string\"><Row><Data>000</Data><Data/><Data/><Data/></Row><Row><Data>XM</Data><Data>ZJHM</Data><Data>YDDH</Data><Data>RWSJ</Data></Row><Row><Data>胡玲</Data><Data>510107197607030049</Data><Data>20932205364</Data><Data>2018-10-10 13:57:44</Data></Row><Row><Data>胡玲</Data><Data>510107197607030049</Data><Data>13808054123</Data><Data>2005-06-08 11:38:15</Data></Row><Row><Data>胡玲</Data><Data>510107197607030049</Data><Data>20924930054</Data><Data>2016-08-09 15:26:09</Data></Row><Row><Data>胡玲</Data><Data>510107197607030049</Data><Data>18482330296</Data><Data>2018-09-26 17:15:35</Data></Row></Value></Item></Items></Method></RBSPMessage>";
             System.out.println("未处理前的查询结果====="+result);
             Map<String,Object> m = new HashMap<String, Object>();
             m = returnXmlMap(xmlStr2Document(result));
@@ -397,11 +398,11 @@ public class AbutmentController {
         Element itemElement = itemsElement.element("Item");
         Element valueElement = itemElement.element("Value");
         List rowList  = valueElement.elements("Row");
-        System.out.println("所有row信息====="+rowList);
+        System.out.println("所有row节点信息====="+rowList);
         int account = rowList.size();//返回数据的条数(包含两个非所需结果的row节点)
-        System.out.println("所有row信息总数====="+account);
+        System.out.println("所有row节点信息总数====="+account);
         if(account > 2){
-            System.out.println("查询是由数据的");
+            System.out.println("查询是有数据的");
             datamap.put("account", String.valueOf((account-2)));//存放的是返回结果数量
             Element pkg = (Element)rowList.get(1);
             pkgList = dealDataTitle(pkg);//处理表头
@@ -420,10 +421,10 @@ public class AbutmentController {
      * @return
      */
     public static List<Map<String,Object>> dealDataTitle(Element pkgs){
-        List<Map<String,Object>> dataList = pkgs.elements("Data");
+        List<Map<String,Object>> pkgsList = ( List<Map<String,Object>>) pkgs.elements("Data");
         List<Map<String,Object>> pkgList = new ArrayList<Map<String,Object>>();
-        for(int t=0;t<dataList.size();t++){
-            Element pkg = (Element) dataList.get(t);
+        for(int t=0;t<pkgsList.size();t++){
+            Element pkg = (Element) pkgsList.get(t);
             String dataname = pkg.getText();
             Map<String, Object> commpkgmap = new HashMap<String, Object>();
             commpkgmap.put("field", dataname);
@@ -435,19 +436,17 @@ public class AbutmentController {
     }
     /**
      * 处理跟界面表头匹配的数据展示问题
-     * @author zhouxiao
-     * @param pkg
      * @return
      */
     public static List dealDataMatchTitle(List rowlist,Element pkg){
         List datalist = new ArrayList();
+        List<Map<String,Object>> pkgsList = ( List<Map<String,Object>>) pkg.elements("Data");
         for(int m=2;m<rowlist.size();m++){
             Element e = (Element) rowlist.get(m);
             List dataLists = e.elements("Data");
             Map<String,String> map = new HashMap<String,String>();
-            List<Map<String,Object>> pkgLists = pkg.elements("Data");
-            for(int j=0;j<pkgLists.size();j++){
-                Element pkgElement = (Element) pkgLists.get(j);
+            for(int j=0;j<pkgsList.size();j++){
+                Element pkgElement = (Element) pkgsList.get(j);
                 String pkgname = pkgElement.getText();
                 for(int i=0;i<j+1;i++){
                     Element basicrow = (Element) dataLists.get(i);
