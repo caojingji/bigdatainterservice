@@ -37,6 +37,7 @@ public class MinistrySuspectInfoController {
             Map<String,Object> mapQg = new HashMap<String, Object>();
             mapQg = call.getGabZyInfoByJyaq("fzxyr",os,gabConfig);
             List<Map<String,Object>> asjbhList = (List<Map<String,Object>>)mapQg.get("dataResult");
+            System.out.println("------------------asjbhList(第一)------------------------"+ asjbhList);
             //通过案事件编号调取案事件信息resultList
             for (Map<String,Object> asjbh:asjbhList) {
                 JSONObject jsonObject1 = new JSONObject();
@@ -44,10 +45,11 @@ public class MinistrySuspectInfoController {
                 JSONArray jsonArray1 = new JSONArray();
                 jsonArray1.add(jsonObject1);
                 Object[] objects = jsonArray1.toArray();
-                resultList= ((List<Map<String,Object>>)call.getGabZyInfoByJyaq("asj",objects,gabConfig).get("dataResult"));
-                System.out.println("list="+resultList);
+                Map<String,Object> m = new HashMap<String, Object>();
+                m = call.getGabZyInfoByJyaq("asj",objects,gabConfig);
+                resultList = (List<Map<String,Object>>)m.get("dataResult");
               //  m = (Map<String,Object>)((Map<String, Object>) call.getGabZyInfoByJyaq("asj",objects,gabConfig).get("dataResult")).get(0);
-                System.out.println("------------------案事件信息list------------------------"+ resultList);
+                System.out.println("------------------最终案事件信息list------------------------"+ resultList);
             }
             if(!resultList.isEmpty() && resultList != null){
                 resultObj.put("code", ResultEnum.SUCCESS.getCode());
@@ -57,7 +59,7 @@ public class MinistrySuspectInfoController {
                 resultObj.put("message","无数据");
             }
             resultObj.put("dataList",resultList);
-            System.out.println("------------------返回list------------------------"+resultList);
+            System.out.println("------------------返回dataList------------------------"+resultList);
         } catch (Exception e) {
             resultObj.put("code", ResultEnum.RESULT_ERROR.getCode());
             resultObj.put("message",ResultEnum.RESULT_ERROR.getMessage());

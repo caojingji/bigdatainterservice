@@ -57,13 +57,16 @@ public class CallDygabxxfw{
 			bizParamXml = getParamXml(xzgzry,"GAB-BJXZ_XZGWRYCX",os);
 		}
 		String resultStr = getResoursesData(gabConfig.getIp(),gabConfig.getSenderId(),responseId,bizParamXml);
+		System.out.println("查询类别=="+zylx+"获取的resultStr="+resultStr);
 		if(resultStr != null){
 			resultStr = resultStr.substring(resultStr.indexOf("<Data>")+6,resultStr.indexOf("</Data>"));
+			System.out.println("查询类别=="+zylx+"裁剪后的resultStr="+resultStr);
 			DataMap = returnXmlMap(xmlStr2Document(resultStr),zylx);
+			System.out.println("查询类别=="+zylx+"裁剪后的resultStr生成的DataMap="+DataMap);
 		}
     	//String resultStr = "<?xml version=\"1.0\" encoding=\"UTF-8\"?><RESULT><AMOUNT>12</AMOUNT><DATA><DATATYPE ID=\"BJXZ_XZASJCX\"><COLUMNS><COLUMN>ASJBH</COLUMN><COLUMN>ZCJDDM</COLUMN><COLUMN>AJLBDM</COLUMN><COLUMN>AJMC</COLUMN><COLUMN>ASJFSSJ_ASJFSKSSJ</COLUMN><COLUMN>LARQ</COLUMN><COLUMN>LADW_GAJGMC</COLUMN><COLUMN>JYAQ</COLUMN><COLUMN>SLDW_GAJGMC</COLUMN><COLUMN>SFSQ_PDBZ</COLUMN></COLUMNS><ROWS><ROW><ITEM>A12345601</ITEM><ITEM>0500</ITEM><ITEM>05000</ITEM><ITEM>张三被诈骗案</ITEM><ITEM>20170101</ITEM><ITEM>简要案情简要案情简要案情简要案情</ITEM><ITEM>陕西省公安厅</ITEM><ITEM>20170101</ITEM><ITEM>简要案情</ITEM><ITEM>简要案情</ITEM></ROW><ROW><ITEM>A12345665756867</ITEM><ITEM>0500</ITEM><ITEM>05000</ITEM><ITEM>李四被盗窃案</ITEM><ITEM>20170101</ITEM><ITEM>20170101</ITEM><ITEM>陕西省公安厅</ITEM><ITEM>20170101</ITEM><ITEM>陕西省公安厅</ITEM><ITEM>陕西省公安厅</ITEM></ROW><ROW><ITEM>A12345601</ITEM><ITEM>0500</ITEM><ITEM>05000</ITEM><ITEM>张三被诈骗案</ITEM><ITEM>20170101</ITEM><ITEM>简要案情简要案情简要案情简要案情</ITEM><ITEM>陕西省公安厅</ITEM><ITEM>20170101</ITEM><ITEM>简要案情</ITEM><ITEM>简要案情</ITEM></ROW><ROW><ITEM>A1234566575686704</ITEM><ITEM>0500</ITEM><ITEM>05000</ITEM><ITEM>李四被盗窃案</ITEM><ITEM>20170101</ITEM><ITEM>20170101</ITEM><ITEM>陕西省公安厅</ITEM><ITEM>20170101</ITEM><ITEM>陕西省公安厅</ITEM><ITEM>陕西省公安厅</ITEM></ROW><ROW><ITEM>A1234560102</ITEM><ITEM>0500</ITEM><ITEM>05000</ITEM><ITEM>张三被诈骗案</ITEM><ITEM>20170101</ITEM><ITEM>简要案情简要案情简要案情简要案情</ITEM><ITEM>陕西省公安厅</ITEM><ITEM>20170101</ITEM><ITEM>简要案情</ITEM><ITEM>简要案情</ITEM></ROW><ROW><ITEM>A1234566575686703</ITEM><ITEM>0500</ITEM><ITEM>05000</ITEM><ITEM>李四被盗窃案</ITEM><ITEM>20170101</ITEM><ITEM>20170101</ITEM><ITEM>陕西省公安厅</ITEM><ITEM>20170101</ITEM><ITEM>陕西省公安厅</ITEM><ITEM>陕西省公安厅</ITEM></ROW><ROW><ITEM>A1234560105</ITEM><ITEM>0500</ITEM><ITEM>05000</ITEM><ITEM>张三被诈骗案</ITEM><ITEM>20170101</ITEM><ITEM>简要案情简要案情简要案情简要案情</ITEM><ITEM>陕西省公安厅</ITEM><ITEM>20170101</ITEM><ITEM>简要案情</ITEM><ITEM>简要案情</ITEM></ROW><ROW><ITEM>A1234566575686706</ITEM><ITEM>0500</ITEM><ITEM>05000</ITEM><ITEM>李四被盗窃案</ITEM><ITEM>20170101</ITEM><ITEM>20170101</ITEM><ITEM>陕西省公安厅</ITEM><ITEM>20170101</ITEM><ITEM>陕西省公安厅</ITEM><ITEM>陕西省公安厅</ITEM></ROW><ROW><ITEM>A1234560107</ITEM><ITEM>0500</ITEM><ITEM>05000</ITEM><ITEM>张三被诈骗案</ITEM><ITEM>20170101</ITEM><ITEM>简要案情简要案情简要案情简要案情</ITEM><ITEM>陕西省公安厅</ITEM><ITEM>20170101</ITEM><ITEM>简要案情</ITEM><ITEM>简要案情</ITEM></ROW><ROW><ITEM>A1234566575686708</ITEM><ITEM>0500</ITEM><ITEM>05000</ITEM><ITEM>李四被盗窃案</ITEM><ITEM>20170101</ITEM><ITEM>20170101</ITEM><ITEM>陕西省公安厅</ITEM><ITEM>20170101</ITEM><ITEM>陕西省公安厅</ITEM><ITEM>陕西省公安厅</ITEM></ROW><ROW><ITEM>A12345601</ITEM><ITEM>0500</ITEM><ITEM>05000</ITEM><ITEM>张三被诈骗案</ITEM><ITEM>20170101</ITEM><ITEM>简要案情简要案情简要案情简要案情</ITEM><ITEM>陕西省公安厅</ITEM><ITEM>20170101</ITEM><ITEM>简要案情</ITEM><ITEM>简要案情</ITEM></ROW><ROW><ITEM>A12345665756867</ITEM><ITEM>0500</ITEM><ITEM>05000</ITEM><ITEM>李四被盗窃案</ITEM><ITEM>20170101</ITEM><ITEM>20170101</ITEM><ITEM>陕西省公安厅</ITEM><ITEM>20170101</ITEM><ITEM>陕西省公安厅</ITEM><ITEM>陕西省公安厅</ITEM></ROW></ROWS></DATATYPE></DATA></RESULT>";
     	DataMap = returnXmlMap(xmlStr2Document(resultStr),zylx);
-    	System.out.println("DataMap==="+DataMap);
+    	System.out.println("查询类别=="+zylx+"未裁剪后的resultStr生成的DataMap=="+DataMap);
 		return DataMap;
 	}
 	/**
@@ -112,6 +115,11 @@ public class CallDygabxxfw{
 		fwfbzElement.setText(fwfbs);
 		Element packageid = root.addElement("TERM");// 服务方内容
 		Field[] fields = obj.getClass().getFields();
+		//<query>
+		// <fwfxzqh>010000</fwfxzqh>
+		//<fwffwbz>GAB-BJXZ_XZASJFZXYRCX</fwffwbz>
+		//<term></term>
+		// </query>
 		String optType = "";//操作符说明
 		for(int j=0;j<fields.length;j++){
 			String sname = (String)fields[j].getName();//拿到属性名称
