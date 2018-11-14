@@ -1,6 +1,6 @@
 spring:
   profiles:
-    active: prod
+    active: dev
   mvc:
     view:
       prefix: /WEB-INF/jsp/
@@ -35,6 +35,13 @@ gab_url:
   receiverZtryxxId: S10-10005794
   #cxztryxx-全国撤销在逃人员信息查询服务
   receiverCxztryxxId: S10-10005793
+
+abutment_config:
+  senderId: C51-00000017
+  serviceId: S10-10005902
+  userCardId: 510902198504188878
+  userDept: 510996440000
+  url: http://10.64.1.116:8585/node
 
 # 系统变量
 xdhbigdata:

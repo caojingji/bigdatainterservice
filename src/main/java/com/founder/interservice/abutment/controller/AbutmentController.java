@@ -9,11 +9,16 @@ import com.founder.interservice.VO.ResultVO;
 import com.founder.interservice.enums.ResultEnum;
 import com.founder.interservice.exception.InterServiceException;
 import com.founder.interservice.model.AutoTbStRy;
+import com.founder.interservice.qgzyfw.domain.AbutmentConfig;
+import com.founder.interservice.qgzyfw.domain.GabConfig;
 import com.founder.interservice.querymodel.RelationLocalFilter;
 import com.founder.interservice.service.IphoneTrackService;
 import com.founder.interservice.splog.model.SpLog;
 import com.founder.interservice.splog.service.SpLogService;
 import com.founder.interservice.util.*;
+import org.dom4j.Document;
+import org.dom4j.DocumentHelper;
+import org.dom4j.Element;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
@@ -45,39 +50,61 @@ public class AbutmentController {
     private SpLogService spLogService;
     @Autowired
     private IphoneTrackService iphoneTrackService;
-
+    @Autowired
+    private AbutmentConfig abutmentConfig;
     /**
      * 调取四川机主信息
      * @return
      */
     @RequestMapping(value = "/getJwzhJzxx")
     @ResponseBody
-    public String getJwzhJzxx(String sfzh,String yddh){
-        RbspService rbspService = new RbspService("C51-00000017","S10-10005902");
-        rbspService.setVersion("02");
-        rbspService.setTimeOut("100");
-        rbspService.setUserCardId("510902198504188878");
-        rbspService.setUserDept("510996440000");
-        rbspService.setUserName("何沙");
-        RbspCall call = rbspService.createCall();
-        call.setUrl("http://10.64.1.116:8585/node");
-        call.setMethod(RbspConsts.METHOD_PAGEQUERY);
-        Map<String,Object> params = new HashMap<String,Object>();
-        params.put("DataObjectCode", "A607_510000");
-        params.put("InfoCodeMode", "0");
-        if(!StringUtil.ckeckEmpty(sfzh)){
-            params.put("Condition", "ZJHM = '"+ sfzh +"'");
+    public JSONObject getJwzhJzxx(String sfzh,String yddh){
+        JSONObject resultObj = new JSONObject();
+        List<Map<String,Object>> resultList = new ArrayList<Map<String, Object>>();
+        try{
+            RbspService rbspService = new RbspService(abutmentConfig.getSenderId(),abutmentConfig.getServiceId());
+            rbspService.setVersion("02");
+            rbspService.setTimeOut("100");
+            rbspService.setUserCardId(abutmentConfig.getUserCardId());
+            rbspService.setUserDept(abutmentConfig.getUserDept());
+            rbspService.setUserName("何沙");
+            RbspCall call = rbspService.createCall();
+            call.setUrl(abutmentConfig.getUrl());
+            call.setMethod(RbspConsts.METHOD_PAGEQUERY);
+            Map<String,Object> params = new HashMap<String,Object>();
+            params.put("DataObjectCode", "A607_510000");
+            params.put("InfoCodeMode", "0");
+            if(!StringUtil.ckeckEmpty(sfzh)){
+                params.put("Condition", "ZJHM = '"+ sfzh +"'");
+            }
+            if(!StringUtil.ckeckEmpty(yddh)){
+                params.put("Condition", "YDDH = '"+ yddh +"'");
+            }
+            params.put("RequiredItems", new String[]{"XM","ZJHM","YDDH","RWSJ"});
+            params.put("PageNum",1);
+            params.put("RowsPerPage", 4);
+            params.put("SortItems", new String[]{});
+            String result = call.invoke(params);
+            System.out.println("未处理前的查询结果====="+result);
+            Map<String,Object> m = new HashMap<String, Object>();
+            m = returnXmlMap(xmlStr2Document(result));
+            resultList = (List<Map<String,Object>>)m.get("dataResult");
+            System.out.println("处理后的查询结果====="+resultList);
+            if(!resultList.isEmpty() && resultList != null){
+                resultObj.put("code", ResultEnum.SUCCESS.getCode());
+                resultObj.put("message",ResultEnum.SUCCESS.getMessage());
+            }else {
+                resultObj.put("code", ResultEnum.SUCCESS.getCode());
+                resultObj.put("message","无数据");
+            }
+            resultObj.put("dataList",resultList);
+         }catch (Exception e){
+            resultObj.put("code", ResultEnum.RESULT_ERROR.getCode());
+            resultObj.put("message",ResultEnum.RESULT_ERROR.getMessage());
+            e.printStackTrace();
         }
-        if(!StringUtil.ckeckEmpty(yddh)){
-            params.put("Condition", "YDDH = '"+ yddh +"'");
-        }
-        params.put("RequiredItems", new String[]{"XM","ZJHM","YDDH","RWSJ"});
-        params.put("PageNum",1);
-        params.put("RowsPerPage", 4);
-        params.put("SortItems", new String[]{});
-        String result = call.invoke(params);
-        System.out.println(result);
-        return result;
+        System.out.println("封装后返回前台的======"+ resultObj);
+        return resultObj;
     }
     /**
      *
@@ -338,4 +365,99 @@ public class AbutmentController {
         }
         return resultVO;
     }
+
+    /**
+     * 将xml字符串转换为Document对象
+     * @author zhouxiao
+     * @param xmlStr
+     * @return
+     */
+    public static Document xmlStr2Document(String xmlStr){
+        Document document = null;
+        try{
+            document = DocumentHelper.parseText(xmlStr);
+        }catch(Exception e){
+            e.printStackTrace();
+        }
+        return document;
+    }
+
+    /**
+     * 解析xml报文，并将结果展示到界面
+     * @param doc
+     * @return
+     */
+    public static Map returnXmlMap(Document doc){
+        Map datamap = new HashMap();
+        List pkgList = new ArrayList();//存表头
+        List datalist = new ArrayList();//存数据
+        Element rootElement = doc.getRootElement();
+        Element methodElement = rootElement.element("Method");
+        Element itemsElement = methodElement.element("Items");
+        Element itemElement = itemsElement.element("Item");
+        Element valueElement = itemElement.element("Value");
+        List rowList  = valueElement.elements("Row");
+        System.out.println("所有row信息====="+rowList);
+        int account = rowList.size();//返回数据的条数(包含两个非所需结果的row节点)
+        System.out.println("所有row信息总数====="+account);
+        if(account > 2){
+            System.out.println("查询是由数据的");
+            datamap.put("account", String.valueOf((account-2)));//存放的是返回结果数量
+            Element pkg = (Element)rowList.get(1);
+            pkgList = dealDataTitle(pkg);//处理表头
+            System.out.println("表头信息========"+pkgList);
+            datalist = dealDataMatchTitle(rowList,pkg);//处理跟表头匹配的数据
+            System.out.println("数据信息======="+datalist);
+        }
+        datamap.put("dataResult", datalist);
+        datamap.put("title", pkgList);
+        return datamap;
+    }
+
+    /**
+     * 处理界面需要展示的表头
+     * @param pkgs
+     * @return
+     */
+    public static List<Map<String,Object>> dealDataTitle(Element pkgs){
+        List<Map<String,Object>> dataList = pkgs.elements("Data");
+        List<Map<String,Object>> pkgList = new ArrayList<Map<String,Object>>();
+        for(int t=0;t<dataList.size();t++){
+            Element pkg = (Element) dataList.get(t);
+            String dataname = pkg.getText();
+            Map<String, Object> commpkgmap = new HashMap<String, Object>();
+            commpkgmap.put("field", dataname);
+            commpkgmap.put("title", dataname);
+            commpkgmap.put("align", "center");
+            pkgList.add(commpkgmap);
+        }
+        return pkgList;
+    }
+    /**
+     * 处理跟界面表头匹配的数据展示问题
+     * @author zhouxiao
+     * @param pkg
+     * @return
+     */
+    public static List dealDataMatchTitle(List rowlist,Element pkg){
+        List datalist = new ArrayList();
+        for(int m=2;m<rowlist.size();m++){
+            Element e = (Element) rowlist.get(m);
+            List dataLists = e.elements("Data");
+            Map<String,String> map = new HashMap<String,String>();
+            List<Map<String,Object>> pkgLists = pkg.elements("Data");
+            for(int j=0;j<pkgLists.size();j++){
+                Element pkgElement = (Element) pkgLists.get(j);
+                String pkgname = pkgElement.getText();
+                for(int i=0;i<j+1;i++){
+                    Element basicrow = (Element) dataLists.get(i);
+                    String dataBasic = basicrow.getText();
+                    map.put(pkgname, dataBasic);
+                }
+            }
+            datalist.add(map);
+        }
+        return datalist;
+    }
+
 }
