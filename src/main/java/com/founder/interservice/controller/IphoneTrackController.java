@@ -219,6 +219,9 @@ public class IphoneTrackController {
                         }else if("003".equals(objType)){ //微信
                             resultMap.put("code", 13);
                             resultMap.put("msg", "微信");
+                        }else if("006".equals(objType)){
+                            resultMap.put("code", ResultEnum.SUCCESS.getCode());
+                            resultMap.put("msg", ResultEnum.SUCCESS.getMessage());
                         }else{
                             resultMap.put("code", ResultEnum.OBJTYPE_PARAM_ERROR.getCode());
                             resultMap.put("msg", ResultEnum.OBJTYPE_PARAM_ERROR.getMessage());
