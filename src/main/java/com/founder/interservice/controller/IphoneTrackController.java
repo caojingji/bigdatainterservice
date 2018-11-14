@@ -138,17 +138,21 @@ public class IphoneTrackController {
             int code = (int)paramMap.get("code");
             if(code == 0){
                 List<String> imsis = new ArrayList<>();
-                JSONObject jsonObject = iphoneTrackService.getObjectRelation(objValue);
-                if(jsonObject != null){
-                    JSONArray jsonArray = jsonObject.getJSONArray("results");
-                    if(jsonArray != null && jsonArray.size() > 0){
-                        for (int i = 0; i <= jsonArray.size() - 1;i++){
-                            JSONObject resObj = jsonArray.getJSONObject(i);
-                            String objectType = resObj.getString("objectToTypeName");
-                            if (objectType != null && "IMSI".equals(objectType)){
-                                String imsi = (String) resObj.get("objectToValue");
-                                if(!imsis.contains(imsi)){
-                                    imsis.add(imsi);
+                if("006".equals(objType)){
+                    imsis.add(objValue);
+                }else{
+                    JSONObject jsonObject = iphoneTrackService.getObjectRelation(objValue);
+                    if(jsonObject != null){
+                        JSONArray jsonArray = jsonObject.getJSONArray("results");
+                        if(jsonArray != null && jsonArray.size() > 0){
+                            for (int i = 0; i <= jsonArray.size() - 1;i++){
+                                JSONObject resObj = jsonArray.getJSONObject(i);
+                                String objectType = resObj.getString("objectToTypeName");
+                                if (objectType != null && "IMSI".equals(objectType)){
+                                    String imsi = (String) resObj.get("objectToValue");
+                                    if(!imsis.contains(imsi)){
+                                        imsis.add(imsi);
+                                    }
                                 }
                             }
                         }
