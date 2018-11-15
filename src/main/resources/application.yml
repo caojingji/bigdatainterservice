@@ -1,6 +1,6 @@
 spring:
   profiles:
-    active: dev
+    active: prod
   mvc:
     view:
       prefix: /WEB-INF/jsp/
@@ -36,6 +36,7 @@ gab_url:
   #cxztryxx-全国撤销在逃人员信息查询服务
   receiverCxztryxxId: S10-10005793
 
+#调用四川接口服务，查询电话-机主信息
 abutment_config:
   senderId: C51-00000017
   serviceId: S10-10005902
