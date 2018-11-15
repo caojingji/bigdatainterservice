@@ -10,7 +10,6 @@ import com.founder.interservice.enums.ResultEnum;
 import com.founder.interservice.exception.InterServiceException;
 import com.founder.interservice.model.AutoTbStRy;
 import com.founder.interservice.qgzyfw.domain.AbutmentConfig;
-import com.founder.interservice.qgzyfw.domain.GabConfig;
 import com.founder.interservice.querymodel.RelationLocalFilter;
 import com.founder.interservice.service.IphoneTrackService;
 import com.founder.interservice.splog.model.SpLog;
@@ -52,6 +51,7 @@ public class AbutmentController {
     private IphoneTrackService iphoneTrackService;
     @Autowired
     private AbutmentConfig abutmentConfig;
+
     /**
      * 调取四川机主信息
      * @return

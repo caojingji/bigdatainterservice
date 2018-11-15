@@ -189,7 +189,7 @@ public class DataController {
         String paramStr = null;
         try{
             //getAndSaveTrack(objValue, kssj, jssj);
-            /*数据入口后再进行查取操作*/
+            /*数据入库后再进行查取操作*/
             TrackFilter trackFilter = new TrackFilter();
             trackFilter.setKssj(kssj);
             trackFilter.setJssj(jssj);
