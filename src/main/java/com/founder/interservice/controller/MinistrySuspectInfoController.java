@@ -8,6 +8,7 @@ import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
@@ -17,6 +18,7 @@ import java.util.List;
 import java.util.Map;
 
 @Controller
+@CrossOrigin  //跨域访问
 public class MinistrySuspectInfoController {
     @Autowired
     private GabConfig gabConfig;
@@ -47,9 +49,11 @@ public class MinistrySuspectInfoController {
                 Object[] objects = jsonArray1.toArray();
                 Map<String,Object> m = new HashMap<String, Object>();
                 m = call.getGabZyInfoByJyaq("asj",objects,gabConfig);
-                resultList = (List<Map<String,Object>>)m.get("dataResult");
-              //  m = (Map<String,Object>)((Map<String, Object>) call.getGabZyInfoByJyaq("asj",objects,gabConfig).get("dataResult")).get(0);
-                System.out.println("------------------最终案事件信息list------------------------"+ resultList);
+                int count = Integer.valueOf((String)m.get("account"));
+                List<Map<String,Object>> result = (List<Map<String,Object>>)m.get("dataResult");
+                for (int i=0;i<count;i++){
+                    resultList.add(result.get(i));
+                }
             }
             if(!resultList.isEmpty() && resultList != null){
                 resultObj.put("code", ResultEnum.SUCCESS.getCode());
