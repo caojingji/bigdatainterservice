@@ -112,11 +112,6 @@ public class CallDygabxxfw{
 		fwfbzElement.setText(fwfbs);
 		Element packageid = root.addElement("TERM");// 服务方内容
 		Field[] fields = obj.getClass().getFields();
-		//<query>
-		// <fwfxzqh>010000</fwfxzqh>
-		//<fwffwbz>GAB-BJXZ_XZASJFZXYRCX</fwffwbz>
-		//<term></term>
-		// </query>
 		String optType = "";//操作符说明
 		for(int j=0;j<fields.length;j++){
 			String sname = (String)fields[j].getName();//拿到属性名称
