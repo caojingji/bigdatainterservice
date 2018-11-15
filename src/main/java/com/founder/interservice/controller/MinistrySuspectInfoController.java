@@ -47,9 +47,11 @@ public class MinistrySuspectInfoController {
                 Object[] objects = jsonArray1.toArray();
                 Map<String,Object> m = new HashMap<String, Object>();
                 m = call.getGabZyInfoByJyaq("asj",objects,gabConfig);
-                resultList = (List<Map<String,Object>>)m.get("dataResult");
-              //  m = (Map<String,Object>)((Map<String, Object>) call.getGabZyInfoByJyaq("asj",objects,gabConfig).get("dataResult")).get(0);
-                System.out.println("------------------最终案事件信息list------------------------"+ resultList);
+                int count = Integer.valueOf((String)m.get("account"));
+                List<Map<String,Object>> result = (List<Map<String,Object>>)m.get("dataResult");
+                for (int i=0;i<count;i++){
+                    resultList.add(result.get(i));
+                }
             }
             if(!resultList.isEmpty() && resultList != null){
                 resultObj.put("code", ResultEnum.SUCCESS.getCode());
