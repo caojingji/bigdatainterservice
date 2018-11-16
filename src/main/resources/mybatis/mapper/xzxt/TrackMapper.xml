@@ -80,6 +80,7 @@
             <where>
                 <include refid="queryTrack_where"/>
             </where>
+            order by t.timestamp asc
     </select>
     <!-- 根据多条件查询出现总次数在前五的记录数 -->
     <select id = "queryTrackBefore5" parameterType="com.founder.interservice.querymodel.TrackFilter" resultType="com.founder.interservice.model.Track">
