@@ -197,15 +197,15 @@ public class DataController {
             List<Track> tracks = dataService.queryTracksListNoPage(trackFilter);
             if(tracks != null && !tracks.isEmpty()){
                 if(tracks.size() == 1){
-                    paramStr = tracks.get(0).getJ() + "," +tracks.get(0).getW();
+                    paramStr = tracks.get(0).getJ() + "," +tracks.get(0).getW()+","+tracks.get(0).getTimestr();
                 }else{
                     for (int i = 0;i < tracks.size(); i++){
                         if(i == 0){
-                            paramStr = tracks.get(i).getJ() + "," +tracks.get(i).getW() + ";";
+                            paramStr = tracks.get(i).getJ() + "," +tracks.get(i).getW()+","+ tracks.get(i).getTimestr() + ";";
                         }else if(i == tracks.size() - 1 ){
-                            paramStr = paramStr + tracks.get(i).getJ() + "," +tracks.get(i).getW();
+                            paramStr = paramStr + tracks.get(i).getJ() + "," +tracks.get(i).getW()+","+tracks.get(i).getTimestr();
                         }else{
-                            paramStr = paramStr + tracks.get(i).getJ() + "," +tracks.get(i).getW() + ";";
+                            paramStr = paramStr + tracks.get(i).getJ() + "," +tracks.get(i).getW() + "," + tracks.get(i).getTimestr() + ";";
                         }
                     }
                 }
@@ -214,7 +214,7 @@ public class DataController {
             //使用post发送请求
             HttpClient httpClient = new HttpClient(httpServletResponse);
             httpClient.setParameter("flag", "search");
-            httpClient.setParameter("markers", paramStr);
+            httpClient.setParameter("markersLW", paramStr);
             httpClient.sendByPost(PGIS_URL);
         }catch (Exception e){
             e.printStackTrace();
