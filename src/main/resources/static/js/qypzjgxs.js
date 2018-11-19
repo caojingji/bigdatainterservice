@@ -1,0 +1,189 @@
+$(function () {
+	doQuery();
+});
+
+function show(){
+    if($(".cursor").attr("flag")=="false"){
+        $(".cxtj-table").slideDown('fast');
+        $(".down").hide();
+        $(".up").show();
+        $(".cursor").attr("flag","true");
+    }else{
+        $(".cxtj-table").slideUp('fast');
+        $(".down").show();
+        $(".up").hide();
+        $(".cursor").attr("flag","false");
+    }
+}
+/**
+ * 清除检索条件
+ */
+function doClear(){
+    $("form input[type=text]:visible,form input[class='textbox-value']").val("");//将所有可见的input和class是textbox-value的input框 即代码选择框 的值清空
+    $("input[name='objType']").each(function() {
+        this.checked = false;
+    });
+}
+var table_title =[
+    {title:"类别参数",field:"objectValue",align:'center',width:'25%'},
+    {title:"类别code",field:"objectType",align:'center',width:'20%'},
+    {title:"类别名称",field:"objectTypeName",align:'center',width:'20%'},
+    {title:"登记时间",field:"djsj",align:'center',width:'25%'},
+    {title:"操作",field:"cz",align:'center',width:'10%',formatter:function(val,row,index){
+        return getCzColumn(row);
+    }},
+];
+function doQuery(){
+    $('#qypzjgxsTable').datagrid({
+        url: "/getTaskResultsList",
+        columns : [table_title],
+        queryParams:serializeObject($("form[name='qypzjgxsForm']")),
+        striped: true,
+        fitColumns: true,
+        singleSelect: false,
+        pagination: true,
+        nowrap: false, //设置是否换行  false换行 true表示不换行
+        pageSize: 20,
+        pageList: [10, 20, 50, 100, 150, 200],
+        showFooter: true,
+        selectOnCheck : false,
+        checkOnSelect : false,
+        pageNumber:1,
+        loadFilter: function(data){
+            $(".total").html(data.total);
+            return data;
+        }
+    });
+};
+
+/**
+ * 将表单序列化
+ */
+function serializeObject(form){
+    var o={};
+    $.each(form.serializeArray(),function(index){
+        if(o[this['name'] ]){
+            o[this['name'] ] = o[this['name'] ] + "," + this['value'];
+        }else{
+            o[this['name'] ]=this['value'];
+        }
+    })
+    return o;
+}
+
+function getCzColumn(row){
+    var str="<a href=\"#\" onclick=\"toQyzjgxsDetail('"+row.taskId+"','"+row.objectType+"','"+row.objectValue+"');\" class=\"cz\"><span>结果显示</span></a>";
+    return str;
+}
+
+function toQyzjgxsDetail(taskId,objType,objValue){
+    var param = {
+        "taskId":taskId,
+        "objType":objType,
+        "imsi":objValue
+    }
+    var cllxArr = [6424,6422,6423,7888];
+    $.ajax({
+        type:"POST",
+        data:param,
+        url:"/queryTaskDetail",
+        success:function(result) {
+            if(result){
+                var data = result.data;
+                var ryzpStr = "";
+                if (null != data.ryzp && "" != data.ryzp) {
+                    ryzpStr = "<img src=\"data:image/gif;base64," + data.ryzp + "\"/>";
+                } else {
+                    ryzpStr = "<img src=\"/images/timg.jpg\" style = \"height:121px;width:100px;\"/>";
+                }
+                if(cllxArr.indexOf(objType) > -1){
+                    //车辆
+                    var zjlx = data.zjlx==null?"":data.zjlx;
+                    var zjhm = data.zjhm==null?"":data.zjhm;
+                    var objectValue = data.objectValue==null?"":data.objectValue;
+                    var objectTypeName = data.objectTypeName==null?"":data.objectTypeName;
+                    $("#clRyzp").html(ryzpStr);
+                    $("#cph").text(objectValue);
+                    $("#cllx").text(objectTypeName);
+                    $("#clZjlx").text(zjlx);
+                    $("#clZjhm").text(zjhm);
+                    openClxx();
+                }else {
+                    //人员
+                    var name = data.name==null?"":data.name;
+                    var age =  data.age==null?"":data.age;
+                    var zjhm = data.zjhm==null?"":data.zjhm;
+                    var csrq = data.csrq==null?"":data.csrq;
+                    var sjhm = data.sjhm==null?"":data.sjhm;
+                    var imsi = data.imsi==null?"":data.imsi;
+                    var xzzDzmc = data.xzzDzmc==null?"":data.xzzDzmc;
+                    $("#ryzp").html(ryzpStr);
+                    $("#ryName").text(name);
+                    $("#ryAge").text(age);
+                    $("#rySfzh").text(zjhm);
+                    $("#ryCsrq").text(csrq);
+                    $("#ryDhhm").text(sjhm);
+                    $("#imsi").text(imsi);
+                    $("#ryAddress").text(xzzDzmc);
+                    openRyxx();
+                }
+            }
+        },
+        error:function () {
+        }
+    });
+    openRyxx();
+}
+function openRyxx(){
+    $('#ryjgzs').dialog({
+        buttons:[{
+            //确定生成表头配置信息,并重新加载表格数据
+            text:'确定',
+            handler:function(){
+                $('#ryjgzs').dialog('close');
+                $(document).unbind("scroll");
+            }
+        },{
+            text:'取消',
+            handler:function(){
+                $('#ryjgzs').dialog('close');
+                $(document).unbind("scroll");
+            }
+        }],
+        onClose: function () {
+            $(document).unbind("scroll");
+        }
+    });
+    $('#ryjgzs').show().dialog('open');
+    $("#ryjgzs").window('center');
+    var tops = $(document).scrollTop();//当页面滚动时，把当前距离赋值给页面，这样保持页面滚动条不动
+    $(document).bind("scroll",function (){$(document).scrollTop(tops); });
+}
+function openClxx(){
+    $('#clxxzs').dialog({
+        buttons:[{
+            //确定生成表头配置信息,并重新加载表格数据
+            text:'确定',
+            handler:function(){
+                $('#clxxzs').dialog('close');
+                $(document).unbind("scroll");
+            }
+        },{
+            text:'取消',
+            handler:function(){
+                $('#clxxzs').dialog('close');
+                $(document).unbind("scroll");
+            }
+        }],
+        onClose: function () {
+            $(document).unbind("scroll");
+        }
+    });
+    $('#clxxzs').show().dialog('open');
+    $("#clxxzs").window('center');
+    var tops = $(document).scrollTop();//当页面滚动时，把当前距离赋值给页面，这样保持页面滚动条不动
+    $(document).bind("scroll",function (){$(document).scrollTop(tops); });
+}
+
+
+
