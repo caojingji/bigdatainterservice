@@ -2,6 +2,8 @@ package com.founder.interservice.regionalanalysis.service.impl;
 
 import com.founder.interservice.exception.InterServiceException;
 import com.founder.interservice.mapper.xzxt.RegionalTaskMapper;
+import com.founder.interservice.mapper.xzxt.RegionalTaskResultMapper;
+import com.founder.interservice.regionalanalysis.model.QueryRegionalTaskResult;
 import com.founder.interservice.regionalanalysis.model.Regional;
 import com.founder.interservice.regionalanalysis.model.RegionalTask;
 import com.founder.interservice.regionalanalysis.model.RegionalTaskResult;
@@ -38,6 +40,8 @@ public class RegionalAnalysisServiceImpl implements RegionalAnalysisService {
     private RegionalTaskResultRepository taskResultRepository;
     @Autowired
     private RegionalTaskMapper regionalTaskMapper;
+    @Autowired
+    private RegionalTaskResultMapper regionalTaskResultMapper;
 
     @Override
     public void saveRegional(Regional regional) throws Exception {
@@ -154,5 +158,15 @@ public class RegionalAnalysisServiceImpl implements RegionalAnalysisService {
         resultMap.put("total", total);
         resultMap.put("regionalTasks", regionalTasks);
         return resultMap;
+    }
+
+    @Override
+    public List<RegionalTaskResult> findRegionalTaskResultList(QueryRegionalTaskResult param) throws Exception {
+        return regionalTaskResultMapper.findRegionalTaskResultList(param);
+    }
+
+    @Override
+    public int findRegionalTaskResultListTotalCount(QueryRegionalTaskResult param) throws Exception {
+        return regionalTaskResultMapper.findRegionalTaskResultListTotalCount(param);
     }
 }

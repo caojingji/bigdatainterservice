@@ -1,6 +1,7 @@
 package com.founder.interservice.regionalanalysis.service;
 
 import com.founder.interservice.exception.InterServiceException;
+import com.founder.interservice.regionalanalysis.model.QueryRegionalTaskResult;
 import com.founder.interservice.regionalanalysis.model.Regional;
 import com.founder.interservice.regionalanalysis.model.RegionalTask;
 import com.founder.interservice.regionalanalysis.model.RegionalTaskResult;
@@ -37,4 +38,6 @@ public interface RegionalAnalysisService {
     */
     Page<RegionalTaskResult> findRegionalTaskResult(Integer page,Integer size,RegionalTaskResult param) throws Exception;
     Map<String,Object> queryTasksByAsjbh(RegionalTask param) throws Exception;
+    List<RegionalTaskResult> findRegionalTaskResultList(QueryRegionalTaskResult param) throws Exception;
+    int findRegionalTaskResultListTotalCount(QueryRegionalTaskResult param) throws  Exception;
 }
