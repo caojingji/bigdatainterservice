@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.founder.interservice.mapper.xzxt.RegionalTaskResultMapper">
+
+    <select id = "findRegionalTaskResultListTotalCount" parameterType = "com.founder.interservice.regionalanalysis.model.QueryRegionalTaskResult" resultType="int" >
+        select count(*)
+          from TB_ST_REGIONALTASKRESULT t
+          where
+              t.TASK_ID = #{taskId}
+              <if test="objType!= null and objType!= ''">
+                  <choose>
+                      <when test="objType.indexOf(',') > 0">
+                          and t.OBJECT_TYPE in (${objType})
+                      </when>
+                      <otherwise>
+                          and t.OBJECT_TYPE in (#{objType})
+                      </otherwise>
+                  </choose>
+              </if>
+              <if test="objValue!= null and objValue!= ''">and t.OBJECT_VALUE = #{objValue}</if>
+              <if test="djsjStart!=null and djsjStart!=''"> and t.DJSJ <![CDATA[>=]]> to_date(#{djsjStart},'yyyy-MM-dd') </if>
+              <if test="djsjEnd!=null and djsjEnd!=''"> and t.DJSJ <![CDATA[<=]]> to_date(#{djsjEnd},'yyyy-MM-dd') </if>
+
+    </select>
+
+
+    <select id="findRegionalTaskResultList" parameterType="com.founder.interservice.regionalanalysis.model.QueryRegionalTaskResult" resultType="com.founder.interservice.regionalanalysis.model.RegionalTaskResult">
+        select t2.*
+            from (
+              select t1.*,
+                  rownum as rn
+                from (
+                    select
+                        t.TASK_ID as taskId,
+                        t.OBJECT_TYPE as objectType,
+                        t.OBJECT_TYPE_NAME as objectTypeName,
+                        t.OBJECT_VALUE as objectValue,
+                        t.DJSJ as djsj
+                    from TB_ST_REGIONALTASKRESULT t
+                      where t.TASK_ID = #{taskId}
+                      <if test="objType!= null and objType!= ''">
+                          <choose>
+                              <when test="objType.indexOf(',') > 0">
+                                  and t.OBJECT_TYPE in (${objType})
+                              </when>
+                              <otherwise>
+                                  and t.OBJECT_TYPE in (#{objType})
+                              </otherwise>
+                          </choose>
+                         </if>
+                      <if test="objValue!= null and objValue!= ''">and t.OBJECT_VALUE = #{objValue}</if>
+                      <if test="djsjStart!=null and djsjStart!=''"> and t.DJSJ <![CDATA[>=]]> to_date(#{djsjStart},'yyyy-MM-dd') </if>
+                      <if test="djsjEnd!=null and djsjEnd!=''"> and t.DJSJ <![CDATA[<=]]> to_date(#{djsjEnd},'yyyy-MM-dd') </if>
+                      order by t.DJSJ desc
+              ) t1
+              where rownum <![CDATA[ <= ]]> #{endNum}
+            ) t2
+          where rn <![CDATA[ > ]]> #{startNum}
+    </select>
+</mapper>
