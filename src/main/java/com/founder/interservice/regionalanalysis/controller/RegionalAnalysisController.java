@@ -9,6 +9,7 @@ import com.founder.interservice.model.AutoTbStRy;
 import com.founder.interservice.model.ResultObj;
 import com.founder.interservice.regionalanalysis.VO.RegionalTaskResultVO;
 import com.founder.interservice.regionalanalysis.VO.RegionalTaskVO;
+import com.founder.interservice.regionalanalysis.model.QueryRegionalTaskResult;
 import com.founder.interservice.regionalanalysis.model.Regional;
 import com.founder.interservice.regionalanalysis.model.RegionalTask;
 import com.founder.interservice.regionalanalysis.model.RegionalTaskResult;
@@ -16,6 +17,7 @@ import com.founder.interservice.regionalanalysis.service.RegionalAnalysisService
 import com.founder.interservice.service.IphoneTrackService;
 import com.founder.interservice.util.*;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.jasper.tagplugins.jstl.core.Catch;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -30,8 +32,10 @@ import org.springframework.web.servlet.ModelAndView;
 import unifiedservice.UnifiedService;
 import unifiedservice.UnifiedServiceParameter;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.xml.namespace.QName;
 import java.lang.reflect.Array;
+import java.text.DecimalFormat;
 import java.util.*;
 
 /**
@@ -55,6 +59,94 @@ public class RegionalAnalysisController {
     @RequestMapping(value = "/toParamJsp")
     public String toParamJsp(){
         return "taskParam";
+    }
+
+
+    @RequestMapping(value = "/toRegionalJsp",method = {RequestMethod.GET,RequestMethod.POST})
+    @ResponseBody
+    public ModelAndView toRegionalJsp(String taskId){
+        ModelAndView modelAndView = new ModelAndView("qypz/qypzjgxs");
+        RegionalTask task = regionalAnalysisService.findByTaskId(taskId);
+        modelAndView.addObject("taskId",taskId);
+        modelAndView.addObject("taskName",task.getTaskName());
+        String state = "";
+        //QUEUEING 排队等待、STARTING 开始中、RUNNING 执行中、FINISHED 完成
+        if("QUEUEING".equals(task.getState())){
+            state = "排队等待";
+        }else if("STARTING".equals(task.getState())){
+            state = "开始中";
+        }else if("RUNNING".equals(task.getState())){
+            state = "执行中";
+        }else if("FINISHED".equals(task.getState())){
+            state = "完成";
+        }
+        String progress = "";
+        if("1".equals(task.getProgress())){
+            progress = "100%";
+        }else if("0".equals(task.getProgress())){
+            progress = "0%";
+        }else {
+            double pi =Double.valueOf(task.getProgress());
+            progress =new DecimalFormat("#%").format(pi);
+        }
+        modelAndView.addObject("state",state);
+        modelAndView.addObject("djsj",task.getDjsj());
+        modelAndView.addObject("progress",progress);
+        modelAndView.addObject("taskCaseId",task.getTaskCaseId());
+        modelAndView.addObject("expression",task.getExpression());
+        return modelAndView;
+    }
+
+    @RequestMapping(value = "getTaskResultsList",method = {RequestMethod.GET,RequestMethod.POST})
+    @ResponseBody
+    public Map<String, Object> getTaskResultsList(QueryRegionalTaskResult param){
+        Map<String, Object> resultObj = new HashMap<>();
+        List<RegionalTaskResult> resultList= new ArrayList<>();
+        int totalCount = 0;
+        try {
+            EasyUIPage easyUIPage = new EasyUIPage();
+            easyUIPage.setPage(param.getPage());
+            easyUIPage.setPagePara(param.getRows());
+            int begin = easyUIPage.getBegin();
+            int end = easyUIPage.getEnd();
+            param.setStartNum(begin);
+            param.setEndNum(end);
+            resultList = regionalAnalysisService.findRegionalTaskResultList(param);
+            totalCount = regionalAnalysisService.findRegionalTaskResultListTotalCount(param);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        resultObj.put("rows", resultList);
+        resultObj.put("total",totalCount);
+        return resultObj;
+    }
+
+    @RequestMapping(value="queryTaskDetail",method = {RequestMethod.GET,RequestMethod.POST})
+    @ResponseBody
+    public JSONObject queryTaskDetail (String taskId,String objType,String imsi){
+        JSONObject jsonObject = new JSONObject();
+        RegionalTaskResultVO taskResultVO = new RegionalTaskResultVO();
+        try {
+            //参数类别为车牌
+            if(Arrays.asList("6424","6422","6423","7888").contains(objType)){
+                taskResultVO = getJdcData(imsi,taskResultVO);
+            }else {
+                taskResultVO = getRyxxData(imsi,taskResultVO,"ryxx");
+            }
+            if(taskResultVO != null){
+                jsonObject.put("code",ResultEnum.SUCCESS.getCode());
+                jsonObject.put("msg",ResultEnum.SUCCESS.getCode());
+            }else {
+                jsonObject.put("code", ResultEnum.SUCCESS.getCode());
+                jsonObject.put("msg","无数据");
+            }
+            jsonObject.put("data",taskResultVO);
+        } catch (Exception e) {
+            jsonObject.put("code", ResultEnum.RESULT_ERROR.getCode());
+            jsonObject.put("msg",ResultEnum.RESULT_ERROR.getMessage());
+            e.printStackTrace();
+        }
+        return jsonObject;
     }
     @RequestMapping("/toTaskListJsp")
     public  ModelAndView toTaskListJsp(@RequestParam String asjbh){
