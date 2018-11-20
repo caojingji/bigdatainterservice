@@ -13,13 +13,14 @@
     <link rel="stylesheet" type="text/css" href="/css/bootstrap.min.css">
     <link rel="stylesheet" type="text/css" href="/css/base_initialize.css">
     <link rel="stylesheet" type="text/css" href="/css/style.css">
+    <link rel="stylesheet" type="text/css" href="/common/layer/skin/layer.css">
     <!--- 时间插件-->
     <link rel="stylesheet" href="/common/datepicker/skin/WdatePicker.css">
     <link rel="stylesheet" href="/common/datepicker/skin/default/datepicker.css">
 </head>
 <style>
     .float-div{float: left;margin:15px 0;width:100%;}
-    .xx-box{width:89%;height:240px;margin:0 auto;background: #fff;position: relative;}
+    .xx-box{width:100%;height:240px;margin:0 auto;background: #fff;position: relative;}
     .result{display: table;width:100%;}
     .lf-img{display: inline-block;width:30%;}
     .lf-img>img{width:98px;margin:0 10px;position: absolute;top:50%;margin-top:-60px;}
@@ -33,7 +34,6 @@
     .xx-line>.green{color:#40ea0a;}
     .xx-line>.yellow{color:#eac710;}
     .xx-line>.orange{color:#ce4b22;}
-    .xx-box:hover{box-shadow: 0 0 20px 0 rgba(0, 0, 0, 0.7);}
     .xx-line>.label{display: inline-block;margin:0 5px;padding:2px 5px;background: #e23e35;height: 20px;
         line-height: 20px;
         border-radius: 11px;
@@ -169,7 +169,7 @@
         </table>
     </div>
 <!--表格设置面板-->
-<div id="ryjgzs" class="easyui-dialog" title="人员" data-options="modal:true,closed:true,collapsible:false,minimizable:false,maximizable:false" style="width:700px;height:auto;padding:10px;display:none;">
+<div id="ryjgzs" class="easyui-dialog" title="人员" data-options="modal:true,closed:true,collapsible:false,minimizable:false,maximizable:false" style="width:520px;height:auto;padding:10px;display:none;">
     <div class='float-div'>
         <div class='xx-box'>
             <div class='lf-img' id="ryzp"></div>
@@ -185,7 +185,7 @@
         </div>
     </div>
 </div>
-<div id="clxxzs" class="easyui-dialog" title="车辆" data-options="modal:true,closed:true,collapsible:false,minimizable:false,maximizable:false" style="width:700px;height:auto;padding:10px;display:none;">
+<div id="clxxzs" class="easyui-dialog" title="车辆" data-options="modal:true,closed:true,collapsible:false,minimizable:false,maximizable:false" style="width:520px;height:auto;padding:10px;display:none;">
     <div class='float-div'>
         <div class="xx-box" style="height:168px;">
                        <div class="lf-img" id="clRyzp"></div>
@@ -208,6 +208,7 @@
 <!--- 日期时间-->
 <script type="text/javascript" src="/common/datepicker/WdatePicker.js"></script>
 <script type="text/javascript" src="/common/datepicker/calendar.js"></script>
+<script src="/common/layer/layer.js" type="text/javascript"></script>
 <script type="text/javascript" src="/js/qypzjgxs.js"></script>
 </body>
 </html>

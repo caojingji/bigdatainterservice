@@ -72,7 +72,7 @@ function serializeObject(form){
 }
 
 function getCzColumn(row){
-    var str="<a href=\"#\" onclick=\"toQyzjgxsDetail('"+row.taskId+"','"+row.objectType+"','"+row.objectValue+"');\" class=\"cz\"><span>结果显示</span></a>";
+    var str="<a href=\"javascript:;\" onclick=\"toQyzjgxsDetail('"+row.taskId+"','"+row.objectType+"','"+row.objectValue+"');\" class=\"cz\"><span>结果显示</span></a>";
     return str;
 }
 
@@ -83,19 +83,32 @@ function toQyzjgxsDetail(taskId,objType,objValue){
         "imsi":objValue
     }
     var cllxArr = ["6424","6422","6423","7888"];
+    var index = layer.load(1, {
+        content: '加载中',
+        shade: [0.35,'#fff'],
+        success: function(layero) {
+            layero.find('.layui-layer-content').css({
+                'padding-top': '40px',
+                'width': '70px',
+                'background-position-x': '2px'
+            });
+        }
+    });
     $.ajax({
         type:"POST",
         data:param,
         url:"/queryTaskDetail",
         success:function(result) {
+            layer.close(index);
             if(result){
                 var data = result.data;
                 var ryzpStr = "";
-                if (null != data.ryzp && "" != data.ryzp) {
-                    ryzpStr = "<img src=\"data:image/gif;base64," + data.ryzp + "\"/>";
-                } else {
+                if(data.ryzp){
+                        ryzpStr = "<img src=\"data:image/gif;base64," + data.ryzp + "\"/>";
+                }else {
                     ryzpStr = "<img src=\"/images/timg.jpg\" style = \"height:121px;width:100px;\"/>";
                 }
+
                 if(cllxArr.indexOf(objType) > -1){
                     //车辆
                     var zjlx = data.zjlx==null?"":data.zjlx;
