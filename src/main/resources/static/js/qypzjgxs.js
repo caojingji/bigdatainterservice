@@ -82,7 +82,7 @@ function toQyzjgxsDetail(taskId,objType,objValue){
         "objType":objType,
         "imsi":objValue
     }
-    var cllxArr = [6424,6422,6423,7888];
+    var cllxArr = ["6424","6422","6423","7888"];
     $.ajax({
         type:"POST",
         data:param,
@@ -132,7 +132,6 @@ function toQyzjgxsDetail(taskId,objType,objValue){
         error:function () {
         }
     });
-    openRyxx();
 }
 function openRyxx(){
     $('#ryjgzs').dialog({
