@@ -40,7 +40,7 @@ function doQuery(){
         queryParams:serializeObject($("form[name='qypzjgxsForm']")),
         striped: true,
         fitColumns: true,
-        singleSelect: false,
+        singleSelect: true,
         pagination: true,
         nowrap: false, //设置是否换行  false换行 true表示不换行
         pageSize: 20,
