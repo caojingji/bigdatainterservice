@@ -80,7 +80,6 @@ function toSkgjbsjgzsDetail(taskId,objType,objValue){
     var param = {
         "imsi":objValue
     }
-    var cllxArr = ["6424","6422","6423","7888"];
     var index = layer.load(1, {
         content: '加载中',
         shade: [0.35,'#fff'],

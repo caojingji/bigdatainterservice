@@ -97,7 +97,7 @@ function queryTasks(type){
         });
 }
 function showTaskResults(taskId){
-    var url="/toShowResultJsp?taskId="+taskId;
+    var url="/toShowSkgjbsjgJsp?taskId="+taskId;
     window.open(url);
 }
 </script>
