@@ -124,7 +124,7 @@
                             </td>
                         </tr>
                         <tr>
-                            <td class="ar" width="13.3%">登记日期：</td>
+                            <td class="ar" width="13.3%">登记时间：</td>
                             <td width="20%">
                                 <span class="textbox">
                                   <input id="djsjStart" name="djsjStart" class="Wdate" type="text" onkeypress="return checkDateFmt();" style="width:100%;" onFocus="WdatePicker({maxDate:'#F{$dp.$D(\'djsjEnd\')}',dateFmt:'yyyy-MM-dd'})"/>
