@@ -26,7 +26,7 @@ function doClear(){
 }
 var table_title =[
     {title:"类别参数",field:"objectValue",align:'center',width:'25%'},
-    {title:"类别code",field:"objectType",align:'center',width:'20%'},
+    {title:"类别代码",field:"objectType",align:'center',width:'20%'},
     {title:"类别名称",field:"objectTypeName",align:'center',width:'20%'},
     {title:"登记时间",field:"djsj",align:'center',width:'25%'},
     {title:"操作",field:"cz",align:'center',width:'10%',formatter:function(val,row,index){
@@ -128,7 +128,6 @@ function toQyzjgxsDetail(taskId,objType,objValue){
                     var zjhm = data.zjhm==null?"":data.zjhm;
                     var csrq = data.csrq==null?"":data.csrq;
                     var sjhm = data.sjhm==null?"":data.sjhm;
-                    var imsi = data.imsi==null?"":data.imsi;
                     var xzzDzmc = data.xzzDzmc==null?"":data.xzzDzmc;
                     $("#ryzp").html(ryzpStr);
                     $("#ryName").text(name);
@@ -136,7 +135,7 @@ function toQyzjgxsDetail(taskId,objType,objValue){
                     $("#rySfzh").text(zjhm);
                     $("#ryCsrq").text(csrq);
                     $("#ryDhhm").text(sjhm);
-                    $("#imsi").text(imsi);
+                    $("#imsi").text(objValue);
                     $("#ryAddress").text(xzzDzmc);
                     openRyxx();
                 }

@@ -26,7 +26,7 @@ function doClear(){
 }
 var table_title =[
     {title:"类别参数",field:"objectValue",align:'center',width:'25%'},
-    {title:"类别code",field:"objectType",align:'center',width:'15%'},
+    {title:"类别代码",field:"objectType",align:'center',width:'15%'},
     {title:"类别名称",field:"objectTypeName",align:'center',width:'15%'},
     {title:"数量",field:"count",align:'center',width:'10%'},
     {title:"登记时间",field:"djsj",align:'center',width:'25%'},
