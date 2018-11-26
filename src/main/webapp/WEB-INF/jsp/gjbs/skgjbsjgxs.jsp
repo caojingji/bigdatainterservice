@@ -22,9 +22,9 @@
     .float-div{float: left;margin: 15px 0 25px 0;width:100%;}
     .xx-box{width:100%;height:240px;margin:0 auto;background: #fff;position: relative;}
     .result{display: table;width:100%;}
-    .lf-img{display: inline-block;width:40%;height:100%;float: left;}
-    .lf-img>img{width:98px;margin:0 10px;position: absolute;top:50%;margin-top:-60px;margin-left:44px;}
-    .rg-xx{display: inline-block;width:59%;position:relative;z-index:1000000;border: 1px solid #ececec;border-radius: 5px;padding-left:10px;}
+    .lf-img{display: inline-block;width:36%;height:100%;float: left;}
+    .lf-img>img{width:135px;margin:0 10px;position: absolute;top:50%;margin-top:-83px;margin-left:25px;}
+    .rg-xx{display: inline-block;width:61%;position:relative;z-index:1000000;border: 1px solid #ececec;border-radius: 5px;padding-left:10px;}
     .xx-line>.xx-xm{font-weight:600;float:left;color:#2145ca;width:130px;overflow: hidden;white-space: nowrap;text-overflow: ellipsis;}
     .xx-line{width:100%;line-height: 35px;}
     .xx-line>span{margin:0 3px;color:#848080;}

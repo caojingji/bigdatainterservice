@@ -514,10 +514,11 @@ public class TrackTogetherContoller {
 
     @RequestMapping(value="queryTogetherTaskDetail",method = {RequestMethod.GET,RequestMethod.POST})
     @ResponseBody
-    public JSONObject queryTaskDetail (String imsi){
+    public JSONObject queryTaskDetail (String imsi,String objType){
         JSONObject jsonObject = new JSONObject();
         TogetherTaskResultVO taskResultVO = new TogetherTaskResultVO();
         try {
+            taskResultVO.setObjectValue(objType);
              taskResultVO = getResultData(imsi,taskResultVO);
             if(taskResultVO != null){
                 jsonObject.put("code",ResultEnum.SUCCESS.getCode());
