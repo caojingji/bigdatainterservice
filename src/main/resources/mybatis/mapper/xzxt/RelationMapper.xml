@@ -19,7 +19,7 @@
             and to_date(r.timestamp,'yyyy-MM-dd HH24:mi:ss') <![CDATA[>=]]> to_date(#{kssj},'yyyy-MM-dd HH24:mi:ss')
         </if>
         <if test="jssj != null and jssj != ''">
-            and to_date(r.timestamp,'yyyy-MM-dd HH24:mi:ss') <![CDATA[<]]> to_date(#{jssj},'yyyy-MM-dd HH24:mi:ss')
+            and to_date(r.timestamp,'yyyy-MM-dd HH24:mi:ss') <![CDATA[<=]]> to_date(#{jssj},'yyyy-MM-dd HH24:mi:ss')
         </if>
     </sql>
     <select id = "getRelations" parameterType="com.founder.interservice.querymodel.RelationFilter" resultType="com.founder.interservice.model.Relation">
