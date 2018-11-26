@@ -35,8 +35,8 @@
     .xx-line>.green{color:#40ea0a;}
     .xx-line>.yellow{color:#eac710;}
     .xx-line>.orange{color:#ce4b22;}
-    .xx-line>.label{display: inline-block;margin:0 5px;padding:2px 5px;background: #e23e35;height: 20px;
-        line-height: 20px;
+    .xx-line>.label{display: inline-block;margin:0 5px;padding:2px 5px;background: #e23e35;height: 24px;
+        line-height: 21px;
         border-radius: 11px;
         font-size: 12px;color:#fff;}
     .over{    overflow: inherit;white-space: inherit;}
