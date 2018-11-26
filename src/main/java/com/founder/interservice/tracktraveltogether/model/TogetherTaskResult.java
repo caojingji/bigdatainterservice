@@ -25,6 +25,8 @@ public class TogetherTaskResult {
     private String objectType;
     private String objectTypeName;
     private String objectValue;
+    private String djsjStart;
+    private String djsjEnd;
     @Column(insertable = false)
     private Date djsj;
     private int count;

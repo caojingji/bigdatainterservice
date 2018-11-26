@@ -2,6 +2,7 @@ package com.founder.interservice.tracktraveltogether.service.impl;
 
 import com.founder.interservice.exception.InterServiceException;
 import com.founder.interservice.enums.ResultEnum;
+import com.founder.interservice.mapper.xzxt.TogetherTaskResultMapper;
 import com.founder.interservice.mapper.xzxt.TrackTogetherMapper;
 import com.founder.interservice.tracktraveltogether.model.TogetherTaskResult;
 import com.founder.interservice.tracktraveltogether.model.TrackTogetherTask;
@@ -44,6 +45,9 @@ public class TrackTogetherServiceImpl implements TrackTogetherService {
     private TogetherTaskResultRepository taskResultRepository;
     @Autowired
     private TrackTogetherMapper trackTogetherMapper;
+    @Autowired
+    private TogetherTaskResultMapper togetherTaskResultMapper;
+
     /**
      *
      * @Description: 发送伴随任务 并且返回任务编号
@@ -151,5 +155,15 @@ public class TrackTogetherServiceImpl implements TrackTogetherService {
     @Override
     public List<TrackTogetherTask> queryTasksByAsjbhAndFwbsh(TrackTogetherTask taskParam) {
         return trackTogetherMapper.queryTasksByAsjbhAndFwbsh(taskParam);
+    }
+
+    @Override
+    public List<TogetherTaskResult> getTogetherTaskResultList(TogetherTaskResult taskParam) {
+        return togetherTaskResultMapper.getTogetherTaskResultList(taskParam);
+    }
+
+    @Override
+    public int getTogetherTaskResultListTotalCount(TogetherTaskResult taskParam) {
+        return togetherTaskResultMapper.getTogetherTaskResultListTotalCount(taskParam);
     }
 }

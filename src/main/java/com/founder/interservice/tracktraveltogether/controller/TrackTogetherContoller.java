@@ -19,12 +19,15 @@ import com.founder.interservice.util.*;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.http.HttpServletRequest;
+import java.text.DateFormat;
+import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.util.*;
 
@@ -55,6 +58,47 @@ public class TrackTogetherContoller {
     @RequestMapping(value = "/toShowResultJsp")
     public ModelAndView toShowResultJsp(String taskId){
         ModelAndView modelAndView = new ModelAndView("gjbs/skgjbsjgzs");
+        modelAndView.addObject("taskId", taskId);
+        return modelAndView;
+    }
+    /**
+     *
+     * @Description: 跳转到时空轨迹伴随结果展示(新)
+     * @Param:
+     * @return: ModelAndView
+     */
+    @RequestMapping(value = "/toShowSkgjbsjgJsp")
+    public ModelAndView toShowSkgjbsjgJsp(String taskId){
+        ModelAndView modelAndView = new ModelAndView("gjbs/skgjbsjgxs");
+        TrackTogetherTask task = trackTogetherService.findByTaskId(taskId);
+        modelAndView.addObject("taskId",taskId);
+        modelAndView.addObject("taskName",task.getTaskName());
+        String state = "";
+        //QUEUEING 排队等待、STARTING 开始中、RUNNING 执行中、FINISHED 完成
+        if("QUEUEING".equals(task.getState())){
+            state = "排队等待";
+        }else if("STARTING".equals(task.getState())){
+            state = "开始中";
+        }else if("RUNNING".equals(task.getState())){
+            state = "执行中";
+        }else if("FINISHED".equals(task.getState())){
+            state = "完成";
+        }
+        String progress = "";
+        if("1".equals(task.getProgress())){
+            progress = "100%";
+        }else if("0".equals(task.getProgress())){
+            progress = "0%";
+        }else {
+            double pi =Double.valueOf(task.getProgress());
+            progress =new DecimalFormat("#%").format(pi);
+        }
+        DateFormat bf = new SimpleDateFormat("yyyy-MM-dd HH:mm");
+        modelAndView.addObject("state",state);
+        modelAndView.addObject("kssj",bf.format(task.getStartTime()));
+        modelAndView.addObject("jssj",bf.format(task.getEndTime()));
+        modelAndView.addObject("progress",progress);
+        modelAndView.addObject("taskCaseId",task.getTaskCaseId());
         modelAndView.addObject("taskId", taskId);
         return modelAndView;
     }
@@ -437,5 +481,128 @@ public class TrackTogetherContoller {
         return resultVO;
     }
 
+    /**
+     *  分页查询伴随任务结果
+     * @param page
+     * @param rows
+     * @return
+     */
+    @RequestMapping(value = "/getTogetherTaskResultList",method = {RequestMethod.GET,RequestMethod.POST})
+    @ResponseBody
+    public Map<String,Object> getTogetherTaskResultList(TogetherTaskResult taskParam,@RequestParam(value = "page",defaultValue = "0") int page,
+                                                        @RequestParam(value = "rows",defaultValue = "0") int rows){
+        Map<String,Object> resultMap = new HashMap<>();
+        List<TogetherTaskResult> taskResults = new ArrayList<>();
+        int totalCount = 0;
+        try{
+            EasyUIPage easyUIPage = new EasyUIPage();
+            easyUIPage.setPage(page);
+            easyUIPage.setPagePara(rows);
+            int begin = easyUIPage.getBegin();
+            int end = easyUIPage.getEnd();
+            taskParam.setStartNum(begin);
+            taskParam.setEndNum(end);
+            taskResults = trackTogetherService.getTogetherTaskResultList(taskParam);
+            totalCount = trackTogetherService.getTogetherTaskResultListTotalCount(taskParam);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        resultMap.put("total",totalCount);
+        resultMap.put("rows",taskResults);
+        return resultMap;
+    }
+
+    @RequestMapping(value="queryTogetherTaskDetail",method = {RequestMethod.GET,RequestMethod.POST})
+    @ResponseBody
+    public JSONObject queryTaskDetail (String imsi){
+        JSONObject jsonObject = new JSONObject();
+        TogetherTaskResultVO taskResultVO = new TogetherTaskResultVO();
+        try {
+             taskResultVO = getResultData(imsi,taskResultVO);
+            if(taskResultVO != null){
+                jsonObject.put("code",ResultEnum.SUCCESS.getCode());
+                jsonObject.put("msg",ResultEnum.SUCCESS.getCode());
+            }else {
+                jsonObject.put("code", ResultEnum.SUCCESS.getCode());
+                jsonObject.put("msg","无数据");
+            }
+            jsonObject.put("data",taskResultVO);
+        } catch (Exception e) {
+            jsonObject.put("code", ResultEnum.RESULT_ERROR.getCode());
+            jsonObject.put("msg",ResultEnum.RESULT_ERROR.getMessage());
+            e.printStackTrace();
+        }
+        return jsonObject;
+    }
+
+    @Async("getAsyncExecutor")
+    public TogetherTaskResultVO getResultData(String imsi,TogetherTaskResultVO taskResultVO) throws Exception{
+        if(!StringUtil.ckeckEmpty(imsi)){
+            JSONObject jsonObject = iphoneTrackService.getObjectRelation(imsi);
+            if(jsonObject != null){
+                JSONArray jsonArray = jsonObject.getJSONArray("results");
+                if(jsonArray != null && jsonArray.size() > 0){
+                    for (int j = 0; j <= jsonArray.size() - 1;j++){
+                        JSONObject resObj = jsonArray.getJSONObject(j);
+                        String relativeType = resObj.getString("relativeType"); //关联类型  4402（手机-IMSI）
+                        String objectFromType = resObj.getString("objectFromType"); //数据来源值类型  4314(IMSI)
+                        String objectFromValue = resObj.getString("objectFromValue"); //数据来源值
+                        String objectToType = resObj.getString("objectToType"); //所得对象值类型  20（联系方式） 4394（电话号码） 3996（手机号码）
+                        if ("4402".equals(relativeType) && "4314".equals(objectFromType)
+                                && Arrays.asList("20","4394","3996").contains(objectToType) && taskResultVO.getObjectValue().equals(objectFromValue)){
+                            String sjhm = resObj.getString("objectToValue");
+                            if(null != sjhm && 11 == sjhm.length()){
+                                taskResultVO.setSjhm(sjhm); //将得到手机号码赋值到对象
+                                break;
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        //2 通过手机号码调取身份证号
+        if(!StringUtil.ckeckEmpty(taskResultVO.getSjhm())){
+            JSONObject jsonObj = iphoneTrackService.getObjectRelationAll(taskResultVO.getSjhm());
+            if(jsonObj != null && "1".equals(jsonObj.getString("objType"))){
+                String zjhm = jsonObj.getString("objValue");
+                if(StringUtil.ckeckEmpty(zjhm)){ //如果第四个接口获取的身份证号为空    则使用第一个接口进行获取
+                    JSONObject jsonObject = iphoneTrackService.getObjectRelation(taskResultVO.getSjhm());
+                    if(jsonObject != null){
+                        JSONArray jsonArray = jsonObject.getJSONArray("results");
+                        if(jsonArray != null && jsonArray.size() > 0){
+                            for (int j = 0; j <= jsonArray.size() - 1;j++){
+                                JSONObject resObj = jsonArray.getJSONObject(j);
+                                String relativeType = resObj.getString("relativeType"); //关联类型  20（联系方式）
+                                String objectFromType = resObj.getString("objectFromType"); //数据来源值类型  20（联系方式） 4394（电话号码） 3996（手机号码）
+                                String objectFromValue = resObj.getString("objectFromValue"); //数据来源值
+                                String objectToType = resObj.getString("objectToType"); //所得对象值类型  1（身份证号码）
+                                if ("20".equals(relativeType) && taskResultVO.getSjhm().equals(objectFromValue)
+                                        && Arrays.asList("20","4394","3996").contains(objectFromType) && "1".equals(objectToType)){
+                                    String zjhm1 = resObj.getString("objectToValue");
+                                    taskResultVO.setZjhm(zjhm1);
+                                    break;
+                                }
+                            }
+                        }
+                    }
+                }else{
+                    taskResultVO.setZjhm(zjhm); //如果第四个接口获取的身份证号码 不为空 则直接赋值
+                }
+            }
+        }
+        //3 通过身份证号调取二代证信息
+        if(!StringUtil.ckeckEmpty(taskResultVO.getZjhm())){
+            AutoTbStRy tbStRy = new Qgckzp().getQgckAllxxXml(taskResultVO.getZjhm());
+            taskResultVO.setXzzDzmc(tbStRy.getXzzDzmc());//现住址
+            taskResultVO.setCsdDzmc(tbStRy.getCsdDzmc());//出生地
+            if(tbStRy.getCsrqRqgzxx() != null){
+                taskResultVO.setCsrq(DateUtil.convertDateToChineseString(tbStRy.getCsrqRqgzxx()));//出生日期
+                taskResultVO.setAge(DateUtil.getAge(tbStRy.getCsrqRqgzxx())); //age
+            }
+            taskResultVO.setName(tbStRy.getXm());//姓名
+            taskResultVO.setRyzp(tbStRy.getEdzzplj());//人员照片
+        }
+        return taskResultVO;
+    }
 
 }

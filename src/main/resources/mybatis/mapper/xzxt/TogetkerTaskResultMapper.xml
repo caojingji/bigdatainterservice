@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.founder.interservice.mapper.xzxt.TogetherTaskResultMapper">
+
+    <select id="getTogetherTaskResultList" parameterType="com.founder.interservice.tracktraveltogether.model.TogetherTaskResult" resultType="com.founder.interservice.tracktraveltogether.model.TogetherTaskResult">
+        select t2.*
+            from (
+              select t1.*,
+                  rownum as rn
+                from (
+                    select
+                        t.TASK_ID as taskId,
+                        t.OBJECT_VALUE as objectValue,
+                        t.OBJECT_TYPE as objectType,
+                        t.OBJECT_TYPE_NAME as objectTypeName,
+                        t.XXZJBH as XXZJBH,
+                        t.DJSJ as djsj,
+                        t.COUNT as count
+                    from TB_ST_TOGETHERTASKRESULT t
+                      where t.TASK_ID = #{taskId}
+                        <if test="objectValue!= null and objectValue!= ''">and t.OBJECT_VALUE = #{objectValue}</if>
+                        <if test="djsjStart!=null and djsjStart!=''"> and t.DJSJ <![CDATA[>=]]> to_date(#{djsjStart},'yyyy-MM-dd') </if>
+                        <if test="djsjEnd!=null and djsjEnd!=''"> and t.DJSJ <![CDATA[<=]]> to_date(#{djsjEnd},'yyyy-MM-dd') </if>
+                      order by t.djsj
+              ) t1
+              where rownum <![CDATA[ <= ]]> #{endNum }
+            ) t2
+          where rn <![CDATA[ > ]]> #{startNum }
+    </select>
+    <select id="getTogetherTaskResultListTotalCount" parameterType="com.founder.interservice.tracktraveltogether.model.TogetherTaskResult" resultType="java.lang.Integer">
+                    select COUNT(*)
+                    from TB_ST_TOGETHERTASKRESULT t
+                      where t.TASK_ID = #{taskId}
+        <if test="objectValue!= null and objectValue!= ''">and t.OBJECT_VALUE = #{objectValue}</if>
+        <if test="djsjStart!=null and djsjStart!=''"> and t.DJSJ <![CDATA[>=]]> to_date(#{djsjStart},'yyyy-MM-dd') </if>
+        <if test="djsjEnd!=null and djsjEnd!=''"> and t.DJSJ <![CDATA[<=]]> to_date(#{djsjEnd},'yyyy-MM-dd') </if>
+    </select>
+</mapper>
