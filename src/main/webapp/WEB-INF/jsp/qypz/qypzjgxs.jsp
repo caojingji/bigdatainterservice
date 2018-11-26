@@ -19,18 +19,19 @@
     <link rel="stylesheet" href="/common/datepicker/skin/default/datepicker.css">
 </head>
 <style>
-    .float-div{float: left;margin:15px 0;width:100%;}
+    .float-div{float: left;margin: 15px 0 25px 0;width:100%;}
     .xx-box{width:100%;height:240px;margin:0 auto;background: #fff;position: relative;}
     .result{display: table;width:100%;}
-    .lf-img{display: inline-block;width:30%;}
-    .lf-img>img{width:98px;margin:0 10px;position: absolute;top:50%;margin-top:-60px;}
-    .rg-xx{display: inline-block;width:64%;position:relative;z-index:1000000;}
+    .lf-img{display: inline-block;width:40%;height:100%;float: left;}
+    .lf-img>img{width:98px;margin:0 10px;position: absolute;top:50%;margin-top:-60px;margin-left:44px;}
+    .rg-xx{display: inline-block;width:59%;position:relative;z-index:1000000;border: 1px solid #ececec;border-radius: 5px;padding-left:10px;}
     .xx-line>.xx-xm{font-weight:600;float:left;color:#2145ca;width:130px;overflow: hidden;white-space: nowrap;text-overflow: ellipsis;}
     .xx-line{width:100%;line-height: 35px;}
-    .xx-line>span,.xx-line>i{margin:0 3px;color:#848080;cursor: pointer;}
+    .xx-line>span{margin:0 3px;color:#848080;}
+    .xx-line>i{margin:0 3px;color:#848080;cursor: pointer;}
     .xx-line>i{color:#848080;line-height: 35px;}
     .xx-line>.c125{float: right;color:#f11f05;}
-    .xx-line{overflow: hidden;white-space: nowrap;text-overflow: ellipsis;}
+    .xx-line{overflow: hidden;white-space: nowrap;text-overflow: ellipsis;border-bottom: 1px dashed #ccc;}
     .xx-line>.green{color:#40ea0a;}
     .xx-line>.yellow{color:#eac710;}
     .xx-line>.orange{color:#ce4b22;}
@@ -172,13 +173,13 @@
 <div id="ryjgzs" class="easyui-dialog" title="人员" data-options="modal:true,closed:true,collapsible:false,minimizable:false,maximizable:false" style="width:520px;height:auto;padding:10px;display:none;">
     <div class='float-div'>
         <div class='xx-box'>
-            <div class='lf-img' id="ryzp"></div>
+            <div class='lf-img' id="ryzp"><img src="/images/timg.jpg" style = "height:121px;width:100px;"/></div>
             <div class='rg-xx'>
-                <div class='xx-line'><span class='xx-xm' id="ryName"></span><span id="ryAge"></span><span class='c125'></span></div>
+                <div class='xx-line'><span>姓名：<span class='xx-xm' id="ryName"></span></span><span style="margin-left:10px;">年龄：<span id="ryAge"></span></span><span class='c125'></span></div>
                 <div class='xx-line'><i class='fa fa-id-card orange' title='身份证号'></i><span id="rySfzh"></span></div>
                 <div class='xx-line'><i class='fa fa-user yellow' title='出生日期'></i><span id="ryCsrq"></span></div>
                 <div class='xx-line'><i class='fa fa-phone' title='电话号码'></i><span id="ryDhhm"></span></div>
-                <div class='xx-line'><i class='fa fa-phone' title='IMSI'></i><span id="imsi"></span></div>
+                <div class='xx-line'><i class='fa fa-commenting-o' title='IMSI'></i><span id="imsi"></span></div>
                 <div class='xx-line'><i class='fa fa-map-marker green' title='现住址'></i><span id="ryAddress"></span></div>
                 <div class='xx-line over'><span class='label'>前科人员</span><span class='label'>高危人员</span><span class='label'>刑侦关注人员</span></div>
             </div>
