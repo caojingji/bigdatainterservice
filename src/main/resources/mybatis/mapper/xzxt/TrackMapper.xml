@@ -24,7 +24,7 @@
             and to_date(t.timestr,'yyyy-MM-dd HH24:mi:ss') <![CDATA[>=]]> to_date(#{kssj},'yyyy-MM-dd HH24:mi:ss')
         </if>
         <if test="jssj != null and jssj != ''">
-            and to_date(t.timestr,'yyyy-MM-dd HH24:mi:ss') <![CDATA[<]]> to_date(#{jssj},'yyyy-MM-dd HH24:mi:ss')
+            and to_date(t.timestr,'yyyy-MM-dd HH24:mi:ss') <![CDATA[<=]]> to_date(#{jssj},'yyyy-MM-dd HH24:mi:ss')
         </if>
     </sql>
 

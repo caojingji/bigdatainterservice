@@ -169,6 +169,9 @@ public class DataController {
         ModelAndView modelAndView = new ModelAndView();
         modelAndView.addObject("objValue", objValue);
         modelAndView.addObject("kssj", kssj);
+        if(!jssj.contains(" ")){
+            jssj = jssj + " 23:59:59";
+        }
         modelAndView.addObject("jssj", jssj);
         modelAndView.setViewName("jzgjzs");
         return modelAndView;
@@ -192,6 +195,9 @@ public class DataController {
             /*数据入库后再进行查取操作*/
             TrackFilter trackFilter = new TrackFilter();
             trackFilter.setKssj(kssj);
+            if(!jssj.contains(" ")){
+                jssj = jssj + " 23:59:59";
+            }
             trackFilter.setJssj(jssj);
             trackFilter.setObjectvalue(getImsiStr(objValue));
             List<Track> tracks = dataService.queryTracksListNoPage(trackFilter);
@@ -233,6 +239,9 @@ public class DataController {
         try{
             TrackFilter trackFilter = new TrackFilter();
             trackFilter.setKssj(kssj);
+            if(!jssj.contains(" ")){
+                jssj = jssj + " 23:59:59";
+            }
             trackFilter.setJssj(jssj);
             String imsis = getImsiStr(objValue);
             if(imsis != null && !imsis.isEmpty()){
@@ -272,6 +281,9 @@ public class DataController {
         try {
             TrackFilter trackFilter = new TrackFilter();
             trackFilter.setKssj(kssj);
+            if(!jssj.contains(" ")){
+                jssj = jssj + " 23:59:59";
+            }
             trackFilter.setJssj(jssj);
             String imsis = getImsiStr(objValue);
             if(imsis != null && !imsis.isEmpty()){
@@ -301,6 +313,9 @@ public class DataController {
         try {
             TrackFilter trackFilter = new TrackFilter();
             trackFilter.setKssj(kssj);
+            if(!jssj.contains(" ")){
+                jssj = jssj + " 23:59:59";
+            }
             trackFilter.setJssj(jssj);
             if("01".equals(base)){
                 trackFilter.setBase("夜间");
@@ -362,6 +377,9 @@ public class DataController {
         try {
             TrackFilter trackFilter = new TrackFilter();
             trackFilter.setKssj(kssj);
+            if(!jssj.contains(" ")){
+                jssj = jssj + " 23:59:59";
+            }
             trackFilter.setJssj(jssj);
             if("01".equals(base)){
                 trackFilter.setBase("夜间");
@@ -407,6 +425,9 @@ public class DataController {
         try {
             TrackFilter trackFilter = new TrackFilter();
             trackFilter.setKssj(kssj);
+            if(!jssj.contains(" ")){
+                jssj = jssj + " 23:59:59";
+            }
             trackFilter.setJssj(jssj);
             String imsis = getImsiStr(objValue);
             if(imsis != null && !imsis.isEmpty()){
@@ -455,6 +476,9 @@ public class DataController {
         try {
             TrackFilter trackFilter = new TrackFilter();
             trackFilter.setKssj(kssj);
+            if(!jssj.contains(" ")){
+                jssj = jssj + " 23:59:59";
+            }
             trackFilter.setJssj(jssj);
             String imsis = getImsiStr(objValue);
             if(imsis != null && !imsis.isEmpty()){
@@ -504,6 +528,9 @@ public class DataController {
 
             TrackFilter trackFilter = new TrackFilter();
             trackFilter.setKssj(kssj);
+            if(!jssj.contains(" ")){
+                jssj = jssj + " 23:59:59";
+            }
             trackFilter.setJssj(jssj);
             trackFilter.setBegin(begin);
             trackFilter.setEnd(end);
