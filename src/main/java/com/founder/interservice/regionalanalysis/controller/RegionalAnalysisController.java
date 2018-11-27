@@ -79,6 +79,8 @@ public class RegionalAnalysisController {
             state = "执行中";
         }else if("FINISHED".equals(task.getState())){
             state = "完成";
+        }else if("TIMEOUT".equals(task.getState())){
+            state = "计算超时";
         }
         String progress = "";
         if("1".equals(task.getProgress())){
