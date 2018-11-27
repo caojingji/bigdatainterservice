@@ -514,12 +514,12 @@ public class TrackTogetherContoller {
 
     @RequestMapping(value="queryTogetherTaskDetail",method = {RequestMethod.GET,RequestMethod.POST})
     @ResponseBody
-    public JSONObject queryTaskDetail (String imsi,String objType){
+    public JSONObject queryTaskDetail (String imsi){
         JSONObject jsonObject = new JSONObject();
         TogetherTaskResultVO taskResultVO = new TogetherTaskResultVO();
         try {
-            taskResultVO.setObjectValue(objType);
-             taskResultVO = getResultData(imsi,taskResultVO);
+            taskResultVO.setObjectValue(imsi);
+             taskResultVO = getResultData(taskResultVO);
             if(taskResultVO != null){
                 jsonObject.put("code",ResultEnum.SUCCESS.getCode());
                 jsonObject.put("msg",ResultEnum.SUCCESS.getCode());
@@ -537,9 +537,9 @@ public class TrackTogetherContoller {
     }
 
     @Async("getAsyncExecutor")
-    public TogetherTaskResultVO getResultData(String imsi,TogetherTaskResultVO taskResultVO) throws Exception{
-        if(!StringUtil.ckeckEmpty(imsi)){
-            JSONObject jsonObject = iphoneTrackService.getObjectRelation(imsi);
+    public TogetherTaskResultVO getResultData(TogetherTaskResultVO taskResultVO) throws Exception{
+        if(!StringUtil.ckeckEmpty(taskResultVO.getObjectValue())){
+            JSONObject jsonObject = iphoneTrackService.getObjectRelation(taskResultVO.getObjectValue());
             if(jsonObject != null){
                 JSONArray jsonArray = jsonObject.getJSONArray("results");
                 if(jsonArray != null && jsonArray.size() > 0){

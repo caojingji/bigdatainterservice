@@ -79,8 +79,7 @@ function getCzColumn(row){
 
 function toSkgjbsjgzsDetail(taskId,objType,objValue){
     var param = {
-        "imsi":objValue,
-        "objType":objType
+        "imsi":objValue
     }
     var index = layer.load(1, {
         content: '加载中',
