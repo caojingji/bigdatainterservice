@@ -25,7 +25,9 @@ public class TogetherTaskResult {
     private String objectType;
     private String objectTypeName;
     private String objectValue;
+    @Transient
     private String djsjStart;
+    @Transient
     private String djsjEnd;
     @Column(insertable = false)
     private Date djsj;

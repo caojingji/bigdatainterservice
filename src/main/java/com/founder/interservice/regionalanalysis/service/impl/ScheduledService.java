@@ -63,24 +63,22 @@ public class ScheduledService {
                     String status_url = REGIONAL_ANALYSIS_TASK_STATUS + "&taskId="+task.getTaskId();
                     System.out.println("status_url = " + status_url);
                     String statusStr = HttpUtil.doGet(status_url);
-                    //String statusStr = "{\"progress\":1,\"state\":\"FINISHED\"}";
+                    //String statusStr = "{\"progress\":0.8,\"state\":\"TIMEOUT\"}";
                     System.out.println("statusStr ======================== " + statusStr);
                     while(statusStr == null || statusStr.isEmpty() || !statusStr.startsWith("{")){
                         statusStr = HttpUtil.doGet(status_url);
                         System.out.println("statusStr ======================== " + statusStr);
                     }
                     JSONObject jsonObject = JSONObject.parseObject(statusStr);
-                    int progress = jsonObject.getIntValue("progress");
+                    String progress = jsonObject.getString("progress");
                     String state = jsonObject.getString("state");
-                    if(progress == 1 && "FINISHED".equals(state)){ //任务执行完成  这时需要去取回任务结果值
-                        String info_url = REGIONAL_ANALYSIS_TASK_INFO + "&taskId=" + task.getTaskId();
-                        String taskInfoResult = HttpUtil.doGet(info_url);
-                        //String taskInfoResult = "{\"results\":[],\"status\":\"ok\"}";
-                        while(taskInfoResult == null || taskInfoResult.isEmpty() || !taskInfoResult.startsWith("{")){
-                            taskInfoResult = HttpUtil.doGet(info_url);
-                        }
-                        getAndSaveInfo(taskInfoResult,task);
+                    String info_url = REGIONAL_ANALYSIS_TASK_INFO + "&taskId=" + task.getTaskId();
+                    String taskInfoResult = HttpUtil.doGet(info_url);
+                    //String taskInfoResult = "{\"results\":[],\"status\":\"ok\"}";
+                    while(taskInfoResult == null || taskInfoResult.isEmpty() || !taskInfoResult.startsWith("{")){
+                        taskInfoResult = HttpUtil.doGet(info_url);
                     }
+                    getAndSaveInfo(taskInfoResult,task,progress,state);
                 }
             }
         }catch (Exception e){
@@ -88,7 +86,7 @@ public class ScheduledService {
         }
     }
 
-    public void getAndSaveInfo(String taskInfoResult,RegionalTask task) throws  Exception{
+    public void getAndSaveInfo(String taskInfoResult,RegionalTask task,String progress,String state) throws  Exception{
         JSONObject o = JSONObject.parseObject(taskInfoResult);
         JSONArray jsonArray = o.getJSONArray("results");
         if(jsonArray != null && jsonArray.size() > 0){
@@ -106,10 +104,10 @@ public class ScheduledService {
                 if(results == null || results.isEmpty()){
                     taskResultRepository.save(taskResults);
                 }
-                regionalTaskRepository.updaxzxtatusByTaskId(task.getTaskId());
+                regionalTaskRepository.updaxzxtatusByTaskId(progress,state,task.getTaskId());
             }
         }else{
-            regionalTaskRepository.updaxzxtatusByTaskId(task.getTaskId());
+            regionalTaskRepository.updaxzxtatusByTaskId(progress,state,task.getTaskId());
         }
     }
 
