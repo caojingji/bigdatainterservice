@@ -92,11 +92,13 @@ public class IphoneTrackServiceImpl implements IphoneTrackService {
             if(!"1".equals(objType)){
                 if(sjhmTypes.contains(objType)){ //返回结果是手机号码及以下的关联
                     JSONObject jso = getSjhmsList(jsonObejct);
-                    resultObj.setObjType(jso.getString("objType"));
-                    resultObj.setObjTypeName(jso.getString("objTypeName"));
-                    resultObj.setObjValue(jso.getString("objValue"));
-                    resultObj.setQqhms(jso.getJSONArray("qqhms"));
-                    resultObj.setWxhms(jso.getJSONArray("wxhms"));
+                    if(jso != null){
+                        resultObj.setObjType(jso.getString("objType"));
+                        resultObj.setObjTypeName(jso.getString("objTypeName"));
+                        resultObj.setObjValue(jso.getString("objValue"));
+                        resultObj.setQqhms(jso.getJSONArray("qqhms"));
+                        resultObj.setWxhms(jso.getJSONArray("wxhms"));
+                    }
                 }
             }else{
                 resultObj.setObjType(jsonObejct.getString("objType"));
@@ -131,19 +133,21 @@ public class IphoneTrackServiceImpl implements IphoneTrackService {
                             }
                         } else if (sjhmTypes.contains(children.getString("objType"))){ //手机号码
                             object = getSjhmsList(children);
-                            if(sjhms.isEmpty()){
-                                sjhms.add(object);
-                            }else{
-                                boolean b = false;
-                                for (JSONObject o:sjhms){
-                                    if(o.getString("objValue").equals(children.getString("objValue"))){
-                                        b = true;
-                                        break;
-                                    }else{
-                                        continue;
+                            if(object != null){
+                                if(sjhms.isEmpty()){
+                                    sjhms.add(object);
+                                }else{
+                                    boolean b = false;
+                                    for (JSONObject o:sjhms){
+                                        if(o.getString("objValue").equals(children.getString("objValue"))){
+                                            b = true;
+                                            break;
+                                        }else{
+                                            continue;
+                                        }
                                     }
+                                    if(!b){sjhms.add(object);}
                                 }
-                                if(!b){sjhms.add(object);}
                             }
                         }
                     }
