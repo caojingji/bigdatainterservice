@@ -37,7 +37,7 @@ import java.util.Map;
  * @Version: 1.0
  */
 @Controller
-@CrossOrigin //跨域访问
+@CrossOrigin
 public class DataController {
 
     @Autowired
