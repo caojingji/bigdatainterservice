@@ -76,10 +76,10 @@ public class IphoneTrackServiceImpl implements IphoneTrackService {
         ResultObj resultObj = null;
         JSONObject jsonObejct = null;
         List<String> cphmTypes = Arrays.asList("6424","6422","6423","7888"); //汽车蓝色号码、汽车黄色号码、汽车白色号码，摩托车黄色号码
-        List<String> sjhmTypes = Arrays.asList("20","4394","3996"); //手机号码类别
+        List<String> sjhmTypes = Arrays.asList("20","4394","3996","6003"); //手机号码类别
         String url = relationGetAll_url + "&objectValue="+obj;
         String result = HttpUtil.doGet(url);
-        //String result = "{\"children\":[{\"children\":[],\"objType\":437,\"objTypeName\":\"号牌号码\",\"objValue\":\"渝AZN748\"},{\"children\":[],\"objType\":4394,\"objTypeName\":\"电话号码\",\"objValue\":\"02379226951\"},{\"children\":[{\"children\":[{\"children\":[],\"objType\":4315,\"objTypeName\":\"IMEI\",\"objValue\":\"866091037961143\"},{\"children\":[],\"objType\":4315,\"objTypeName\":\"IMEI\",\"objValue\":\"861106038308428\"},{\"children\":[],\"objType\":4615,\"objTypeName\":\"微信ID\",\"objValue\":\"612087581\"}],\"objType\":4314,\"objTypeName\":\"IMSI\",\"objValue\":\"460110496721423\"}],\"objType\":3996,\"objTypeName\":\"手机号码\",\"objValue\":\"13308271988\"},{\"children\":[],\"objType\":4394,\"objTypeName\":\"电话号码\",\"objValue\":\"18008365980\"},{\"children\":[{\"children\":[{\"children\":[],\"objType\":4315,\"objTypeName\":\"IMEI\",\"objValue\":\"866091037961143\"},{\"children\":[],\"objType\":4315,\"objTypeName\":\"IMEI\",\"objValue\":\"861106038308428\"},{\"children\":[],\"objType\":4615,\"objTypeName\":\"微信ID\",\"objValue\":\"612087581\"}],\"objType\":4314,\"objTypeName\":\"IMSI\",\"objValue\":\"460110496721423\"}],\"objType\":4394,\"objTypeName\":\"电话号码\",\"objValue\":\"13308271988\"},{\"children\":[{\"children\":[{\"children\":[],\"objType\":4315,\"objTypeName\":\"IMEI\",\"objValue\":\"866091037961143\"},{\"children\":[],\"objType\":4315,\"objTypeName\":\"IMEI\",\"objValue\":\"861106038308428\"},{\"children\":[],\"objType\":4615,\"objTypeName\":\"微信ID\",\"objValue\":\"612087581\"}],\"objType\":4314,\"objTypeName\":\"IMSI\",\"objValue\":\"460110496721423\"}],\"objType\":20,\"objTypeName\":\"联系方式\",\"objValue\":\"13308271988\"},{\"children\":[],\"objType\":6424,\"objTypeName\":\"汽车蓝色号牌\",\"objValue\":\"渝AZN748\"},{\"children\":[],\"objType\":4394,\"objTypeName\":\"电话号码\",\"objValue\":\"02367625393\"},{\"children\":[{\"children\":[{\"children\":[],\"objType\":4315,\"objTypeName\":\"IMEI\",\"objValue\":\"866091038053692\"}],\"objType\":4314,\"objTypeName\":\"IMSI\",\"objValue\":\"460005331386186\"}],\"objType\":4394,\"objTypeName\":\"电话号码\",\"objValue\":\"13638201377\"}],\"objType\":1,\"objTypeName\":\"身份证号码\",\"objValue\":\"513523196904108017\"}";
+        //String result = "{children:[{children:[],objType:4394,objTypeName:\"电话号码\",objValue:\"1253411025\"},{children:[],objType:20,objTypeName:\"联系方式\",objValue:\"15925883372\"},{children:[{children:[],objType:4314,objTypeName:\"IMSI\",objValue:\"460025023516943\"}],objType:20,objTypeName:\"联系方式\",objValue:\"15922883372\"},{children:[{}],objType:20,objTypeName:\"联系方式\",objValue:\"13642345119\"},{children:[],objType:6003,objTypeName:\"联系电话\",objValue:\"53411025\"}],objType:1,objTypeName:\"身份证号码\",objValue:\"500228198907233374\"}";
         //String result = "{\"children\":[{\"children\":[{\"children\":[],\"objType\":4315,\"objTypeName\":\"IMEI\",\"objValue\":\"866091037961143\"},{\"children\":[],\"objType\":4315,\"objTypeName\":\"IMEI\",\"objValue\":\"861106038308428\"},{\"children\":[],\"objType\":4615,\"objTypeName\":\"微信ID\",\"objValue\":\"612087581\"}],\"objType\":4314,\"objTypeName\":\"IMSI\",\"objValue\":\"460110496721423\"}],\"objType\":3996,\"objTypeName\":\"手机号码\",\"objValue\":\"13308271988\"}";
         if(!StringUtil.ckeckEmpty(result)){
             if(result.startsWith("{") && result.endsWith("}")){
@@ -162,7 +162,7 @@ public class IphoneTrackServiceImpl implements IphoneTrackService {
     private JSONObject getSjhmsList(JSONObject children){
         String sjhm = children.getString("objValue");
         JSONObject object = null;
-        if(sjhm != null && sjhm.length() == 11){
+        if(sjhm != null && (sjhm.length() == 11 || sjhm.length() == 8 || sjhm.length() == 13)){
             object = new JSONObject();
             object.put("objType","4394");
             object.put("objTypeName","电话号码");
@@ -218,7 +218,6 @@ public class IphoneTrackServiceImpl implements IphoneTrackService {
             }
             object.put("wxhms",wxhms);
             object.put("qqhms",qqhms);
-
         }
         return object;
     }
