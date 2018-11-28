@@ -6,10 +6,7 @@ import com.founder.interservice.util.EasyUIPage;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -25,6 +22,7 @@ import java.util.Map;
  * @Version: 1.0
  */
 @Controller
+@CrossOrigin //跨域访问
 public class LoginLogController {
     @Autowired
     LoginLogService loginLogService;
