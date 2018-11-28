@@ -247,21 +247,21 @@ public class TrackTogetherContoller {
                 //2 拿到imsi后 再去调用伴随接口
                 String taskId = trackTogetherService.sendTrackTogetherTask(trackParam); //发送任务 并且得到任务编号
                 //String taskId = "123123123";
-                if(!StringUtil.ckeckEmpty(taskId) && !"Rate limit".equals(taskId)){
+                if(!StringUtil.ckeckEmpty(taskId) && !taskId.startsWith("Rate")){
                     trackParam.setTaskId(taskId);
+                    trackParam.setProgress("0");
+                    trackParam.setState("QUEUEING");
+                    trackTogetherService.saveTogetherTask(trackParam);
+                    resultVO = ResultVOUtil.success(taskId);
                 }else{
-                    throw new InterServiceException(ResultEnum.TASK_SEND_ERROR);
+                    resultVO = ResultVOUtil.error(ResultEnum.TASK_SEND_ERROR.getCode(),ResultEnum.TASK_SEND_ERROR.getMessage());
                 }
-                trackParam.setProgress("0");
-                trackParam.setState("QUEUEING");
-                trackTogetherService.saveTogetherTask(trackParam);
-                resultVO = ResultVOUtil.success(taskId);
             }else{
-                throw new InterServiceException(ResultEnum.PARAM_NOTNULL);
+                resultVO = ResultVOUtil.error(ResultEnum.TASK_SEND_ERROR.getCode(),ResultEnum.TASK_SEND_ERROR.getMessage());
             }
         }catch (InterServiceException e){
             e.printStackTrace();
-            resultVO = ResultVOUtil.error(e.getCode(),e.getMessage());
+            resultVO = ResultVOUtil.error(ResultEnum.TASK_SEND_ERROR.getCode(),ResultEnum.TASK_SEND_ERROR.getMessage());
         }
         return resultVO;
     }
