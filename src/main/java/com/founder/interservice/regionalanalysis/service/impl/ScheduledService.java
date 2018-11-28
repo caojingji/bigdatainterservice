@@ -48,7 +48,7 @@ public class ScheduledService {
      * @Author: cao peng
      * @date: 2018/8/22 0022-16:35
      */
-    @Scheduled(initialDelay = 5000,fixedDelay = 180000) //项目启动后延迟5秒执行，每次执行完后三分钟后再次执行
+    @Scheduled(initialDelay = 200000,fixedDelay = 600000) //项目启动后延迟5秒执行，每次执行完后三分钟后再次执行
     public void queryTaskResult(){
         System.out.println("=============开始执行定时任务================");
         try{
