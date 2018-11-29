@@ -52,4 +52,6 @@ public interface TrackMapper {
     public List<Track> queryTracksByRSD(TrackFilter trackFilter) throws Exception;
 
     public List<Track> queryNewLocation(TrackFilter trackFilter) throws InterServiceException;
+
+    public List<Track> queryTrackByRSD(TrackFilter trackFilter) throws Exception;
 }

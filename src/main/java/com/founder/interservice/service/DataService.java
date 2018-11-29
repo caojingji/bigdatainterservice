@@ -29,4 +29,6 @@ public interface DataService {
     public List<Track> queryTracksListNoPage(TrackFilter trackFilter) throws Exception;
 
     public List<Track> queryNewLocation(TrackFilter trackFilter) throws InterServiceException;
+
+    public List<Track> queryTrackByRSD(TrackFilter trackFilter) throws Exception;
 }

@@ -373,7 +373,7 @@ public class DataController {
     @RequestMapping(value = "/queryTracksByRSD")
     @ResponseBody
     public List<TrackVO> queryTracksByRSD(String objValue, String kssj, String jssj,String base){
-        List<TrackVO> trackVOS = null;
+            List<TrackVO> trackVOS = null;
         try {
             TrackFilter trackFilter = new TrackFilter();
             trackFilter.setKssj(kssj);
@@ -595,6 +595,52 @@ public class DataController {
             e.printStackTrace();
         }
         return imsiStr;
+    }
+
+    /**
+     *
+     * @Description: 根据时段类型查询 停留时间最多的一个
+     * @Param:
+     * @param objValue
+     * @param kssj
+     * @param jssj
+     * @param queryType 01 落脚点, 02 活动地点
+     * @return: java.util.List<com.founder.interservice.VO.TrackVO>
+     */
+    @RequestMapping(value = "/queryTrackByRSD")
+    @ResponseBody
+    public List<TrackVO> queryTrackByRSD(String objValue, String kssj, String jssj,String queryType){
+        List<TrackVO> trackVOS = null;
+        try {
+            TrackFilter trackFilter = new TrackFilter();
+            trackFilter.setKssj(kssj);
+            if(!jssj.contains(" ")){
+                jssj = jssj + " 23:59:59";
+            }
+            trackFilter.setJssj(jssj);
+            if("01".equals(queryType)){
+                trackFilter.setBase("落脚点");
+            }else if ("02".equals(queryType)) {
+                trackFilter.setBase("活动地点");
+            }
+            String imsis = getImsiStr(objValue);
+            if(imsis != null && !imsis.isEmpty()){
+                trackFilter.setObjectvalue(imsis);
+                List<Track> tracks = dataService.queryTrackByRSD(trackFilter);
+                if(tracks != null && !tracks.isEmpty()){
+                    trackVOS = new ArrayList<>();
+                    TrackVO trackVO = new TrackVO();
+                    BeanUtils.copyProperties(tracks.get(0),trackVO);
+                    trackVOS.add(trackVO);
+                }
+            }else{
+                trackVOS = new ArrayList<>();
+            }
+
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+        return trackVOS;
     }
 
 }
