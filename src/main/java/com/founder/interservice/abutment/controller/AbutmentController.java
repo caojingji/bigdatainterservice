@@ -208,6 +208,36 @@ public class AbutmentController {
     }
 
     /**
+     * 跳转到采集信息的修改界面
+     * @param asjbh
+     * @param sfzh
+     * @param type
+     * @param xxzjbh
+     * @param response
+     */
+    @RequestMapping(value = "/toUpdatePage",method = {RequestMethod.GET,RequestMethod.POST})
+    public void toUpdatePage(String asjbh, String sfzh, String type,String xxzjbh,HttpServletResponse response){
+        try {
+            LinkedHashMap<String, Object> params = new LinkedHashMap<>();
+            params.put("sysname", type); //参数
+            JSONObject jsonObject = new JSONObject();
+            jsonObject.put("AJBH", asjbh);
+            jsonObject.put("SFZH", sfzh);
+            jsonObject.put("VIEWTYPE", "2");
+            jsonObject.put("fk",xxzjbh);
+            params.put("sysparam", jsonObject.toJSONString()); //参数
+
+            String url = UnifiedServiceUtil.sendRequest(bizCode,cjServiceId,params);
+            if(!StringUtil.ckeckEmpty(url)){
+                response.sendRedirect(url);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            throw new InterServiceException(55,"发生未知错误！");
+        }
+    }
+
+    /**
      * 跳转到新德汇审批界面
      * @param asjbh 案事件编号
      * @param sfzh 身份证号
