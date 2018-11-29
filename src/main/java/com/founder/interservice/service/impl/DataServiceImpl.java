@@ -114,4 +114,9 @@ public class DataServiceImpl implements DataService {
         resultMap.put("tracks", tracks);
         return resultMap;
     }
+
+    @Override
+    public List<Track> queryTrackByRSD(TrackFilter trackFilter) throws Exception {
+        return trackMapper.queryTrackByRSD(trackFilter);
+    }
 }

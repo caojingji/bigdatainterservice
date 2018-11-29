@@ -147,5 +147,31 @@
         where rownum <![CDATA[ <= ]]> 1
     </select>
 
-
+    <select id="queryTrackByRSD" parameterType="com.founder.interservice.querymodel.TrackFilter" resultType="com.founder.interservice.model.Track">
+        select * from (
+        select t2.address as address,
+        t2.j,
+        t2.w,
+        count(*) as timestr
+        from (
+        select * from (
+        select t.*,
+        case
+        when to_char(to_date(t.timestr,'yyyy-MM-dd HH24:mi:ss'),'HH24:mi') between '23:00' and '24:00'
+        or
+        to_char(to_date(t.timestr,'yyyy-MM-dd HH24:mi:ss'),'HH24:mi') between '00:00' and '07:59' then '落脚点'
+        when  to_char(to_date(t.timestr,'yyyy-MM-dd HH24:mi:ss'),'HH24:mi') between '08:00' and '23:00' then '活动地点'
+        end as daystr
+        from track t
+        <where>
+            <include refid="queryTrack_where"/>
+        </where>
+        )  t1
+        where t1.daystr = #{base}
+        ) t2
+        group by t2.address,t2.j,t2.w
+        order by count(*) desc
+        )
+        where rownum <![CDATA[ <= ]]> 5
+    </select>
 </mapper>
